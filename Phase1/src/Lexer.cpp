@@ -41,10 +41,22 @@ void Lexer::next(Token &token)
             ++end;
         llvm::StringRef Name(BufferPtr, end - BufferPtr);
         Token::TokenKind kind;
-        if (Name == "type")
-            kind = Token::KW_type;
-        else if (Name == "int")
+        if (Name == "int")
             kind = Token::KW_int;
+        else if (Name == "if")
+            kind = Token::KW_if;
+        else if (Name == "else")
+            kind = Token::KW_else;
+        else if (Name == "elif")
+            kind = Token::KW_elif;
+        else if (Name == "begin")
+            kind = Token::KW_begin;
+        else if (Name == "end")
+            kind = Token::KW_end;
+        else if (Name == "loopc")
+            kind = Token::KW_loopc;
+        else if (Name == "and ")
+            kind = Token::and;
         else
             kind = Token::ident;
         // generate the token
@@ -62,26 +74,137 @@ void Lexer::next(Token &token)
     }
     else
     {
+
         switch (*BufferPtr)
         {
-#define CASE(ch, tok)                         \
-    case ch:                                  \
-        formToken(token, BufferPtr + 1, tok); \
-        break
-            CASE('+', Token::plus);
-            CASE('-', Token::minus);
-            CASE('*', Token::star);
-            CASE('/', Token::slash);
-            CASE('(', Token::l_paren);
-            CASE(')', Token::r_paren);
-            CASE(';', Token::semicolon);
-            CASE(',', Token::Token::comma);
-            CASE('=', Token::equal);
-#undef CASE
+        case '>':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::ge);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::gr);
+                return;
+            }
+            break;
+        case '<':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::le);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::ls);
+                return;
+            }
+            break;
+        case '=':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::eq); // equal
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::equal);
+                return;
+            }
+            break;
+        case '!':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::nq);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::not );
+                return;
+            }
+            break;
+        case '+':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::plus_equal);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::plus);
+                return;
+            }
+            break;
+        case '-':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::minus_equal);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::minus);
+                return;
+            }
+            break;
+
+        case '*':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::star_equal);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::star);
+                return;
+            }
+            break;
+        case '/':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::slash_equal);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::slash);
+                return;
+            }
+            break;
+
+        case '(':
+            formToken(token, BufferPtr + 1, Token::l_paren);
+            return;
+            break;
+        case ')':
+            formToken(token, BufferPtr + 1, Token::r_paren);
+            return;
+            break;
+        
+        case ':':
+            formToken(token, BufferPtr + 1, Token::colon);
+            return;
+            break;
+        case ';':
+            formToken(token, BufferPtr + 1, Token::semicolon);
+            return;
+            break;
+        case '&':
+            formToken(token, BufferPtr + 1, Token::and);
+            return;
+            break;
+        case '|':
+            formToken(token, BufferPtr + 1, Token::or);
+            return;
+            break;
+        
         default:
             formToken(token, BufferPtr + 1, Token::unknown);
+            break;
         }
-        return;
     }
 }
 
