@@ -7,6 +7,7 @@ AST *Parser::parse()
     return Res;
 }
 
+
 AST *Parser::parseGSM()
 {
     llvm::SmallVector<Expr *> exprs;
@@ -25,7 +26,6 @@ AST *Parser::parseGSM()
         case Token::ident:
             Expr *a;
             a = parseAssign();
-
             if (!Tok.is(Token::semicolon))
             {
                 error();

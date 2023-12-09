@@ -55,9 +55,11 @@ void Lexer::next(Token &token)
             kind = Token::KW_end;
         else if (Name == "loopc")
             kind = Token::KW_loopc;
-        else if (Name == "and ")
+        else if (Name == "and")
             kind = Token::and;
-        else
+        else if (Name == "or")
+            kind = Token::or;
+        else 
             kind = Token::ident;
         // generate the token
         formToken(token, end, kind);
