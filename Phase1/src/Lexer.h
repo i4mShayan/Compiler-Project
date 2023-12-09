@@ -38,6 +38,7 @@ public:
         plus_equal,
         star_equal,
         slash_equal,
+        equal_equal,
         l_paren,
         r_paren,
         KW_int,

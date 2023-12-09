@@ -104,7 +104,7 @@ void Lexer::next(Token &token)
         case '=':
             if (*(BufferPtr + 1) == '=')
             {
-                formToken(token, BufferPtr + 2, Token::eq); // equal
+                formToken(token, BufferPtr + 2, Token::equal_equal); // equal
                 return;
             }
             else
