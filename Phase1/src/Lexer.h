@@ -43,7 +43,7 @@ public:
         r_paren,
         KW_int,
         KW_if,
-        Kw_else,
+        KW_else,
         KW_elif,
         KW_begin,
         KW_end,
