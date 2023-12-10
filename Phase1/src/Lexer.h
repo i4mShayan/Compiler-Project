@@ -31,9 +31,9 @@ public:
         le,
         nq,
         eq,
-        not,
-        and,
-        or,
+        not, // TODO: Not needed
+        KW_and,
+        KW_or,
         minus_equal,
         plus_equal,
         star_equal,
