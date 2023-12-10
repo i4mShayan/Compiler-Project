@@ -41,11 +41,18 @@ class Parser
     }
 
     AST *parseGSM();
-    Expr *parseDec();
-    Expr *parseAssign();
-    Expr *parseExpr();
-    Expr *parseTerm();
-    Expr *parseFactor();
+    Expr *parseFinal();
+    GSM *parseBinaryOp();
+    GSM *parseAssignment();
+    GSM *parseDeclaration();
+    GSM *parseIf();
+    GSM *parseElif();
+    GSM *parseElse();
+    // Expr *parseDec();
+    // Expr *parseAssign();
+    // Expr *parseExpr();
+    // Expr *parseTerm();
+    // Expr *parseFactor();
 
 public:
     // initializes all members and retrieves the first token

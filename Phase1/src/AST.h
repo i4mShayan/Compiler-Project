@@ -22,16 +22,15 @@ class BinaryOp;
 // class ConditionS;
 class Condition;
 
-
 // ASTVisitor class defines a visitor pattern to traverse the AST
 class ASTVisitor
 {
 public:
   // Virtual visit functions for each AST node type
-  virtual void visit(AST &) {}           // Visit the base AST node
+  virtual void visit(AST &) {} // Visit the base AST node
   // virtual void visit(Expr &) {}          // Visit the expression node
   virtual void visit(GSM &) = 0;         // Visit the group of expressions node
-  virtual void visit(Final &) = 0;      // Visit the final node
+  virtual void visit(Final &) = 0;       // Visit the final node
   virtual void visit(BinaryOp &) = 0;    // Visit the binary operation node
   virtual void visit(Assignment &) = 0;  // Visit the assignment expression node
   virtual void visit(Declaration &) = 0; // Visit the variable declaration node
@@ -44,13 +43,13 @@ public:
   virtual ~AST() {}
   virtual void accept(ASTVisitor &V) = 0; // Accept a visitor for traversal
 };
-
-// Expr class represents an expression in the AST
-// class Expr : public AST
-// {
-// public:
-//   Expr() {}
-// };
+// represents an expression in the AST class Expr
+Expr class
+    : public AST
+{
+public:
+  Expr() {}
+};
 
 // GSM class represents a group of expressions in the AST
 class GSM : public AST
@@ -62,9 +61,9 @@ class GSM : public AST
 
 private:
   DeclarationVector decs; // Stores the list of declaration
-  AssignVector assigns; // Stores the list of assignments
-  IfVector ifs; // Stores the list of if statements
-  LoopVector loops; // Stores the list of loop statements
+  AssignVector assigns;   // Stores the list of assignments
+  IfVector ifs;           // Stores the list of if statements
+  LoopVector loops;       // Stores the list of loop statements
 
 public:
   GSM(llvm::SmallVector<Declaration *> decs, llvm::SmallVector<Assignment *> assigns, llvm::SmallVector<IF *> ifs, llvm::SmallVector<LOOP *> loops)
@@ -155,7 +154,7 @@ class Assignment : public GSM
 {
 private:
   Final *Left; // Left-hand side final (identifier)
-  Expr *Right;  // Right-hand side expression
+  Expr *Right; // Right-hand side expression
 
 public:
   Assignment(Final *L, Expr *R) : Left(L), Right(R) {}
@@ -193,13 +192,13 @@ public:
 };
 
 // IF class represents an if statement in the AST
-class IF : public GSM //TODO: Expr?
+class IF : public GSM // TODO: Expr?
 {
 private:
-  Condition *condition;   // Condition for the if statement
-  llvm::SmallVector<Assign *> assigns; // List of expressions inside the if statement
-  llvm::SmallVector<ELIF *> Elifs; // Optional elif branches
-  ELSE *Else;         // Optional else branch
+  Condition *condition;                // Condition for the if statement
+  llvm::SmallVector<Assignment *> assigns; // List of expressions inside the if statement
+  llvm::SmallVector<ELIF *> Elifs;     // Optional elif branches
+  ELSE *Else;                          // Optional else branch
 
 public:
   IF(Condition *cond, llvm::SmallVector<Expr *> exprs, llvm::SmallVector<ELIF *> e, ELSE *eB) : condition(cond), expressions(exprs), Elifs(e), Else(eB) {}
@@ -218,66 +217,62 @@ public:
   }
 };
 
-
 // ELIF class represents an elif statement in the AST
-class ELIF : public GSM 
+class ELIF : public GSM
 {
 private:
-  Condition *condition;   // Condition for the elif statement
-  llvm::SmallVector<Expr *> expressions; // List of expressions inside the elif statement
+  Condition *condition;                  // Condition for the elif statement
+  llvm::SmallVector<Assignment *> assigns; // List of expressions inside the elif statement
 
 public:
-  ELIF(Condition *cond, llvm::SmallVector<Expr *> exprs) : condition(cond), expressions(exprs) {}
+  ELIF(Condition *cond, llvm::SmallVector<Assignment *> assigns) : condition(cond), expressions(exprs) {}
 
   Condition *getCondition() { return condition; }
 
-  llvm::SmallVector<Expr *> getExpressions() { return expressions; }
+  llvm::SmallVector<Assignment *> getAssigns() { return assigns; }
 
   virtual void accept(ASTVisitor &V) override
   {
     V.visit(*this);
   }
 };
-
 
 // ELSE class represents an else statement in the AST
 class ELSE : public GSM
 {
 private:
-  llvm::SmallVector<Expr *> expressions; // List of expressions inside the else statement
+  llvm::SmallVector<Assignment *> assigns; // List of expressions inside the else statement
 
 public:
-  ELSE(llvm::SmallVector<Expr *> exprs) : expressions(exprs) {}
+  ELSE(llvm::SmallVector<Assignment *> assigns) : expressions(exprs) {}
 
-  llvm::SmallVector<Expr *> getExpressions() { return expressions; }
+  llvm::SmallVector<Assignment *> getAssigns() { return assigns ; }
 
   virtual void accept(ASTVisitor &V) override
   {
     V.visit(*this);
   }
 };
-
 
 // LOOP class represents a loop statement in the AST
 class LOOP : public GSM
 {
 private:
-  Condition *condition;   // Condition for the loop statement
-  llvm::SmallVector<Expr *> expressions; // List of expressions inside the loop body
+  Condition *condition;                  // Condition for the loop statement
+  llvm::SmallVector<Assignment *> assigns; // List of expressions inside the loop body
 
 public:
-  LOOP(Condition *cond, llvm::SmallVector<Expr *> exprs) : condition(cond), expressions(exprs) {}
+  LOOP(Condition *cond, llvm::SmallVector<Assignment *> assigns) : condition(cond), expressions(exprs) {}
 
   Condition *getCondition() { return condition; }
 
-  llvm::SmallVector<Expr *> getExpressions() { return expressions; }
+  llvm::SmallVector<Assignment *> getAssigns() { return assigns; }
 
   virtual void accept(ASTVisitor &V) override
   {
     V.visit(*this);
   }
 };
-
 
 class LogicalOp : public Conditions
 {
@@ -289,8 +284,8 @@ public:
   };
 
 private:
-  Expr *Left;  // Left-hand side expression
-  Expr *Right; // Right-hand side expression
+  Expr *Left;         // Left-hand side expression
+  Expr *Right;        // Right-hand side expression
   LogicalOperator Op; // Operator of the binary operation
 
 public:
@@ -308,7 +303,6 @@ public:
   }
 };
 
-
 class ComparisonOp : public Conditions
 {
 public:
@@ -323,8 +317,8 @@ public:
   };
 
 private:
-  Expr *Left;  // Left-hand side expression
-  Expr *Right; // Right-hand side expression
+  Expr *Left;            // Left-hand side expression
+  Expr *Right;           // Right-hand side expression
   ComparisonOperator Op; // Operator of the binary operation
 
 public:
@@ -341,6 +335,5 @@ public:
     V.visit(*this);
   }
 };
-
 
 #endif
