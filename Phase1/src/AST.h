@@ -54,7 +54,7 @@ class MyNode : public AST
 {
 public:
   MyNode() {}
-}
+};
 
 
 // represents an expression in the AST class Expr
@@ -317,7 +317,7 @@ public:
 
   Expr *getRight() { return Right; }
 
-  LogicalOperator getLogicalOperator() { return Op; }
+  LogicalOperator getLogicOperator() { return Op; }
 
   virtual void accept(ASTVisitor &V) //override
   {
@@ -373,16 +373,16 @@ public:
 private:
   Expr *Left;            // Left-hand side expression
   Expr *Right;           // Right-hand side expression
-  ComparisonOperator operator; // Operator of the binary operation
+  ComparisonOperator Operator; // Operator of the binary operation
 
 public:
-  ComparisonOp(ComparisonOperator Op, Expr *L, Expr *R) : operator(Op), Left(L), Right(R) {}
+  ComparisonOp(ComparisonOperator Op, Expr *L, Expr *R) : Operator(Op), Left(L), Right(R) {}
 
   Expr *getLeft() { return Left; }
 
   Expr *getRight() { return Right; }
 
-  ComparisonOperator getComparisonOperatorr() { return operator; }
+  ComparisonOperator getComparisonOperatorr() { return Operator; }
 
   virtual void accept(ASTVisitor &V) //override
   {
