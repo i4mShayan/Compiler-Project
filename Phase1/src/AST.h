@@ -184,7 +184,7 @@ public:
 };
 
 // Declaration class represents a variable declaration with an initializer in the AST
-class Declaration : public Mynode
+class Declaration : public MyNode
 {
   using VarVector = llvm::SmallVector<llvm::StringRef, 8>;
   VarVector Vars; // Stores the list of variables
@@ -199,7 +199,7 @@ public:
 
   Expr *getExpr() { return E; }
 
-  virtual void accept(ASTVisitor &V) override
+  virtual void accept(ASTVisitor &V) // override
   {
     V.visit(*this);
   }
@@ -215,13 +215,13 @@ private:
   ELSE *Else;                              // Optional else branch
 
 public:
-  IF(Condition *cond, llvm::SmallVector<Expr *> exprs, llvm::SmallVector<ELIF *> e, ELSE *eB) : condition(cond), expressions(exprs), Elifs(e), Else(eB) {}
+  IF(Condition *cond, llvm::SmallVector<Assignment *> assign, llvm::SmallVector<ELIF *> e, ELSE *eB) : condition(cond), assigns(assign), Elifs(e), Else(eB) {}
 
   Condition *getCondition() { return condition; }
 
-  llvm::SmallVector<Expr *> getAssigns() { return assigns; }
+  llvm::SmallVector<Assignment *> getAssigns() { return assigns; }
 
-  llvm::SmallVector<ELIF *> getElifs() { return elifs; }
+  llvm::SmallVector<ELIF *> getElifs() { return Elifs; }
 
   ELSE *getElse() { return Else; }
 
@@ -239,7 +239,7 @@ private:
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the elif statement
 
 public:
-  ELIF(Condition *cond, llvm::SmallVector<Assignment *> assigns) : condition(cond), expressions(exprs) {}
+  ELIF(Condition *cond, llvm::SmallVector<Assignment *> assign) : condition(cond), assigns(assign) {}
 
   Condition *getCondition() { return condition; }
 
@@ -258,7 +258,7 @@ private:
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the else statement
 
 public:
-  ELSE(llvm::SmallVector<Assignment *> assigns) : expressions(exprs) {}
+  ELSE(llvm::SmallVector<Assignment *> assign) : assigns(assign) {}
 
   llvm::SmallVector<Assignment *> getAssigns() { return assigns; }
 
@@ -276,7 +276,7 @@ private:
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the loop body
 
 public:
-  LOOP(Condition *cond, llvm::SmallVector<Assignment *> assigns) : condition(cond), expressions(exprs) {}
+  LOOP(Condition *cond, llvm::SmallVector<Assignment *> assign) : condition(cond), assigns(assign) {}
 
   Condition *getCondition() { return condition; }
 
@@ -288,7 +288,7 @@ public:
   }
 };
 
-class LogicalOp : public Conditions
+class LogicalOp : public MyNode
 {
 public:
   enum LogicOperator
@@ -300,10 +300,10 @@ public:
 private:
   Expr *Left;         // Left-hand side expression
   Expr *Right;        // Right-hand side expression
-  LogicalOperator Op; // Operator of the binary operation
+  LogicOperator Op; // Operator of the binary operation
 
 public:
-  LogicalOp(LogicalOperator Op, Expr *L, Expr *R) : LogicalOperator(Op), Left(L), Right(R) {}
+  LogicalOp(LogicOperator Op, Expr *L, Expr *R) : LogicOperator(Op), Left(L), Right(R) {}
 
   Expr *getLeft() { return Left; }
 
@@ -311,13 +311,13 @@ public:
 
   LogicalOperator getLogicalOperator() { return Op; }
 
-  virtual void accept(ASTVisitor &V) override
+  virtual void accept(ASTVisitor &V) //override
   {
     V.visit(*this);
   }
 };
 
-class ComparisonOp : public Conditions
+class ComparisonOp : public MyNode
 {
 public:
   enum ComparisonOperator
@@ -333,18 +333,18 @@ public:
 private:
   Expr *Left;            // Left-hand side expression
   Expr *Right;           // Right-hand side expression
-  ComparisonOperator Op; // Operator of the binary operation
+  ComparisonOperator operator; // Operator of the binary operation
 
 public:
-  ComparisonOp(ComparisonOperator Op, Expr *L, Expr *R) : ComparisonOperator(Op), Left(L), Right(R) {}
+  ComparisonOp(ComparisonOperator Op, Expr *L, Expr *R) : operator(Op), Left(L), Right(R) {}
 
   Expr *getLeft() { return Left; }
 
   Expr *getRight() { return Right; }
 
-  ComparisonOperator getComparisonOperatorr() { return Op; }
+  ComparisonOperator getComparisonOperatorr() { return operator; }
 
-  virtual void accept(ASTVisitor &V) override
+  virtual void accept(ASTVisitor &V) //override
   {
     V.visit(*this);
   }
