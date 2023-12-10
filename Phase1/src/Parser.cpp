@@ -15,7 +15,7 @@ AST *Parser::parseGSM()
     {
         switch (Tok.getKind())
         {
-        case Token::KW_type:
+        case Token::KW_type: // Should be KW_int
             Expr *d;
             d = parseDec();
             if (d)
@@ -96,7 +96,7 @@ Expr *Parser::parseAssign()
 {
     Expr *E;
     Factor *F;
-    F = (Factor *)(parseFactor());
+    F = (Factor *)(parseFactor()); // Factor Should be replaced with Final
 
     if (!Tok.is(Token::equal))
     {
