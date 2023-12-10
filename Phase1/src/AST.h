@@ -311,13 +311,13 @@ private:
   LogicOperator Op; // Operator of the binary operation
 
 public:
-  LogicalOp(LogicOperator Op, Expr *L, Expr *R) : LogicOperator(Op), Left(L), Right(R) {}
+  LogicalOp(LogicOperator OpIn, Expr *L, Expr *R) : Op(OpIn), Left(L), Right(R) {}
 
   Expr *getLeft() { return Left; }
 
   Expr *getRight() { return Right; }
 
-  LogicalOperator getLogicOperator() { return Op; }
+  LogicOperator getLogicOperator() { return Op; }
 
   virtual void accept(ASTVisitor &V) //override
   {
