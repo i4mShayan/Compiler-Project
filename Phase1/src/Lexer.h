@@ -21,6 +21,7 @@ public:
         comma,
         colon,
         semicolon,
+        hat,
         plus,
         minus,
         star,

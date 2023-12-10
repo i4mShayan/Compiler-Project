@@ -3,5 +3,6 @@
         "optional": "cpp",
         "future": "cpp",
         "*.def": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
