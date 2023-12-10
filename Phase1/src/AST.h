@@ -34,6 +34,10 @@ public:
   virtual void visit(BinaryOp &) = 0;    // Visit the binary operation node
   virtual void visit(Assignment &) = 0;  // Visit the assignment expression node
   virtual void visit(Declaration &) = 0; // Visit the variable declaration node
+  virtual void visit(IF &) = 0;          // Visit the if statement node
+  virtual void visit(ELIF &) = 0;        // Visit the elif statement node
+  virtual void visit(ELSE &) = 0;        // Visit the else statement node
+  virtual void visit(LOOP &) = 0;        // Visit the loop statement node
 };
 
 // AST class serves as the base class for all AST nodes
