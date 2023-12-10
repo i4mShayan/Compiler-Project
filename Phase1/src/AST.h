@@ -35,10 +35,10 @@ public:
   virtual void visit(Assignment &) = 0;  // Visit the assignment expression node
   virtual void visit(Declaration &) = 0; // Visit the variable declaration node
   virtual void visit(IF &) = 0;          // Visit the if statement node
-  virtual void visit(Condition &) = 0; // Visit the condtion node 
-  virtual void visit(ELIF &) = 0; // Visit the elif statement node
-  virtual void visit(ELSE &) = 0; // Visit the else statement node
-  virtual void visit(LOOP &) = 0; // Visit the loop statement node
+  virtual void visit(Condition &) = 0;   // Visit the condtion node
+  virtual void visit(ELIF &) = 0;        // Visit the elif statement node
+  virtual void visit(ELSE &) = 0;        // Visit the else statement node
+  virtual void visit(LOOP &) = 0;        // Visit the loop statement node
 };
 
 // AST class serves as the base class for all AST nodes
@@ -48,8 +48,17 @@ public:
   virtual ~AST() {}
   virtual void accept(ASTVisitor &V) = 0; // Accept a visitor for traversal
 };
+
+// repesent a node in tree
+class MyNode : public AST
+{
+public:
+  MyNode() {}
+}
+
+
 // represents an expression in the AST class Expr
-Expr class
+class Expr
     : public AST
 {
 public:
@@ -155,7 +164,7 @@ public:
 };
 
 // Assignment class represents an assignment expression in the AST
-class Assignment : public GSM
+class Assignment : public MyNode
 {
 private:
   Final *Left; // Left-hand side final (identifier)
@@ -175,7 +184,7 @@ public:
 };
 
 // Declaration class represents a variable declaration with an initializer in the AST
-class Declaration : public GSM
+class Declaration : public Mynode
 {
   using VarVector = llvm::SmallVector<llvm::StringRef, 8>;
   VarVector Vars; // Stores the list of variables
@@ -197,7 +206,7 @@ public:
 };
 
 // IF class represents an if statement in the AST
-class IF : public GSM // TODO: Expr?
+class IF : public MyNode // TODO: Expr?
 {
 private:
   Condition *condition;                    // Condition for the if statement
@@ -223,7 +232,7 @@ public:
 };
 
 // ELIF class represents an elif statement in the AST
-class ELIF : public GSM
+class ELIF : public MyNode
 {
 private:
   Condition *condition;                    // Condition for the elif statement
@@ -243,7 +252,7 @@ public:
 };
 
 // ELSE class represents an else statement in the AST
-class ELSE : public GSM
+class ELSE : public MyNode
 {
 private:
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the else statement
@@ -260,7 +269,7 @@ public:
 };
 
 // LOOP class represents a loop statement in the AST
-class LOOP : public GSM
+class LOOP : public MyNode
 {
 private:
   Condition *condition;                    // Condition for the loop statement

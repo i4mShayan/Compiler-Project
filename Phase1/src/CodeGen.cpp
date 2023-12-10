@@ -56,7 +56,7 @@ namespace
     virtual void visit(GSM &Node) override
     {
       // Iterate over the children of the GSM node and visit each child.
-      for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
+      for (auto I = Node.getbegin(), E = Node.end(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
