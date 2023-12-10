@@ -42,12 +42,14 @@ class Parser
 
     AST *parseGSM();
     Expr *parseFinal();
-    GSM *parseBinaryOp();
-    GSM *parseAssignment();
-    GSM *parseDeclaration();
+    Expr *parseFactor();
+    GSM *parseAssign();
+    GSM *parseDec();
     GSM *parseIf();
     GSM *parseElif();
     GSM *parseElse();
+    GSM *parseLoopC();
+    GSM *parseCondition();
     // Expr *parseDec();
     // Expr *parseAssign();
     // Expr *parseExpr();

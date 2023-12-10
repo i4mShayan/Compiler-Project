@@ -117,7 +117,7 @@ public:
 };
 
 // BinaryOp class represents a binary operation in the AST (plus, minus, multiplication, division, power)
-class BinaryOp : public GSM
+class BinaryOp : public Expr 
 {
 public:
   enum Operator
