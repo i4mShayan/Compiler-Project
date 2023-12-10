@@ -164,7 +164,7 @@ public:
 };
 
 // Assignment class represents an assignment expression in the AST
-class Assignment : public MyNode
+class Assignment : public MyNode //TODO
 {
 private:
   Final *Left; // Left-hand side final (identifier)
@@ -310,6 +310,38 @@ public:
   Expr *getRight() { return Right; }
 
   LogicalOperator getLogicalOperator() { return Op; }
+
+  virtual void accept(ASTVisitor &V) //override
+  {
+    V.visit(*this);
+  }
+};
+
+class AssignOp : public MyNode
+{
+public:
+  enum AssignOperator
+  {
+    Minus_equal,
+    Plus_equal,
+    Star_equal,
+    Slash_equal,
+    Equal,
+  };
+
+private:
+  Final *Left;         
+  Expr *Right;        // Right-hand side expression
+  AssignOperator AssignOp; // Operator of the binary operation
+
+public:
+  LogicalOp(Final *L, Expr *R, AssignOperator Op) : Left(L), Right(R), AssignOp(Op) {}
+
+  Final *getLeft() { return Left; }
+
+  Expr *getRight() { return Right; }
+
+  LogicalOperator getAssignOperator() { return Op; }
 
   virtual void accept(ASTVisitor &V) //override
   {
