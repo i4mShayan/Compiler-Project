@@ -32,7 +32,6 @@ public:
         le,
         nq,
         eq,
-        not, // TODO: Not needed
         KW_and,
         KW_or,
         minus_equal,
