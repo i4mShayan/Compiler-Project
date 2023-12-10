@@ -13,7 +13,7 @@ class IF;
 class ELIF;
 class ELSE;
 class LOOP;
-// class Expr;
+class Expr;
 // class Factor;
 class Final;
 // class ID;
