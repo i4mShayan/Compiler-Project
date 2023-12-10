@@ -35,9 +35,10 @@ public:
   virtual void visit(Assignment &) = 0;  // Visit the assignment expression node
   virtual void visit(Declaration &) = 0; // Visit the variable declaration node
   virtual void visit(IF &) = 0;          // Visit the if statement node
-  virtual void visit(ELIF &) = 0;        // Visit the elif statement node
-  virtual void visit(ELSE &) = 0;        // Visit the else statement node
-  virtual void visit(LOOP &) = 0;        // Visit the loop statement node
+  virtual void visit(Condition &) = 0; // Visit the condtion node 
+  virtual void visit(ELIF &) = 0; // Visit the elif statement node
+  virtual void visit(ELSE &) = 0; // Visit the else statement node
+  virtual void visit(LOOP &) = 0; // Visit the loop statement node
 };
 
 // AST class serves as the base class for all AST nodes
@@ -121,7 +122,7 @@ public:
 };
 
 // BinaryOp class represents a binary operation in the AST (plus, minus, multiplication, division, power)
-class BinaryOp : public Expr 
+class BinaryOp : public Expr
 {
 public:
   enum Operator
@@ -199,17 +200,17 @@ public:
 class IF : public GSM // TODO: Expr?
 {
 private:
-  Condition *condition;                // Condition for the if statement
+  Condition *condition;                    // Condition for the if statement
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the if statement
-  llvm::SmallVector<ELIF *> Elifs;     // Optional elif branches
-  ELSE *Else;                          // Optional else branch
+  llvm::SmallVector<ELIF *> Elifs;         // Optional elif branches
+  ELSE *Else;                              // Optional else branch
 
 public:
   IF(Condition *cond, llvm::SmallVector<Expr *> exprs, llvm::SmallVector<ELIF *> e, ELSE *eB) : condition(cond), expressions(exprs), Elifs(e), Else(eB) {}
 
   Condition *getCondition() { return condition; }
 
-  llvm::SmallVector<Expr *> getExpressions() { return expressions; }
+  llvm::SmallVector<Expr *> getAssigns() { return assigns; }
 
   llvm::SmallVector<ELIF *> getElifs() { return elifs; }
 
@@ -225,7 +226,7 @@ public:
 class ELIF : public GSM
 {
 private:
-  Condition *condition;                  // Condition for the elif statement
+  Condition *condition;                    // Condition for the elif statement
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the elif statement
 
 public:
@@ -250,7 +251,7 @@ private:
 public:
   ELSE(llvm::SmallVector<Assignment *> assigns) : expressions(exprs) {}
 
-  llvm::SmallVector<Assignment *> getAssigns() { return assigns ; }
+  llvm::SmallVector<Assignment *> getAssigns() { return assigns; }
 
   virtual void accept(ASTVisitor &V) override
   {
@@ -262,7 +263,7 @@ public:
 class LOOP : public GSM
 {
 private:
-  Condition *condition;                  // Condition for the loop statement
+  Condition *condition;                    // Condition for the loop statement
   llvm::SmallVector<Assignment *> assigns; // List of expressions inside the loop body
 
 public:
