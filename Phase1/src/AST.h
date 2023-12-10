@@ -28,7 +28,7 @@ class ASTVisitor
 public:
   // Virtual visit functions for each AST node type
   virtual void visit(AST &) {} // Visit the base AST node
-  // virtual void visit(Expr &) {}          // Visit the expression node
+  virtual void visit(Expr &) {}          // Visit the expression node
   virtual void visit(GSM &) = 0;         // Visit the group of expressions node
   virtual void visit(Final &) = 0;       // Visit the final node
   virtual void visit(BinaryOp &) = 0;    // Visit the binary operation node
@@ -63,6 +63,14 @@ class Expr
 {
 public:
   Expr() {}
+};
+
+
+class Condition
+    : public AST
+{
+public:
+  Condition() {}
 };
 
 // GSM class represents a group of expressions in the AST
@@ -164,7 +172,7 @@ public:
 };
 
 // Assignment class represents an assignment expression in the AST
-class Assignment : public MyNode //TODO
+class Assignment : public MyNode
 {
 private:
   Final *Left; // Left-hand side final (identifier)
@@ -317,39 +325,39 @@ public:
   }
 };
 
-class AssignOp : public MyNode
-{
-public:
-  enum AssignOperator
-  {
-    Minus_equal,
-    Plus_equal,
-    Star_equal,
-    Slash_equal,
-    Equal,
-  };
+// class AssignOp : public MyNode
+// {
+// public:
+//   enum AssignOperator
+//   {
+//     Minus_equal,
+//     Plus_equal,
+//     Star_equal,
+//     Slash_equal,
+//     Equal,
+//   };
 
-private:
-  Final *Left;         
-  Expr *Right;        // Right-hand side expression
-  AssignOperator AssignOp; // Operator of the binary operation
+// private:
+//   Final *Left;         
+//   Expr *Right;        // Right-hand side expression
+//   AssignOperator AssignOp; // Operator of the binary operation
 
-public:
-  LogicalOp(Final *L, Expr *R, AssignOperator Op) : Left(L), Right(R), AssignOp(Op) {}
+// public:
+//   LogicalOp(Final *L, Expr *R, AssignOperator Op) : Left(L), Right(R), AssignOp(Op) {}
 
-  Final *getLeft() { return Left; }
+//   Final *getLeft() { return Left; }
 
-  Expr *getRight() { return Right; }
+//   Expr *getRight() { return Right; }
 
-  LogicalOperator getAssignOperator() { return Op; }
+//   LogicalOperator getAssignOperator() { return Op; }
 
-  virtual void accept(ASTVisitor &V) //override
-  {
-    V.visit(*this);
-  }
-};
+//   virtual void accept(ASTVisitor &V) //override
+//   {
+//     V.visit(*this);
+//   }
+// };
 
-class ComparisonOp : public MyNode
+class ComparisonOp : public Condition
 {
 public:
   enum ComparisonOperator
