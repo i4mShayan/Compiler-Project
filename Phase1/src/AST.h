@@ -20,7 +20,7 @@ class Final;
 // class NUM;
 class BinaryOp;
 // class ConditionS;
-// class Condition;
+class Condition;
 
 
 // ASTVisitor class defines a visitor pattern to traverse the AST
@@ -279,19 +279,13 @@ public:
 };
 
 
-class LogicalOp : public Expr
+class LogicalOp : public Conditions
 {
 public:
   enum LogicOperator
   {
     Or,
-    And,
-    ls,
-    le,
-    eq,
-    gr,
-    ge,
-    nq
+    And
   };
 
 private:
@@ -314,6 +308,39 @@ public:
   }
 };
 
+
+class ComparisonOp : public Conditions
+{
+public:
+  enum ComparisonOperator
+  {
+    ls,
+    le,
+    eq,
+    gr,
+    ge,
+    nq
+  };
+
+private:
+  Expr *Left;  // Left-hand side expression
+  Expr *Right; // Right-hand side expression
+  ComparisonOperator Op; // Operator of the binary operation
+
+public:
+  ComparisonOp(ComparisonOperator Op, Expr *L, Expr *R) : ComparisonOperator(Op), Left(L), Right(R) {}
+
+  Expr *getLeft() { return Left; }
+
+  Expr *getRight() { return Right; }
+
+  ComparisonOperator getComparisonOperatorr() { return Op; }
+
+  virtual void accept(ASTVisitor &V) override
+  {
+    V.visit(*this);
+  }
+};
 
 
 #endif
