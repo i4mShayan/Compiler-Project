@@ -141,7 +141,7 @@ Assign *Parser::parseAssign()
 
     if (expect(Token::ident))
         goto _error;
-    Var = Tok.getText()
+    Var = Tok.getText();
     advance();
 
 
