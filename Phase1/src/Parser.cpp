@@ -47,7 +47,7 @@ AST *Parser::parseGSM()
                 goto _error2;
             break;
         }
-        case Token::KW_Loopc:
+        case Token::KW_loopc:
         {
             Loop *a;
             a = parseLoop();
@@ -116,7 +116,7 @@ Declare *Parser::parseDec()
                 Exprs.push_back(E);
                 if (++expressionCount > varsCount)
                 {
-                    goto _error2
+                    goto _error2;
                 }
             }
             else
@@ -166,6 +166,11 @@ Assign *Parser::parseAssign()
         goto _error;
         break;
     }
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 Expr *Parser::parseExpr()
@@ -208,6 +213,11 @@ Expr *Parser::parseExpr()
             break;
         }
     }
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 
@@ -237,6 +247,11 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         break;
     }
     return Res;
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 Conditions *Parser::parseConditions()
@@ -270,6 +285,11 @@ Conditions *Parser::parseConditions()
             break;
         }
     }
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 Condition *Parser::parseCondition()
@@ -310,6 +330,11 @@ Condition *Parser::parseCondition()
     if(!Right) goto _error;
 
     return new Condition(Left, Op, Right);
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 // If → "If" CONDITIONS ":" "begin" (ASSIGN)* "end" (ELIf)* (ELSE)?
@@ -361,6 +386,11 @@ If *Parser::parseIf()
     }
 
     return new If(Cond, Assigns, Elifs, Else);
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 // ELIf → "elIf" CONDITIONS ":" "begin" (ASSIGN)* "end"
@@ -391,6 +421,11 @@ Elif *Parser::parseElif()
     advance();
 
     return new Elif(Cond, Assigns);
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 // ELSE→ "else" ":" "begin" (ASSIGN)* "end"
@@ -420,6 +455,11 @@ Else *Parser::parseElse()
     advance();
 
     return new Else(Assigns);
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
 
 // LoopC → "Loopc" CONDITIONS ":" "begin" (ASSIGN)* "end"
@@ -450,4 +490,9 @@ Loop *Parser::parseLoop()
     advance();
 
     return new Loop(Cond, Assigns);
+
+    _error: // TODO: Check this later in case of error :)
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
 }
