@@ -342,10 +342,10 @@ If *Parser::parseIf()
 {
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
-    llvm::SmallVector<ELIf *> Elifs;
+    llvm::SmallVector<ELif *> Elifs;
     Else *Else;
 
-    if (expect(Token::KW_If)) goto _error;
+    if (expect(Token::KW_if)) goto _error;
     advance();
 
     Cond = parseCondition();
