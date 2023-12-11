@@ -138,7 +138,7 @@ private:
 public:
     Assign(llvm::StringRef Var, AssOp AssignmentOp, Expr *Right) :
      Var(Var), AssignmentOp(AssignmentOp), Right(Right), Statement(StatementType::Assignment) {}
-    llvm::StringRef *getVar()
+    llvm::StringRef getVar()
     {
         return Var;
     }
