@@ -3,11 +3,11 @@
 // main point is that the whole input has been consumed
 AST *Parser::parse()
 {
-    AST *Res = parseASA();
+    AST *Res = parseARK();
     return Res;
 }
 
-AST *Parser::parseASA()
+AST *Parser::parseARK()
 {
     llvm::SmallVector<Statement *> statements;
 
@@ -61,10 +61,10 @@ AST *Parser::parseASA()
         }
         advance();
     }
-    return new ASA(statements);
+    return new ARK(statements);
 _error2:
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "ASA Error at: " << Tok.getText() << "\n";
+        llvm::errs() << "ARK Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }

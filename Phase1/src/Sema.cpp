@@ -29,8 +29,8 @@ namespace
 
     bool hasError() { return HasError; } // Function to check if an error occurred
 
-    // Visit function for ASA nodes
-    virtual void visit(ASA &Node) override
+    // Visit function for ARK nodes
+    virtual void visit(ARK &Node) override
     {
       for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
       {

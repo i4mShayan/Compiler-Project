@@ -40,7 +40,7 @@ class Parser
         return false;
     }
 
-    AST *parseASA();
+    AST *parseARK();
     Declare *parseDec();
     Assign *parseAssign();
     Expr *parseExpr();

@@ -18,10 +18,10 @@ int main(int argc, const char **argv)
     // Initialize the LLVM framework.
     llvm::InitLLVM X(argc, argv);
 
-    std::ifstream inFile("main.asa");
+    std::ifstream inFile("main.ARK");
     if (!inFile)
     {
-        llvm::errs() << "Error: Unable to open main.ASA file\n";
+        llvm::errs() << "Error: Unable to open main.ARK file\n";
         return 1;
     }
     std::string Input((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
