@@ -26,6 +26,7 @@ public:
         minus,
         star,
         slash,
+        mod,
         gr,
         ge,
         ls,
@@ -48,7 +49,6 @@ public:
         KW_begin,
         KW_end,
         KW_loopc,
-
     };
 
 private:
