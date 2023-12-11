@@ -27,8 +27,8 @@ public:
     virtual void visit(Expr &) {}
     virtual void visit(GSM &) = 0;
     virtual void visit(Statement &) = 0;
-    virtual void visit(Declare &) = 0;
-    virtual void visit(Assign &) = 0;
+    virtual void visit(Declare &) = 0;//
+    virtual void visit(Assign &) = 0;//
     virtual void visit(If &) = 0;
     virtual void visit(Elif &) = 0;
     virtual void visit(Else &) = 0;
