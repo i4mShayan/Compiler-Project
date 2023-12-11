@@ -264,13 +264,25 @@ namespace
       Value *Right = V;
 
       // Perform the binary operation based on the operator type and create the corresponding instruction.
-      switch (Node.getOperator())
+      switch (Node.getSign())
       {
-      case Condition::And:
-        V = Builder.CreateAnd(Left, Right);
+      case Condition::LessEqual:
+        V = Left <= Right;
         break;
-      case Condition::Or:
-        V = Builder.CreateOr(Left, Right);
+      case Condition::LessThan:
+        V = Left < Right;
+        break;
+      case Condition::EqualEqual:
+        V = Left == Right;
+        break;
+      case Condition::NotEqual:
+        V = Left != Right;
+        break;
+      case Condition::GreaterThan:
+        V = Left > Right;
+        break;
+      case Condition::GreaterEqual:
+        V = Left >= Right;
         break;
       }
     }
