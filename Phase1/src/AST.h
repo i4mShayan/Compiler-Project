@@ -293,11 +293,11 @@ private:
     Conditions *condition;
     llvm::SmallVector<Assign *> Assignments;
     llvm::SmallVector<Elif *> Elifs;
-    Else *Else;
+    Else *ElseBranch;
 
 public:
-    If(Conditions *condition, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *Else) : 
-    condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), Else(Else) {}
+    If(Conditions *condition, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
+    condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     If(): Statement(Statement::StatementType::If) {}
 
     Conditions *getCondition()
@@ -315,9 +315,9 @@ public:
         return Elifs;
     }
 
-    Else *getElse()
+    Else *getElseBranch()
     {
-        return Else;
+        return ElseBranch;
     }
 
     virtual void accept(ASTVisitor &V) override
