@@ -150,7 +150,6 @@ Assign *Parser::parseAssign()
 
     if(!Right) goto _error;
 
-
     switch (tokKind)
     {
     case Token::equal:
@@ -250,10 +249,8 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         if (!consume(Token::r_paren))
             break;
     default: // error handling
-        if (!Res)
-            error();
-        while (!Tok.isOneOf(Token::r_paren, Token::star, Token::plus, Token::minus, Token::slash, Token::eoi))
-            advance();
+        error();
+        goto _error;
         break;
     }
     return Res;
