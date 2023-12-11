@@ -294,8 +294,11 @@ _error:
 
 Condition *Parser::parseCondition()
 {
-    Expr *Left = parseExpr();
+    Expr *Left;
+    Expr *Right;
 
+    Left = parseExpr();
+    
     if(!Left)
         goto _error;
 
@@ -326,7 +329,7 @@ Condition *Parser::parseCondition()
     }
 
     advance();
-    Expr *Right = parseExpr();
+    Right = parseExpr();
 
     if(!Right)
         goto _error;
