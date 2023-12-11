@@ -86,7 +86,6 @@ Declare *Parser::parseDec()
         goto _error;
     Vars.push_back(Tok.getText());
     advance();
-    varsCount = 1;
 
     while (Tok.is(Token::comma))
     {
