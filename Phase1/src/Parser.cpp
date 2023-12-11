@@ -148,7 +148,7 @@ Assign *Parser::parseAssign()
     if(!E)
         goto _error;
 
-    Assign Ans*;
+    Assign *Ans;
     switch (tokKind)
     {
     case Token::equal:
