@@ -19,7 +19,7 @@ AST *Parser::parseGSM()
         {
             Declare *d;
             d = parseDec();
-            If (d)
+            if (d)
                 statements.push_back(d);
             else
                 goto _error2;
@@ -29,10 +29,10 @@ AST *Parser::parseGSM()
         {
             Assign *a;
             a = parseAssign();
-            If (!Tok.is(Token::semicolon)) {
+            if (!Tok.is(Token::semicolon)) {
                 error();
                 goto _error2;
-            } If (a)
+            } if (a)
                 statements.push_back(a);
             else goto _error2;
             break;
@@ -41,7 +41,7 @@ AST *Parser::parseGSM()
         {
             If *i;
             i = parseIf();
-            If (i)
+            if (i)
                 statements.push_back(i);
             else
                 goto _error2;
@@ -51,7 +51,7 @@ AST *Parser::parseGSM()
         {
             Loop *a;
             a = parseLoop();
-            If (a)
+            if (a)
                 statements.push_back(a);
             else
                 goto _error2;
@@ -77,12 +77,12 @@ Declare *Parser::parseDec()
     llvm::SmallVector<Expr *> Exprs;
     llvm::SmallVector<llvm::StringRef, 8> Vars;
 
-    If (expect(Token::KW_int))
+    if (expect(Token::KW_int))
         goto _error;
 
     advance();
 
-    If (expect(Token::ident))
+    if (expect(Token::ident))
         goto _error;
     Vars.push_back(Tok.getText());
     advance();
@@ -91,19 +91,19 @@ Declare *Parser::parseDec()
     while (Tok.is(Token::comma))
     {
         advance();
-        If (expect(Token::ident))
+        if (expect(Token::ident))
             goto _error;
         Vars.push_back(Tok.getText());
         varsCount++;
         advance();
     }
 
-    If (Tok.is(Token::equal))
+    if (Tok.is(Token::equal))
     {
         advance();
         Expr *E;
         E = parseExpr();
-        If (E)
+        if (E)
             Exprs.push_back(E);
         else
             goto _error;
@@ -111,10 +111,10 @@ Declare *Parser::parseDec()
         {
             advance();
             E = parseExpr();
-            If (E)
+            if (E)
             {
                 Exprs.push_back(E);
-                If (++expressionCount > varsCount)
+                if (++expressionCount > varsCount)
                 {
                     goto _error2
                 }
@@ -124,7 +124,7 @@ Declare *Parser::parseDec()
         }
     }
 
-    If (expect(Token::semicolon))
+    if (expect(Token::semicolon))
         goto _error;
 
     return new Declare(Vars, Exprs);
@@ -227,10 +227,10 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
     case Token::l_paren:
         advance();
         Res = parseExpr();
-        If (!consume(Token::r_paren))
+        if (!consume(Token::r_paren))
             break;
     default: // error handling
-        If (!Res)
+        if (!Res)
             error();
         while (!Tok.isOneOf(Token::r_paren, Token::star, Token::plus, Token::minus, Token::slash, Token::eoi))
             advance();
@@ -254,7 +254,7 @@ Conditions *Parser::parseConditions()
     TokenKind tokKind = Tok.getKind();
 
     advance();
-    Right = parseExpr();
+    Right = parseCondition();
 
     if (!Right) goto _error;
 
@@ -320,21 +320,21 @@ If *Parser::parseIf()
     llvm::SmallVector<ELIf *> Elifs;
     Else *Else;
 
-    If (expect(Token::KW_If)) goto _error;
+    if (expect(Token::KW_If)) goto _error;
     advance();
 
     Cond = parseConditions();
-    If (expect(Token::colon)) goto _error;
+    if (expect(Token::colon)) goto _error;
     advance();
 
-    If (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin)) goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
     {
         Assign *a;
         a = parseAssign();
-        If (a)
+        if (a)
             Assigns.push_back(a);
         else
             goto _error;
@@ -346,17 +346,17 @@ If *Parser::parseIf()
         // advance(); It is not necessary to advance here because parseElIf() will do it
         Expr *Elif;
         Elif = parseElif();
-        If (Elif)
+        if (Elif)
             ElIfs.push_back(Elif);
         else
             goto _error;
     }
 
-    If (Tok.is(Token::KW_else))
+    if (Tok.is(Token::KW_else))
     {
         // advance(); It is not necessary to advance here because parseElse() will do it
         Else = parseElse();
-        If (!Else)
+        if (!Else)
             goto _error;
     }
 
@@ -369,21 +369,21 @@ Elif *Parser::parseElif()
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
-    If (expect(Token::KW_elif)) goto _error;
+    if (expect(Token::KW_elif)) goto _error;
     advance();
 
     Cond = parseConditions();
-    If (expect(Token::colon)) goto _error;
+    if (expect(Token::colon)) goto _error;
     advance();
 
-    If (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin)) goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
     {
         Assign *a;
         a = parseAssign();
-        If (a)
+        if (a)
             Assigns.push_back(a);
         else
             goto _error;
@@ -399,20 +399,20 @@ Else *Parser::parseElse()
 {
     llvm::SmallVector<Assign *> Assigns;
 
-    If (expect(Token::KW_else)) goto _error;
+    if (expect(Token::KW_else)) goto _error;
     advance();
 
-    If (expect(Token::colon)) goto _error;
+    if (expect(Token::colon)) goto _error;
     advance();
 
-    If (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin)) goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
     {
         Assign *a;
         a = parseAssign();
-        If (a)
+        if (a)
             Assigns.push_back(a);
         else
             goto _error;
@@ -428,21 +428,21 @@ Loop *Parser::parseLoop()
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
-    If (expect(Token::KW_Loopc)) goto _error;
+    if (expect(Token::KW_Loopc)) goto _error;
     advance();
 
     Cond = parseConditions();
-    If (expect(Token::colon)) goto _error;
+    if (expect(Token::colon)) goto _error;
     advance();
 
-    If (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin)) goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
     {
         Expr *a;
         a = parseAssign();
-        If (a)
+        if (a)
             Assigns.push_back(a);
         else
             goto _error;
