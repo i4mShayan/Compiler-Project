@@ -1,8 +1,8 @@
-add_executable (gsm
+add_executable (ARK
   GSM.cpp
   CodeGen.cpp
   Lexer.cpp
   Parser.cpp
   Sema.cpp
   )
-target_link_libraries(gsm PRIVATE ${llvm_libs})
+target_link_libraries(ARK PRIVATE ${llvm_libs})
