@@ -147,7 +147,8 @@ Assign *Parser::parseAssign()
     advance();
     E = parseExpr();
 
-    if(!E) goto _error;
+    if(!E)
+        goto _error;
 
     switch (Tok.getKind())
     {
@@ -165,8 +166,7 @@ Assign *Parser::parseAssign()
         goto _error;
         break;
     }
-
-_error: // TODO: Check this later in case of error :)
+_error:
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -192,7 +192,8 @@ Expr *Parser::parseExpr()
     advance();
     Right = parseExpr();
 
-    if (!Right) goto _error;
+    if (!Right)
+        goto _error;
 
     switch (tokKind)
     {
@@ -214,7 +215,6 @@ Expr *Parser::parseExpr()
             break;
         }
     }
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -248,7 +248,6 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         break;
     }
     return Res;
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -272,7 +271,8 @@ Conditions *Parser::parseConditions()
     advance();
     Right = parseCondition();
 
-    if (!Right) goto _error;
+    if (!Right)
+        goto _error;
 
     switch (tokKind)
     {
@@ -286,7 +286,6 @@ Conditions *Parser::parseConditions()
             break;
         }
     }
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -297,7 +296,8 @@ Condition *Parser::parseCondition()
 {
     Expr *Left = parseExpr();
 
-    if(!Left) goto _error;
+    if(!Left)
+        goto _error;
 
     Condition::Operator Op;
     switch (Tok.getKind())
@@ -328,10 +328,10 @@ Condition *Parser::parseCondition()
     advance();
     Expr *Right = parseExpr();
 
-    if(!Right) goto _error;
+    if(!Right)
+        goto _error;
 
     return new Condition(Left, Op, Right);
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -346,14 +346,17 @@ If *Parser::parseIf()
     llvm::SmallVector<Elif *> Elifs;
     Else *Else;
 
-    if (expect(Token::KW_if)) goto _error;
+    if (expect(Token::KW_if))
+        goto _error;
     advance();
 
     Cond = parseCondition();
-    if (expect(Token::colon)) goto _error;
+    if (expect(Token::colon))
+        goto _error;
     advance();
 
-    if (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin))
+        goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
@@ -400,14 +403,17 @@ Elif *Parser::parseElif()
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
-    if (expect(Token::KW_elif)) goto _error;
+    if (expect(Token::KW_elif))
+        goto _error;
     advance();
 
     Cond = parseCondition();
-    if (expect(Token::colon)) goto _error;
+    if (expect(Token::colon))
+        goto _error;
     advance();
 
-    if (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin))
+        goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
@@ -422,7 +428,6 @@ Elif *Parser::parseElif()
     advance();
 
     return new Elif(Cond, Assigns);
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -435,13 +440,16 @@ Else *Parser::parseElse()
 {
     llvm::SmallVector<Assign *> Assigns;
 
-    if (expect(Token::KW_else)) goto _error;
+    if (expect(Token::KW_else))
+        goto _error;
     advance();
 
-    if (expect(Token::colon)) goto _error;
+    if (expect(Token::colon))
+        goto _error;
     advance();
 
-    if (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin))
+        goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
@@ -456,7 +464,6 @@ Else *Parser::parseElse()
     advance();
 
     return new Else(Assigns);
-
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
@@ -469,14 +476,17 @@ Loop *Parser::parseLoop()
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
-    if (expect(Token::KW_loopc)) goto _error;
+    if (expect(Token::KW_loopc))
+        goto _error;
     advance();
 
     Cond = parseCondition();
-    if (expect(Token::colon)) goto _error;
+    if (expect(Token::colon))
+        goto _error;
     advance();
 
-    if (expect(Token::KW_begin)) goto _error;
+    if (expect(Token::KW_begin))
+        goto _error;
     advance();
 
     while (!Tok.is(Token::KW_end))
