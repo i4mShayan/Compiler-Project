@@ -175,20 +175,18 @@ void Lexer::next(Token &token)
         case '(':
             formToken(token, BufferPtr + 1, Token::l_paren);
             return;
-            break;
         case ')':
             formToken(token, BufferPtr + 1, Token::r_paren);
             return;
-            break;
-        
         case ':':
             formToken(token, BufferPtr + 1, Token::colon);
             return;
-            break;
         case ';':
             formToken(token, BufferPtr + 1, Token::semicolon);
             return;
-            break;
+        case ',':
+            formToken(token, BufferPtr + 1, Token::comma);
+            return;
         case '^':
              formToken(token, BufferPtr +1 , Token::hat);
              return ;

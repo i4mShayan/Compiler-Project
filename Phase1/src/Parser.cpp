@@ -139,6 +139,10 @@ Assign *Parser::parseAssign()
 {
     Final *F;
     Expr *E;
+
+    if (expect(Token::ident))
+        goto _error;
+
     F = (Final *)(parseFinal());
 
 
