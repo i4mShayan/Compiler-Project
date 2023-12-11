@@ -134,14 +134,14 @@ _error:
 
 Assign *Parser::parseAssign()
 {
-    llvm::StringRef var;
+    llvm::StringRef Var;
     Expr *Right;
     Assign *Ans;
     Token::TokenKind tokKind;
 
     if (expect(Token::ident))
         goto _error;
-    var.push_back(Tok.getText())
+    Var = Tok.getText()
     advance();
 
 
@@ -155,17 +155,17 @@ Assign *Parser::parseAssign()
     switch (tokKind)
     {
     case Token::equal:
-        Ans = new Assign(Left, Assign::AssOp::EqualAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::EqualAssign, Right);
     case Token::plus_equal:
-        Ans = new Assign(Left, Assign::AssOp::PlusAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::PlusAssign, Right);
     case Token::minus_equal:
-        Ans = new Assign(Left, Assign::AssOp::MinusAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::MinusAssign, Right);
     case Token::star_equal:
-        Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::MulAssign, Right);
     case Token::slash_equal:
-        Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::MulAssign, Right);
     case Token::mod_equal:
-        Ans = new Assign(Left, Assign::AssOp::ModAssign, Right);
+        Ans = new Assign(Var, Assign::AssOp::ModAssign, Right);
     default:
         goto _error;
         break;
