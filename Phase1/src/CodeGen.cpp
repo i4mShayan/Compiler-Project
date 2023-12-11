@@ -311,6 +311,35 @@ namespace
         }
       }
     }
+    virtual void visit(Elif &Node)
+    {
+      Node.getCondition()->accept(*this);
+      Value *val = V;
+      if (V)
+      {
+        for (auto I = Node.getStatements().begin(), E = Node.getStatements().end(); I != E; ++I)
+        {
+          (*I)->accept(*this);
+        }
+      }
+    }
+    virtual void visit(Else &Node)
+    {
+      Value *v;
+      do
+      {
+        Node.getCondition()->accept(*this);
+        v = V;
+
+        if (v)
+        {
+          for (auto I = Node.getStatements().begin(), E = Node.getStatements().end(); I != E; ++I)
+          {
+            (*I)->accept(*this);
+          }
+        }
+      } while (v)
+    }
   };
 }; // namespace
 
