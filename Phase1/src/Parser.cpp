@@ -342,7 +342,7 @@ If *Parser::parseIf()
 {
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
-    llvm::SmallVector<ELif *> Elifs;
+    llvm::SmallVector<Elif *> Elifs;
     Else *Else;
 
     if (expect(Token::KW_if)) goto _error;
