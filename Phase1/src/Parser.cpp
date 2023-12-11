@@ -179,7 +179,7 @@ Expr *Parser::parseExpr()
 
     Left = (Final *) parseFinal();
 
-    if (!Tok.isOneOf(Token::plus, Token::minus, Token::star,
+    if (Tok.isOneOf(Token::plus, Token::minus, Token::star,
     Token::slash, Token::mod, Token::hat))
     {
         return new Expr(Final);
@@ -259,7 +259,7 @@ Conditions *Parser::parseConditions()
 
     Left = parseCondition();
 
-    if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
+    if (Tok.isOneOf(Token::KW_and, Token::KW_or))
     {
         return new Conditions(Left);
     }
