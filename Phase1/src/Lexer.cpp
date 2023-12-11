@@ -190,7 +190,7 @@ void Lexer::next(Token &token)
             return;
             break;
         case '^':
-             formToken(token, BufferPtr +1 , Token::hat)
+             formToken(token, BufferPtr +1 , Token::hat);
              return ;
         default:
             formToken(token, BufferPtr + 1, Token::unknown);
