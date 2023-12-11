@@ -37,7 +37,7 @@ AST *Parser::parseGSM()
             else goto _error2;
             break;
         } 
-        case Token::KW_If:
+        case Token::KW_if:
         {
             If *i;
             i = parseIf();
