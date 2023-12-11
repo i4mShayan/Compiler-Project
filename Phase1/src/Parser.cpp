@@ -63,7 +63,6 @@ AST *Parser::parseGSM()
     }
     return new GSM(statements);
 _error2:
-    error();
     while (Tok.getKind() != Token::eoi)
         llvm::errs() << "GSM Error at: " << Tok.getText() << "\n";
         advance();
@@ -152,7 +151,7 @@ Assign *Parser::parseAssign()
 
     Right = parseExpr();
 
-    // if(!Right) goto _error;
+    if(!Right) goto _error;
 
     switch (tokKind)
     {
@@ -341,7 +340,7 @@ Condition *Parser::parseCondition()
         Op = Condition::Operator::GreaterEqual;
         break;
     default:
-        error();
+        goto _error;
         return nullptr;
     }
 
