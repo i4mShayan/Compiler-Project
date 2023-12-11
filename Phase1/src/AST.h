@@ -334,14 +334,14 @@ class Elif : public If
 {
     
 private:
-    Conditions *condition;
+    Condition *condition;
     llvm::SmallVector<Assign *> Assignments;
 
 public:
-    Elif(Conditions *condition, llvm::SmallVector<Assign *> Assignments) :
+    Elif(Condition *condition, llvm::SmallVector<Assign *> Assignments) :
      condition(condition), Assignments(Assignments), If() {}
 
-    Conditions *getCondition()
+    Condition *getCondition()
     {
         return condition;
     }
@@ -382,14 +382,14 @@ class Loop : public Statement
 {
 
 private:
-    Conditions *condition;
+    Condition *condition;
     llvm::SmallVector<Assign *> Assignments;
 
 public:
-    Loop(Conditions *condition, llvm::SmallVector<Assign *> Assignments) : 
+    Loop(Condition *condition, llvm::SmallVector<Assign *> Assignments) : 
     condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If) {}
 
-    Conditions *getCondition()
+    Condition *getCondition()
     {
         return condition;
     }

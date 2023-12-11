@@ -143,7 +143,7 @@ Assign *Parser::parseAssign()
     F = (Final *)(parseFinal());
 
 
-    TokenKind tokKind = Tok.getKind();
+    Token::TokenKind tokKind = Tok.getKind();
 
     advance();
     E = parseExpr();
@@ -186,7 +186,7 @@ Expr *Parser::parseExpr()
         return Expr(Final);
     }
 
-    TokenKind tokKind = Tok.getKind();
+    Token::TokenKind tokKind = Tok.getKind();
 
     advance();
     Right = parseExpr();
@@ -266,7 +266,7 @@ Conditions *Parser::parseConditions()
         return Conditions(Left);
     }
 
-    TokenKind tokKind = Tok.getKind();
+    Token::TokenKind tokKind = Tok.getKind();
 
     advance();
     Right = parseCondition();
@@ -402,7 +402,7 @@ Elif *Parser::parseElif()
     if (expect(Token::KW_elif)) goto _error;
     advance();
 
-    Cond = parseConditions();
+    Cond = parseCondition();
     if (expect(Token::colon)) goto _error;
     advance();
 
@@ -468,10 +468,10 @@ Loop *Parser::parseLoop()
     Condition *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
-    if (expect(Token::KW_Loopc)) goto _error;
+    if (expect(Token::KW_loopc)) goto _error;
     advance();
 
-    Cond = parseConditions();
+    Cond = parseCondition();
     if (expect(Token::colon)) goto _error;
     advance();
 
