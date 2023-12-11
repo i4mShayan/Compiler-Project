@@ -178,8 +178,8 @@ Expr *Parser::parseExpr()
     Expr *Right;
 
     Left = (Final *) parseFinal();
-
-    if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
+    // !Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat)
+    if (true)
     {
         return new Expr(Final);
     }
@@ -257,8 +257,8 @@ Conditions *Parser::parseConditions()
     Conditions *Right;
 
     Left = parseCondition();
-
-    if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
+    //!Tok.isOneOf(Token::KW_and, Token::KW_or)
+    if (true)
     {
         return new Conditions(Left);
     }
