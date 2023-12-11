@@ -117,6 +117,7 @@ namespace
         Node.getExpr()->accept(*this); // If the Declaration node has an expression, recursively visit the expression node
     };
   };
+
   virtual void visit(IF &Node) override
   {
     if (Node.getCondition())
@@ -140,6 +141,7 @@ namespace
     else
       HasError = true;
   };
+
   virtual void visit(ELIF &Node) override
   {
     if (Node.getCondition())
@@ -153,6 +155,7 @@ namespace
     else
       HasError = true;
   };
+
   virtual void visit(ELSE &Node) override
   {
     if (Node.getAssigns())
@@ -161,6 +164,7 @@ namespace
     else
       HasError = true;
   };
+
   virtual void visit(LoopC &Node) override
   {
     if (Node.getCondition())
@@ -174,6 +178,7 @@ namespace
     else
       HasError = true;
   };
+  
   virtual void visit(Condition &Node) override
   {
     if (Node.getLeft())
