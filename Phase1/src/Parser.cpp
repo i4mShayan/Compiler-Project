@@ -65,6 +65,7 @@ AST *Parser::parseGSM()
 _error2:
     error();
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "GSM Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -129,6 +130,7 @@ Declare *Parser::parseDec()
 _error2:
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Declration Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -184,6 +186,7 @@ Assign *Parser::parseAssign()
     return Ans;
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Assignment Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -232,6 +235,7 @@ Expr *Parser::parseExpr()
     }
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -300,6 +304,7 @@ Conditions *Parser::parseConditions()
     }
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "ConditionS Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -349,11 +354,11 @@ Condition *Parser::parseCondition()
     return new Condition(Left, Op, Right);
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Condition Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
-// If → "If" CONDITIONS ":" "begin" (ASSIGN)* "end" (ELIf)* (ELSE)?
 If *Parser::parseIf()
 {
     Condition *Cond;
@@ -408,11 +413,11 @@ If *Parser::parseIf()
 
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "If Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
-// ELIf → "elIf" CONDITIONS ":" "begin" (ASSIGN)* "end"
 Elif *Parser::parseElif()
 {
     Condition *Cond;
@@ -448,11 +453,10 @@ Elif *Parser::parseElif()
     return new Elif(Cond, Assigns);
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Elif Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
-
-// ELSE→ "else" ":" "begin" (ASSIGN)* "end"
 
 Else *Parser::parseElse()
 {
@@ -484,11 +488,11 @@ Else *Parser::parseElse()
     return new Else(Assigns);
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Else Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
-// LoopC → "Loopc" CONDITIONS ":" "begin" (ASSIGN)* "end"
 Loop *Parser::parseLoop()
 {
     Condition *Cond;
@@ -522,6 +526,7 @@ Loop *Parser::parseLoop()
 
 _error:
     while (Tok.getKind() != Token::eoi)
+        llvm::errs() << "Loopc Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
