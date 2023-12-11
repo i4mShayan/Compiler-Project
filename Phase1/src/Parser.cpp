@@ -153,25 +153,15 @@ Assign *Parser::parseAssign()
     switch (Tok.getKind())
     {
     case Token::equal:
-    {
         return new Assign(F, Assign::AssOp::EqualAssign, E);
-    }
     case Token::plus_equal:
-    {
         return new Assign(F, Assign::AssOp::PlusAssign, E);
-    }
     case Token::minus_equal:
-    {
         return new Assign(F, Assign::AssOp::MinusAssign, E);
-    }
     case Token::star_equal:
-    {
         return new Assign(F, Assign::AssOp::MulAssign, E);
-    }
     case Token::slash_equal:
-    {
         return new Assign(F, Assign::AssOp::MulAssign, E);
-    }
     default:
         goto _error;
         break;
@@ -180,15 +170,15 @@ Assign *Parser::parseAssign()
 
 Expr *Parser::parseExpr()
 {
-    Expr *Left;
+    Final *Left;
     Expr *Right;
 
-    Left = (Final *)parseFinal();
+    Left = (Final *) parseFinal();
 
     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star,
     Token::slash, Token::mod, Token::hat))
     {
-        return Left;
+        return Expr(Final);
     }
 
     TokenKind tokKind = Tok.getKind();
@@ -201,29 +191,17 @@ Expr *Parser::parseExpr()
     switch (tokKind)
     {
         case Token::plus:
-        {
             return new Expr(Left, Expr::Operator::Plus, Right);
-        }
         case Token::minus:
-        {
             return new Expr(Left, Expr::Operator::Minus, Right);
-        }
         case Token::star:
-        {
             return new Expr(Left, Expr::Operator::Mul, Right);
-        }
         case Token::slash:
-        {
             return new Expr(Left, Expr::Operator::Div, Right);
-        }
         case Token::mod:
-        {
             return new Expr(Left, Expr::Operator::Mod, Right);
-        }
         case Token::hat:
-        {
             return new Expr(Left, Expr::Operator::Pow, Right);
-        }
         default:
         {
             goto _error;
@@ -263,14 +241,14 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
 
 Conditions *Parser::parseConditions()
 {
-    Conditions *Left;
+    Condition *Left;
     Conditions *Right;
 
-    Left = (Conditions *)parseCondition();
+    Left = parseCondition();
 
     if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
     {
-        return Left;
+        return Conditions(Left);
     }
 
     TokenKind tokKind = Tok.getKind();
@@ -283,13 +261,9 @@ Conditions *Parser::parseConditions()
     switch (tokKind)
     {
         case Token::KW_and:
-        {
             return new Conditions(Left, Conditions::Operator::And, Right);
-        }
         case Token::KW_or:
-        {
             return new Conditions(Left, Conditions::Operator::Or, Right);
-        }
         default:
         {
             goto _error;

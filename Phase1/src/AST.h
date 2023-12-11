@@ -173,16 +173,18 @@ public:
     };
 
 private:
-    Expr *Left; // Left-hand side Expr
+    Final *Left; // Left-hand side Expr
     Expr *Right; // Right-hand side Expr
     Operator Op;      // Operator of the binary operation
 
 public:
-    Expr(Expr *L, Operator Op, Expr *R) : 
+    Expr(Final *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
+    Expr(Final *L) : 
+    Left(L) {}
     Expr() {}
 
-    Expr *getLeft() { return Left; }
+    Final *getLeft() { return Left; }
 
     Operator getOperator() { return Op; }
 
@@ -204,16 +206,18 @@ public:
         Or
     };
 private:
-    Conditions *Left;
+    Condition *Left;
     Operator Sign;
     Conditions *Right;
 
 public:
-    Conditions(Conditions *left, Operator sign, Conditions *right) : 
+    Conditions(Condition *left, Operator sign, Conditions *right) : 
     Left(left), Sign(sign), Right(right) {}
+    Conditions(Condition *left) : 
+    Left(left) {}
     Conditions() {}
 
-    Conditions *getLeft() { return Left; }
+    Condition *getLeft() { return Left; }
 
     Operator getSign() { return Sign; }
 
