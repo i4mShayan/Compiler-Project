@@ -127,7 +127,7 @@ public:
         MulAssign,
         DivAssign,
         ModAssign,
-        Assign
+        EqualAssign
     };
 
 private:
@@ -205,17 +205,17 @@ public:
     };
 private:
     Conditions *Left;
-    AndOr Sign;
+    Operator Sign;
     Conditions *Right;
 
 public:
-    Conditions(Conditions *left, AndOr sign, Conditions *right) : 
+    Conditions(Conditions *left, Operator sign, Conditions *right) : 
     Left(left), Sign(sign), Right(right) {}
     Conditions() {}
 
     Conditions *getLeft() { return Left; }
 
-    AndOr getSign() { return Sign; }
+    Operator getSign() { return Sign; }
 
     Conditions *getRight() { return Right; }
 

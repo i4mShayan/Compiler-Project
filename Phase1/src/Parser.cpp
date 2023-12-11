@@ -154,7 +154,7 @@ Assign *Parser::parseAssign()
     {
     case Token::equal:
     {
-        return new Assign(F, Assign::AssOp::Assign, E);
+        return new Assign(F, Assign::AssOp::EqualAssign, E);
     }
     case Token::plus_equal:
     {
