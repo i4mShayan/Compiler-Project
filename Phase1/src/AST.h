@@ -131,21 +131,21 @@ public:
     };
 
 private:
-    Final *lvalue;
+    llvm::StringRef Var;
     AssOp AssignmentOp;
-    Expr *rvalue;
+    Expr *Right;
 
 public:
-    Assign(Final *lvalue, AssOp AssignmentOp, Expr *rvalue) :
-     lvalue(lvalue), AssignmentOp(AssignmentOp), rvalue(rvalue), Statement(StatementType::Assignment) {}
-    Final *getLValue()
+    Assign(llvm::StringRef Var, AssOp AssignmentOp, Expr *Right) :
+     Var(Var), AssignmentOp(AssignmentOp), Right(Right), Statement(StatementType::Assignment) {}
+    Final *getVar()
     {
-        return lvalue;
+        return Var;
     }
 
-    Expr *getRValue()
+    Expr *getRight()
     {
-        return rvalue;
+        return Right;
     }
 
     AssOp getAssignmentOP()

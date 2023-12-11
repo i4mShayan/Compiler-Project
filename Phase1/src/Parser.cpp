@@ -134,12 +134,15 @@ _error:
 
 Assign *Parser::parseAssign()
 {
-    Final *Left;
+    llvm::StringRef Var;
     Expr *Right;
     Assign *Ans;
     Token::TokenKind tokKind;
 
-    Left = (Final *)(parseFinal());
+    if (expect(Token::ident))
+        goto _error;
+    Var.push_back(Tok.getText())
+    advance();
 
     if(!Left) goto _error;
 
@@ -249,7 +252,8 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         if (!consume(Token::r_paren))
             break;
     default: // error handling
-        error();
+        // error();
+        llvm::errs() << "Final Error: " << Tok.getText() << "\n";
         goto _error;
         break;
     }
