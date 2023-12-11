@@ -6,7 +6,7 @@
 #include "llvm/Support/raw_ostream.h"
 
 class AST; // Abstract Syntax Tree
-class GSM; // Top-level program
+class ASA; // Top-level program
 class Statement; // Top-level statement
 class Expr; // Binary operation of numbers and identifiers
 class Assign; // Assignment statement like a = 3;
@@ -25,7 +25,7 @@ public:
     // Virtual visit functions for each AST node type
     virtual void visit(AST &) {}
     virtual void visit(Expr &) {}
-    virtual void visit(GSM &) = 0;
+    virtual void visit(ASA &) = 0;
     virtual void visit(Statement &) = 0;
     virtual void visit(Declare &) = 0;//
     virtual void visit(Assign &) = 0;//
@@ -45,13 +45,13 @@ public:
     virtual void accept(ASTVisitor &V) = 0;
 };
 
-class GSM : public AST
+class ASA : public AST
 {
 private:
     llvm::SmallVector<Statement *> statements; // Stores the list of Exprs
 
 public:
-    GSM(llvm::SmallVector<Statement *> Statements) : statements(Statements) {}
+    ASA(llvm::SmallVector<Statement *> Statements) : statements(Statements) {}
     llvm::SmallVector<Statement *> getStatements() { return statements; }
 
     llvm::SmallVector<Statement *>::const_iterator begin() { return statements.begin(); }

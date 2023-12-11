@@ -3,11 +3,11 @@
 // main point is that the whole input has been consumed
 AST *Parser::parse()
 {
-    AST *Res = parseGSM();
+    AST *Res = parseASA();
     return Res;
 }
 
-AST *Parser::parseGSM()
+AST *Parser::parseASA()
 {
     llvm::SmallVector<Statement *> statements;
 
@@ -61,10 +61,10 @@ AST *Parser::parseGSM()
         }
         advance();
     }
-    return new GSM(statements);
+    return new ASA(statements);
 _error2:
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "GSM Error at: " << Tok.getText() << "\n";
+        llvm::errs() << "ASA Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }

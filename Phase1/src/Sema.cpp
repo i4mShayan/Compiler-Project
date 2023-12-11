@@ -29,8 +29,8 @@ namespace
 
     bool hasError() { return HasError; } // Function to check if an error occurred
 
-    // Visit function for GSM nodes
-    virtual void visit(GSM &Node) override
+    // Visit function for ASA nodes
+    virtual void visit(ASA &Node) override
     {
       for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
       {

@@ -40,7 +40,7 @@ class Parser
         return false;
     }
 
-    AST *parseGSM();
+    AST *parseASA();
     Declare *parseDec();
     Assign *parseAssign();
     Expr *parseExpr();

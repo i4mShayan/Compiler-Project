@@ -4,6 +4,7 @@
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/raw_ostream.h"
+#include <fstream>
 
 // Define a command-line option for specifying the input expression.
 static llvm::cl::opt<std::string>
@@ -17,8 +18,13 @@ int main(int argc, const char **argv)
     // Initialize the LLVM framework.
     llvm::InitLLVM X(argc, argv);
 
-    // Parse command-line options.
-    llvm::cl::ParseCommandLineOptions(argc, argv, "GSM - the expression compiler\n");
+    std::ifstream inFile("main.asa");
+    if (!inFile)
+    {
+        llvm::errs() << "Error: Unable to open main.ASA file\n";
+        return 1;
+    }
+    std::string Input((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
 
     // Create a lexer object and initialize it with the input expression.
     Lexer Lex(Input);
@@ -36,17 +42,17 @@ int main(int argc, const char **argv)
         return 1;
     }
 
-    // Perform semantic analysis on the AST.
-    Sema Semantic;
-    if (Semantic.semantic(Tree))
-    {
-        llvm::errs() << "Semantic errors occurred\n";
-        return 1;
-    }
+    Perform semantic analysis on the AST.
+   Sema Semantic;
+   if (Semantic.semantic(Tree))
+   {
+       llvm::errs() << "Semantic errors occurred\n";
+       return 1;
+   }
 
-    // Generate code for the AST using a code generator.
-    CodeGen CodeGenerator;
-    CodeGenerator.compile(Tree);
+   // Generate code for the AST using a code generator.
+   CodeGen CodeGenerator;
+   CodeGenerator.compile(Tree);
 
     // The program executed successfully.
     return 0;
