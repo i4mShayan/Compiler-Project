@@ -134,46 +134,47 @@ _error:
 
 Assign *Parser::parseAssign()
 {
-    llvm::SmallVector<llvm::StringRef, 8> Vars;
-    Final *F;
-    Expr *E;
-
-    F = (Final *)(parseFinal());
-
-
-    Token::TokenKind tokKind = Tok.getKind();
-
-    advance();
-    E = parseExpr();
-
-    if(!E)
-        goto _error;
-
-    if (expect(Token::semicolon)) {
-        error();
-        goto _error;
-    }
-    advance();
-
+    Final *Left;
+    Expr *Right;
     Assign *Ans;
+    Token::TokenKind tokKind;
+
+    Left = (Final *)(parseFinal());
+
+    if(!Left) goto _error;
+
+    tokKind = Tok.getKind();
+    advance();
+
+    Right = parseExpr();
+
+    if(!Right) goto _error;
+
+
     switch (tokKind)
     {
     case Token::equal:
-        Ans = new Assign(F, Assign::AssOp::EqualAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::EqualAssign, Right);
     case Token::plus_equal:
-        Ans = new Assign(F, Assign::AssOp::PlusAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::PlusAssign, Right);
     case Token::minus_equal:
-        Ans = new Assign(F, Assign::AssOp::MinusAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::MinusAssign, Right);
     case Token::star_equal:
-        Ans = new Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
     case Token::slash_equal:
-        Ans = new Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
     case Token::mod_equal:
-        Ans = new Assign(F, Assign::AssOp::ModAssign, E);
+        Ans = new Assign(Left, Assign::AssOp::ModAssign, Right);
     default:
         goto _error;
         break;
     }
+
+    if (expect(Token::semicolon)) {
+        goto _error;
+    }
+    advance();
+
     return Ans;
 _error:
     while (Tok.getKind() != Token::eoi)
@@ -185,20 +186,23 @@ Expr *Parser::parseExpr()
 {
     Final *Left;
     Expr *Right;
+    Token::TokenKind tokKind;
 
     Left = (Final *) parseFinal();
+
+    if(!Left) goto _error;
+
     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
     {
         return new Expr(Left);
     }
 
-    Token::TokenKind tokKind = Tok.getKind();
-
+    tokKind = Tok.getKind();
     advance();
+    
     Right = parseExpr();
 
-    if (!Right)
-        goto _error;
+    if (!Right) goto _error;
 
     switch (tokKind)
     {
@@ -358,6 +362,9 @@ If *Parser::parseIf()
     advance();
 
     Cond = parseCondition();
+    if(!Cond)
+        goto _error;
+
     if (expect(Token::colon))
         goto _error;
     advance();
@@ -375,11 +382,9 @@ If *Parser::parseIf()
         else
             goto _error;
     }
-    advance();
 
     while (Tok.is(Token::KW_elif))
     {
-        // advance(); It is not necessary to advance here because parseElIf() will do it
         Elif *Elif;
         Elif = parseElif();
         if (Elif)
@@ -390,7 +395,6 @@ If *Parser::parseIf()
 
     if (Tok.is(Token::KW_else))
     {
-        // advance(); It is not necessary to advance here because parseElse() will do it
         Else = parseElse();
         if (!Else)
             goto _error;
@@ -415,6 +419,9 @@ Elif *Parser::parseElif()
     advance();
 
     Cond = parseCondition();
+    if(!Cond)
+        goto _error;
+
     if (expect(Token::colon))
         goto _error;
     advance();

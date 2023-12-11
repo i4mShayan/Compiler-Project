@@ -76,7 +76,6 @@ void Lexer::next(Token &token)
     }
     else
     {
-
         switch (*BufferPtr)
         {
         case '>':
@@ -90,7 +89,6 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::gr);
                 return;
             }
-            break;
         case '<':
             if (*(BufferPtr + 1) == '=')
             {
@@ -102,7 +100,6 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::ls);
                 return;
             }
-            break;
         case '=':
             if (*(BufferPtr + 1) == '=')
             {
@@ -114,14 +111,12 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::equal);
                 return;
             }
-            break;
         case '!':
             if (*(BufferPtr + 1) == '=')
             {
                 formToken(token, BufferPtr + 2, Token::nq);
                 return;
             }
-            break;
         case '+':
             if (*(BufferPtr + 1) == '=')
             {
@@ -133,7 +128,6 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::plus);
                 return;
             }
-            break;
         case '-':
             if (*(BufferPtr + 1) == '=')
             {
@@ -145,8 +139,6 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::minus);
                 return;
             }
-            break;
-
         case '*':
             if (*(BufferPtr + 1) == '=')
             {
@@ -158,7 +150,6 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::star);
                 return;
             }
-            break;
         case '/':
             if (*(BufferPtr + 1) == '=')
             {
@@ -170,8 +161,17 @@ void Lexer::next(Token &token)
                 formToken(token, BufferPtr + 1, Token::slash);
                 return;
             }
-            break;
-
+        case '%':
+            if (*(BufferPtr + 1) == '=')
+            {
+                formToken(token, BufferPtr + 2, Token::mod_equal);
+                return;
+            }
+            else
+            {
+                formToken(token, BufferPtr + 1, Token::mod);
+                return;
+            }
         case '(':
             formToken(token, BufferPtr + 1, Token::l_paren);
             return;
