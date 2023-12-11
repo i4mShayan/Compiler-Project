@@ -167,7 +167,7 @@ Assign *Parser::parseAssign()
         break;
     }
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -214,7 +214,7 @@ Expr *Parser::parseExpr()
         }
     }
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -248,7 +248,7 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
     }
     return Res;
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -286,7 +286,7 @@ Conditions *Parser::parseConditions()
         }
     }
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -331,7 +331,7 @@ Condition *Parser::parseCondition()
 
     return new Condition(Left, Op, Right);
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -387,7 +387,7 @@ If *Parser::parseIf()
 
     return new If(Cond, Assigns, Elifs, Else);
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -422,7 +422,7 @@ Elif *Parser::parseElif()
 
     return new Elif(Cond, Assigns);
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -456,7 +456,7 @@ Else *Parser::parseElse()
 
     return new Else(Assigns);
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -491,7 +491,7 @@ Loop *Parser::parseLoop()
 
     return new Loop(Cond, Assigns);
 
-    _error: // TODO: Check this later in case of error :)
+_error: // TODO: Check this later in case of error :)
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
