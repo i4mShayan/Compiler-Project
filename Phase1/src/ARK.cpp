@@ -42,7 +42,7 @@ int main(int argc, const char **argv)
         return 1;
     }
 
-    Perform semantic analysis on the AST.
+    // Perform semantic analysis on the AST.
    Sema Semantic;
    if (Semantic.semantic(Tree))
    {

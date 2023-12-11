@@ -1,5 +1,5 @@
 add_executable (ARK
-  GSM.cpp
+  ARK.cpp
   CodeGen.cpp
   Lexer.cpp
   Parser.cpp
