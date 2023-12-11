@@ -211,8 +211,6 @@ Expr *Parser::parseExpr()
             return new Expr(Left, Expr::Operator::Mod, Right);
         case Token::hat:
             return new Expr(Left, Expr::Operator::Pow, Right);
-        case Token::mod:
-            return new Expr(Left, Expr::Operator::Mod, Right);
         default:
         {
             goto _error;
