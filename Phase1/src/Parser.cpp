@@ -134,17 +134,16 @@ _error:
 
 Assign *Parser::parseAssign()
 {
-    llvm::StringRef Var;
+    llvm::StringRef var;
     Expr *Right;
     Assign *Ans;
     Token::TokenKind tokKind;
 
     if (expect(Token::ident))
         goto _error;
-    Var.push_back(Tok.getText())
+    var.push_back(Tok.getText())
     advance();
 
-    if(!Left) goto _error;
 
     tokKind = Tok.getKind();
     advance();
