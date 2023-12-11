@@ -31,7 +31,8 @@ AST *Parser::parseGSM()
             a = parseAssign();
             if (a)
                 statements.push_back(a);
-            else goto _error2;
+            else
+                goto _error2;
             break;
         } 
         case Token::KW_if:
@@ -171,6 +172,7 @@ Assign *Parser::parseAssign()
         error();
         goto _error;
     }
+    advance();
     return Ans;
 _error:
     while (Tok.getKind() != Token::eoi)
