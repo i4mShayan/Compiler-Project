@@ -154,15 +154,15 @@ Assign *Parser::parseAssign()
     case Token::equal:
         Ans = new Assign(F, Assign::AssOp::EqualAssign, E);
     case Token::plus_equal:
-        Ans = Assign(F, Assign::AssOp::PlusAssign, E);
+        Ans = new Assign(F, Assign::AssOp::PlusAssign, E);
     case Token::minus_equal:
-        Ans = Assign(F, Assign::AssOp::MinusAssign, E);
+        Ans = new Assign(F, Assign::AssOp::MinusAssign, E);
     case Token::star_equal:
-        Ans = Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = new Assign(F, Assign::AssOp::MulAssign, E);
     case Token::slash_equal:
-        Ans = Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = new Assign(F, Assign::AssOp::MulAssign, E);
     case Token::mod_equal:
-        Ans = Assign(F, Assign::AssOp::ModAssign, E);
+        Ans = new Assign(F, Assign::AssOp::ModAssign, E);
     default:
         goto _error;
         break;
