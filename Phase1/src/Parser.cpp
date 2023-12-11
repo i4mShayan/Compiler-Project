@@ -323,7 +323,7 @@ If *Parser::parseIf()
     if (expect(Token::KW_If)) goto _error;
     advance();
 
-    Cond = parseConditions();
+    Cond = parseCondition();
     if (expect(Token::colon)) goto _error;
     advance();
 
@@ -344,10 +344,10 @@ If *Parser::parseIf()
     while (Tok.is(Token::KW_elif))
     {
         // advance(); It is not necessary to advance here because parseElIf() will do it
-        Expr *Elif;
+        Elif *Elif;
         Elif = parseElif();
         if (Elif)
-            ElIfs.push_back(Elif);
+            Elifs.push_back(Elif);
         else
             goto _error;
     }
@@ -440,7 +440,7 @@ Loop *Parser::parseLoop()
 
     while (!Tok.is(Token::KW_end))
     {
-        Expr *a;
+        Assign *a;
         a = parseAssign();
         if (a)
             Assigns.push_back(a);

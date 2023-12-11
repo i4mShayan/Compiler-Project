@@ -294,17 +294,17 @@ class If : public Statement
 {
 
 private:
-    Conditions *condition;
+    Condition *condition;
     llvm::SmallVector<Assign *> Assignments;
     llvm::SmallVector<Elif *> Elifs;
     Else *ElseBranch;
 
 public:
-    If(Conditions *condition, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
+    If(Condition *condition, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
     condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     If(): Statement(Statement::StatementType::If) {}
 
-    Conditions *getCondition()
+    Condition *getCondition()
     {
         return condition;
     }
