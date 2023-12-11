@@ -136,11 +136,9 @@ _error:
 
 Assign *Parser::parseAssign()
 {
+    llvm::SmallVector<llvm::StringRef, 8> Vars;
     Final *F;
     Expr *E;
-
-    // if (expect(Token::ident))
-    //     goto _error;
 
     F = (Final *)(parseFinal());
 
@@ -153,7 +151,7 @@ Assign *Parser::parseAssign()
     if(!E)
         goto _error;
 
-    switch (Tok.getKind())
+    switch (tokKind)
     {
     case Token::equal:
         return new Assign(F, Assign::AssOp::EqualAssign, E);
