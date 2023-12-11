@@ -29,10 +29,7 @@ AST *Parser::parseGSM()
         {
             Assign *a;
             a = parseAssign();
-            if (!Tok.is(Token::semicolon)) {
-                error();
-                goto _error2;
-            } if (a)
+            if (a)
                 statements.push_back(a);
             else goto _error2;
             break;
@@ -151,24 +148,30 @@ Assign *Parser::parseAssign()
     if(!E)
         goto _error;
 
+    Assign Ans*;
     switch (tokKind)
     {
     case Token::equal:
-        return new Assign(F, Assign::AssOp::EqualAssign, E);
+        Ans = new Assign(F, Assign::AssOp::EqualAssign, E);
     case Token::plus_equal:
-        return new Assign(F, Assign::AssOp::PlusAssign, E);
+        Ans = Assign(F, Assign::AssOp::PlusAssign, E);
     case Token::minus_equal:
-        return new Assign(F, Assign::AssOp::MinusAssign, E);
+        Ans = Assign(F, Assign::AssOp::MinusAssign, E);
     case Token::star_equal:
-        return new Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = Assign(F, Assign::AssOp::MulAssign, E);
     case Token::slash_equal:
-        return new Assign(F, Assign::AssOp::MulAssign, E);
+        Ans = Assign(F, Assign::AssOp::MulAssign, E);
     case Token::mod_equal:
-        return new Assign(F, Assign::AssOp::ModAssign, E);
+        Ans = Assign(F, Assign::AssOp::ModAssign, E);
     default:
         goto _error;
         break;
     }
+    if (!Tok.is(Token::semicolon)) {
+        error();
+        goto _error;
+    }
+    return Ans;
 _error:
     while (Tok.getKind() != Token::eoi)
         advance();
