@@ -149,6 +149,12 @@ Assign *Parser::parseAssign()
     if(!E)
         goto _error;
 
+    if (expect(Token::semicolon)) {
+        error();
+        goto _error;
+    }
+    advance();
+
     Assign *Ans;
     switch (tokKind)
     {
@@ -168,11 +174,6 @@ Assign *Parser::parseAssign()
         goto _error;
         break;
     }
-    if (!Tok.is(Token::semicolon)) {
-        error();
-        goto _error;
-    }
-    advance();
     return Ans;
 _error:
     while (Tok.getKind() != Token::eoi)
