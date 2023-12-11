@@ -63,6 +63,7 @@ AST *Parser::parseGSM()
     }
     return new GSM(statements);
 _error2:
+    error();
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
@@ -144,13 +145,12 @@ Assign *Parser::parseAssign()
     Var = Tok.getText();
     advance();
 
-
     tokKind = Tok.getKind();
     advance();
 
     Right = parseExpr();
 
-    if(!Right) goto _error;
+    // if(!Right) goto _error;
 
     switch (tokKind)
     {
@@ -158,14 +158,19 @@ Assign *Parser::parseAssign()
         Ans = new Assign(Var, Assign::AssOp::EqualAssign, Right);
     case Token::plus_equal:
         Ans = new Assign(Var, Assign::AssOp::PlusAssign, Right);
+        break;
     case Token::minus_equal:
         Ans = new Assign(Var, Assign::AssOp::MinusAssign, Right);
+        break;
     case Token::star_equal:
         Ans = new Assign(Var, Assign::AssOp::MulAssign, Right);
+        break;
     case Token::slash_equal:
         Ans = new Assign(Var, Assign::AssOp::MulAssign, Right);
+        break;
     case Token::mod_equal:
         Ans = new Assign(Var, Assign::AssOp::ModAssign, Right);
+        break;
     default:
         goto _error;
         break;
@@ -251,8 +256,7 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         if (!consume(Token::r_paren))
             break;
     default: // error handling
-        // error();
-        llvm::errs() << "Final Error: " << Tok.getText() << "\n";
+        llvm::errs() << "Expected ID/Number/Parentheses but got: " << Tok.getText() << "\n";
         goto _error;
         break;
     }
