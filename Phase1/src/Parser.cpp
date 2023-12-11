@@ -179,13 +179,11 @@ Expr *Parser::parseExpr()
 
     Left = (Final *) parseFinal();
 
-    // bool x = Tok.isOneOf(Token::plus, Token::minus, Token::star,
-    // Token::slash, Token::mod, Token::hat);
-
-    // if (x)
-    // {
-    //     return new Expr(Final);
-    // }
+    if (!Tok.isOneOf(Token::plus, Token::minus, Token::star,
+    Token::slash, Token::mod, Token::hat))
+    {
+        return new Expr(Final);
+    }
 
     Token::TokenKind tokKind = Tok.getKind();
 
@@ -261,10 +259,10 @@ Conditions *Parser::parseConditions()
 
     Left = parseCondition();
 
-    // if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
-    // {
-    //     return new Conditions(Left);
-    // }
+    if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
+    {
+        return new Conditions(Left);
+    }
 
     Token::TokenKind tokKind = Tok.getKind();
 
@@ -298,7 +296,7 @@ Condition *Parser::parseCondition()
     Expr *Right;
 
     Left = parseExpr();
-    
+
     if(!Left)
         goto _error;
 
