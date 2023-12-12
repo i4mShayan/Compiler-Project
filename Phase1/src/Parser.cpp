@@ -256,8 +256,8 @@ Expr *Parser::parseFinal() // the return type MUST be Expr
         advance();
         break;
     case Token::l_paren:
-        advance();
         Res = parseExpr();
+        advance();
         if (!consume(Token::r_paren))
             break;
     default: // error handling
