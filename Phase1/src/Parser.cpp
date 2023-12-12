@@ -143,7 +143,7 @@ Assign *Parser::parseAssign()
 
     if (expect(Token::ident))
         goto _error;
-    Left = parseFinal();
+    Left = (Final*) parseFinal();
 
     tokKind = Tok.getKind();
     advance();
