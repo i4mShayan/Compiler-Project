@@ -15,49 +15,49 @@ AST *Parser::parseARK()
     {
         switch (Tok.getKind())
         {
-        case Token::KW_int:
-        {
-            Declare *d;
-            d = parseDec();
-            if (d)
-                statements.push_back(d);
-            else
+            case Token::KW_int:
+            {
+                Declare *d;
+                d = parseDec();
+                if (d)
+                    statements.push_back(d);
+                else
+                    goto _error2;
+                break;
+            }
+            case Token::ident: 
+            {
+                Assign *a;
+                a = parseAssign();
+                if (a)
+                    statements.push_back(a);
+                else
+                    goto _error2;
+                break;
+            } 
+            case Token::KW_if:
+            {
+                If *i;
+                i = parseIf();
+                if (i)
+                    statements.push_back(i);
+                else
+                    goto _error2;
+                break;
+            }
+            case Token::KW_loopc:
+            {
+                Loop *a;
+                a = parseLoop();
+                if (a)
+                    statements.push_back(a);
+                else
+                    goto _error2;
+                break;
+            }
+            default:
                 goto _error2;
-            break;
-        }
-        case Token::ident: 
-        {
-            Assign *a;
-            a = parseAssign();
-            if (a)
-                statements.push_back(a);
-            else
-                goto _error2;
-            break;
-        } 
-        case Token::KW_if:
-        {
-            If *i;
-            i = parseIf();
-            if (i)
-                statements.push_back(i);
-            else
-                goto _error2;
-            break;
-        }
-        case Token::KW_loopc:
-        {
-            Loop *a;
-            a = parseLoop();
-            if (a)
-                statements.push_back(a);
-            else
-                goto _error2;
-            break;
-        }
-        default:
-            goto _error2;
-            break;
+                break;
         }
         advance();
     }
