@@ -346,7 +346,7 @@ public:
         return Conds;
     }
 
-    llvm::SmallVector<Assign *> getStatements()
+    llvm::SmallVector<Assign *> getAssignments()
     {
         return Assignments;
     }
