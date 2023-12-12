@@ -151,7 +151,9 @@ Assign *Parser::parseAssign()
     Token::star_equal, Token::slash_equal, Token::mod_equal))
         goto _error;
 
-    Right = parseExpr();
+    // Right = parseExpr();
+    // Right = Expr();
+    advance();
 
     if(!Right) goto _error;
 

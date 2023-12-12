@@ -191,7 +191,7 @@ void Lexer::next(Token &token)
              formToken(token, BufferPtr +1 , Token::hat);
              return ;
         default:
-            formToken(token, BufferPtr + 1, Token::unknown);
+            formToken(token, BufferPtr + 1, Token::eoi);
             break;
         }
     }
