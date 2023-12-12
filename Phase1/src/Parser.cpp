@@ -56,15 +56,15 @@ AST *Parser::parseARK()
                 break;
             }
             default:
+                llvm::errs() << "Here: " << Tok.getText() << "\n";
                 goto _error2;
                 break;
         }
-        advance();
     }
     return new ARK(statements);
 _error2:
-    while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "ARK Error at: " << Tok.getText() << "\n";
+    llvm::errs() << "ARK Error at: " << Tok.getText() << "\n";
+    while (Tok.getKind() != Token::eoi) 
         advance();
     return nullptr;
 }
@@ -78,7 +78,6 @@ Declare *Parser::parseDec()
 
     if (expect(Token::KW_int))
         goto _error;
-
     advance();
 
     if (expect(Token::ident))
@@ -124,12 +123,14 @@ Declare *Parser::parseDec()
 
     if (expect(Token::semicolon))
         goto _error;
+    advance();
 
     return new Declare(Vars, Exprs);
 _error2:
 _error:
+    llvm::errs() << "Declration Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Declration Error at: " << Tok.getText() << "\n";
+        
         advance();
     return nullptr;
 }
@@ -145,16 +146,15 @@ Assign *Parser::parseAssign()
         goto _error;
     Left = (Final*) parseFinal();
 
-    tokKind = Tok.getKind();
-    advance();
 
     if (!Tok.isOneOf(Token::equal, Token::plus_equal, Token::minus_equal,
     Token::star_equal, Token::slash_equal, Token::mod_equal))
         goto _error;
 
-    // Right = parseExpr();
-    // Right = Expr();
+    tokKind = Tok.getKind();
     advance();
+
+    Right = parseExpr();
 
     if(!Right) goto _error;
 
@@ -189,8 +189,8 @@ Assign *Parser::parseAssign()
 
     return Ans;
 _error:
+    llvm::errs() << "Assignment Error at: " << Tok.getText() << "\n";   
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Assignment Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -238,8 +238,8 @@ Expr *Parser::parseExpr()
         }
     }
 _error:
+    llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -279,20 +279,23 @@ Conditions *Parser::parseConditions()
 {
     Condition *Left;
     Conditions *Right;
+    Token::TokenKind tokKind;
 
     Left = parseCondition();
+
+    if(!Left) goto _error;
+
     if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
     {
         return new Conditions(Left);
     }
 
-    Token::TokenKind tokKind = Tok.getKind();
-
+    tokKind = Tok.getKind();
     advance();
+
     Right = parseCondition();
 
-    if (!Right)
-        goto _error;
+    if (!Right) goto _error;
 
     switch (tokKind)
     {
@@ -307,8 +310,8 @@ Conditions *Parser::parseConditions()
         }
     }
 _error:
+    llvm::errs() << "ConditionS Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "ConditionS Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -357,15 +360,15 @@ Condition *Parser::parseCondition()
 
     return new Condition(Left, Op, Right);
 _error:
+    llvm::errs() << "Condition Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Condition Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
 If *Parser::parseIf()
 {
-    Condition *Cond;
+    Conditions *Cond;
     llvm::SmallVector<Assign *> Assigns;
     llvm::SmallVector<Elif *> Elifs;
     Else *Else;
@@ -374,7 +377,7 @@ If *Parser::parseIf()
         goto _error;
     advance();
 
-    Cond = parseCondition();
+    Cond = parseConditions();
     if(!Cond)
         goto _error;
 
@@ -395,6 +398,7 @@ If *Parser::parseIf()
         else
             goto _error;
     }
+    advance();
 
     while (Tok.is(Token::KW_elif))
     {
@@ -416,22 +420,22 @@ If *Parser::parseIf()
     return new If(Cond, Assigns, Elifs, Else);
 
 _error:
+    llvm::errs() << "If Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "If Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
 Elif *Parser::parseElif()
 {
-    Condition *Cond;
+    Conditions *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
     if (expect(Token::KW_elif))
         goto _error;
     advance();
 
-    Cond = parseCondition();
+    Cond = parseConditions();
     if(!Cond)
         goto _error;
 
@@ -456,8 +460,8 @@ Elif *Parser::parseElif()
 
     return new Elif(Cond, Assigns);
 _error:
+    llvm::errs() << "Elif Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Elif Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
@@ -491,22 +495,22 @@ Else *Parser::parseElse()
 
     return new Else(Assigns);
 _error:
+    llvm::errs() << "Else Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Else Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }
 
 Loop *Parser::parseLoop()
 {
-    Condition *Cond;
+    Conditions *Cond;
     llvm::SmallVector<Assign *> Assigns;
 
     if (expect(Token::KW_loopc))
         goto _error;
     advance();
 
-    Cond = parseCondition();
+    Cond = parseConditions();
     if (expect(Token::colon))
         goto _error;
     advance();
@@ -529,8 +533,8 @@ Loop *Parser::parseLoop()
     return new Loop(Cond, Assigns);
 
 _error:
+    llvm::errs() << "Loopc Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
-        llvm::errs() << "Loopc Error at: " << Tok.getText() << "\n";
         advance();
     return nullptr;
 }

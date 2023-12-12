@@ -294,19 +294,19 @@ class If : public Statement
 {
 
 private:
-    Condition *condition;
+    Conditions *Conditions;
     llvm::SmallVector<Assign *> Assignments;
     llvm::SmallVector<Elif *> Elifs;
     Else *ElseBranch;
 
 public:
-    If(Condition *condition, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
-    condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
+    If(Conditions *Conditions, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
+    conditions(Conditions), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     If(): Statement(Statement::StatementType::If) {}
 
-    Condition *getCondition()
+    Conditions *getConditions()
     {
-        return condition;
+        return Conditions;
     }
 
     llvm::SmallVector<Assign *> getAssignments()
@@ -334,16 +334,16 @@ class Elif : public If
 {
     
 private:
-    Condition *condition;
+    Conditions *Conditions;
     llvm::SmallVector<Assign *> Assignments;
 
 public:
-    Elif(Condition *condition, llvm::SmallVector<Assign *> Assignments) :
-     condition(condition), Assignments(Assignments), If() {}
+    Elif(Conditions *Conditions, llvm::SmallVector<Assign *> Assignments) :
+     Conditions(Conditions), Assignments(Assignments), If() {}
 
-    Condition *getCondition()
+    Conditions *getConditions()
     {
-        return condition;
+        return Conditions;
     }
 
     llvm::SmallVector<Assign *> getStatements()
@@ -382,16 +382,16 @@ class Loop : public Statement
 {
 
 private:
-    Condition *condition;
+    Conditions *Conditions;
     llvm::SmallVector<Assign *> Assignments;
 
 public:
-    Loop(Condition *condition, llvm::SmallVector<Assign *> Assignments) : 
-    condition(condition), Assignments(Assignments), Statement(Statement::StatementType::If) {}
+    Loop(Conditions *Conditions, llvm::SmallVector<Assign *> Assignments) : 
+    Conditions(Conditions), Assignments(Assignments), Statement(Statement::StatementType::If) {}
 
-    Condition *getCondition()
+    Conditions *getConditions()
     {
-        return condition;
+        return Conditions;
     }
 
     llvm::SmallVector<Assign *> getAssignments()
