@@ -78,11 +78,7 @@ private:
     StatementType Type;
 
 public:
-    StatementType getKind()
-    {
-        return Type;
-    }
-
+    StatementType getKind() { return Type; }
 
     Statement(StatementType type) : Type(type) {}
     virtual void accept(ASTVisitor &V) override
@@ -99,7 +95,7 @@ private:
 
 public:
     Declare(llvm::SmallVector<llvm::StringRef, 8> vars, llvm::SmallVector<Expr *> exprs) :
-        vars(vars), exprs(exprs), Statement(Statement::StatementType::Declaration) {}
+        vars(vars), exprs(exprs), Statement(Statement::Declaration) {}
 
     llvm::SmallVector<llvm::StringRef, 8> getVars()
     {
@@ -300,7 +296,7 @@ private:
 
 public:
     If(Conditions *Conds, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs, Else *ElseBranch) : 
-    Conds(Conds), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
+    Conds(Conds), Assignments(Assignments), Statement(Statement::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     
     If() : {}
 
@@ -377,7 +373,7 @@ private:
 
 public:
     Loop(Conditions *Conds, llvm::SmallVector<Assign *> Assignments) : 
-    Conds(Conds), Assignments(Assignments), Statement(Statement::StatementType::If) {}
+    Conds(Conds), Assignments(Assignments), Statement(Statement::Loop) {}
 
     Conditions *getConds() { return Conds; }
 
