@@ -329,7 +329,7 @@ private:
 
 public:
     Elif(Conditions *Conds, llvm::SmallVector<Assign *> Assignments) :
-     Conds(Conds), Assignments(Assignments), If() {}
+     Conds(Conds), Assignments(Assignments) {}
 
     Conditions *getConds() { return Conds; }
 
@@ -352,7 +352,7 @@ private:
 
 public:
     Else(llvm::SmallVector<Assign *> Assignments) : 
-    Assignments(Assignments), If() {}
+    Assignments(Assignments) {}
 
     llvm::SmallVector<Assign *> getAssignments() { return Assignments; }
 
