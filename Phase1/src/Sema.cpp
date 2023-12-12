@@ -33,30 +33,30 @@ public:
 
 
   virtual void visit(Statement &Node) override {
-    Node *pointer = &Node;
+    Statement *pointer = &Node;
     switch (Node.getKind())
     {
       case Statement::Declaration:
       {
-        Declare *dec = dynamic_cast<Declare*> (*Node);
+        Declare *dec = dynamic_cast<Declare*> (pointer);
         dec->accept(*this);
         break;
       }
       case Statement::Assignment:
       {
-        Assign *assign = dynamic_cast<Assign*> (*Node);
+        Assign *assign = dynamic_cast<Assign*> (pointer);
         assign->accept(*this);
         break;
       }
       case Statement::If:
       {
-        If *if_condition = dynamic_cast<If*> (*Node);
+        If *if_condition = dynamic_cast<If*> (pointer);
         if_condition->accept(*this);
         break;
       }
       case Statement::Loop:
       {
-        Loop *loop = dynamic_cast<Loop*> (*Node);
+        Loop *loop = dynamic_cast<Loop*> (pointer);
         loop->accept(*this);
         break;
       }
