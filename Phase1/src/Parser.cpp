@@ -293,7 +293,7 @@ Conditions *Parser::parseConditions()
     tokKind = Tok.getKind();
     advance();
 
-    Right = parseCondition();
+    Right = parseConditions();
 
     if (!Right) goto _error;
 
