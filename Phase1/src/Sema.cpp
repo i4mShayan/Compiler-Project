@@ -39,7 +39,7 @@ namespace
     };
 
     // Visit function for final nodes
-    virtual void visit(ّFinal &Node) override
+    virtual void visit(Final &Node) override
     {
       if (Node.getKind() == Final::Ident)
       {
@@ -139,7 +139,7 @@ namespace
 
   virtual void visit(If &Node) override
   {
-    for (auto I = Node.getConditions()->begin(), E = Node.getConditions()->end(); I != E; ++I)
+    for (auto I = Node.getConds()->begin(), E = Node.getConds()->end(); I != E; ++I)
       (*I)->accept(*this);
 
     if (Node.getAssignments())
@@ -156,8 +156,8 @@ namespace
 
   virtual void visit(Elif &Node) override
   {
-    if (Node.getConditions())
-      for (auto I = Node.getConditions()->begin(), E = Node.getConditions()->end(); I != E; ++I)
+    if (Node.getConds())
+      for (auto I = Node.getConds()->begin(), E = Node.getConds()->end(); I != E; ++I)
         (*I)->accept(*this);
 
     if (Node.getAssignments())
@@ -174,8 +174,8 @@ namespace
 
   virtual void visit(Loop &Node) override
   {
-    if (Node.getConditions())
-      for (auto I = Node.getConditions()->begin(), E = Node.getConditions()->end(); I != E; ++I)
+    if (Node.getConds())
+      for (auto I = Node.getConds()->begin(), E = Node.getConds()->end(); I != E; ++I)
         (*I)->accept(*this);
 
     if (Node.getAssignments())
