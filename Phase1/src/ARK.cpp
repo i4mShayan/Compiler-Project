@@ -1,4 +1,4 @@
-#include "CodeGen.h"
+// #include "CodeGen.h"
 #include "Parser.h"
 #include "Sema.h"
 #include "llvm/Support/CommandLine.h"
@@ -50,9 +50,9 @@ int main(int argc, const char **argv)
        return 1;
    }
 
-   // Generate code for the AST using a code generator.
-   CodeGen CodeGenerator;
-   CodeGenerator.compile(Tree);
+//    // Generate code for the AST using a code generator.
+//    CodeGen CodeGenerator;
+//    CodeGenerator.compile(Tree);
 
     // The program executed successfully.
     return 0;
