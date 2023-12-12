@@ -71,10 +71,8 @@ public:
       if (!Scope.insert(*I).second)
         error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
     }
-    if (Node.getExprs()) {
-      for (auto I = Node.ExprsBegin(), E = Node.ExprsEnd(); I != E; ++I) {
-         (*I)->accept(*this);
-      }
+    for (auto I = Node.ExprsBegin(), E = Node.ExprsEnd(); I != E; ++I) {
+        (*I)->accept(*this);
     }
   };
 
