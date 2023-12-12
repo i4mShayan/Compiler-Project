@@ -316,7 +316,7 @@ public:
 
     llvm::SmallVector<Elif *> getElifs()
     {
-        return EliConditionsLofs;
+        return Elifs;
     }
 
     Else *getElseBranch()
