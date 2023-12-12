@@ -97,10 +97,10 @@ public:
     if (Node.getRight())
       right->accept(*this);
 
-    if (Node.getOperator() == BinaryOp::Operator::Div && right) {
+    if (Node.getOperator() == Expr::Div && right) {
       Final * f = (Final *)right;
 
-      if (right && f->getKind() == Factor::ValueKind::Number) {
+      if (right && f->getKind() == Final::Number) {
         int intval;
         f->getVal().getAsInteger(10, intval);
 
@@ -172,7 +172,7 @@ public:
         (*I)->accept(*this);
     }
   };
-
+};
 }
 
 bool Sema::semantic(AST *Tree) {
