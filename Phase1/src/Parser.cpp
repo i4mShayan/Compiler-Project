@@ -147,6 +147,9 @@ Assign *Parser::parseAssign()
 
     tokKind = Tok.getKind();
     advance();
+    if (!Tok.isOneOf(Token::equal, Token::plus_equal, Token::minus_equal,
+    Token::star_equal, Token::slash_equal, Token::mod_equal))
+        goto _error;
 
     Right = parseExpr();
 
