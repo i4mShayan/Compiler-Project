@@ -220,17 +220,17 @@ Expr *Parser::parseExpr()
     switch (tokKind)
     {
         case Token::plus:
-            return new Expr(Left, Expr::Operator::Plus, Right);
+            return new Expr(Left, Expr::Plus, Right);
         case Token::minus:
-            return new Expr(Left, Expr::Operator::Minus, Right);
+            return new Expr(Left, Expr::Minus, Right);
         case Token::star:
-            return new Expr(Left, Expr::Operator::Mul, Right);
+            return new Expr(Left, Expr::Mul, Right);
         case Token::slash:
-            return new Expr(Left, Expr::Operator::Div, Right);
+            return new Expr(Left, Expr::Div, Right);
         case Token::mod:
-            return new Expr(Left, Expr::Operator::Mod, Right);
+            return new Expr(Left, Expr::Mod, Right);
         case Token::hat:
-            return new Expr(Left, Expr::Operator::Pow, Right);
+            return new Expr(Left, Expr::Pow, Right);
         default:
         {
             goto _error;

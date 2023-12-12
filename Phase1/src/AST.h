@@ -27,8 +27,8 @@ public:
     virtual void visit(Expr &) {}
     virtual void visit(ARK &) = 0;
     virtual void visit(Statement &) = 0;
-    virtual void visit(Declare &) = 0;//
-    virtual void visit(Assign &) = 0;//
+    virtual void visit(Declare &) = 0;
+    virtual void visit(Assign &) = 0;
     virtual void visit(If &) = 0;
     virtual void visit(Elif &) = 0;
     virtual void visit(Else &) = 0;
@@ -111,6 +111,14 @@ public:
         return exprs;
     }
 
+    llvm::SmallVector<llvm::StringRef, 8>::const_iterator VarsBegin() { return vars.begin(); }
+
+    llvm::SmallVector<llvm::StringRef, 8>::const_iterator VarsEnd() { return vars.end(); }
+
+    llvm::SmallVector<Expr *>::const_iterator ExprsBegin() { return exprs.begin(); }
+
+    llvm::SmallVector<Expr *>::const_iterator ExprsEnd() { return exprs.end(); }
+
     virtual void accept(ASTVisitor &V) override
     {
         V.visit(*this);
@@ -138,20 +146,12 @@ private:
 public:
     Assign(Final *Left, AssOp AssignmentOp, Expr *Right) :
      Left(Left), AssignmentOp(AssignmentOp), Right(Right), Statement(StatementType::Assignment) {}
-    Final *getLeft()
-    {
-        return Left;
-    }
 
-    Expr *getRight()
-    {
-        return Right;
-    }
+    Final *getLeft() { return Left; }
 
-    AssOp getAssignmentOP()
-    {
-        return AssignmentOp;
-    }
+    Expr *getRight() { return Right; }
+
+    AssOp getAssignmentOP() { return AssignmentOp; }
 
     virtual void accept(ASTVisitor &V) override
     {
@@ -174,8 +174,8 @@ public:
 
 private:
     Final *Left; // Left-hand side Expr
-    Expr *Right; // Right-hand side Expr
     Operator Op;      // Operator of the binary operation
+    Expr *Right; // Right-hand side Expr
 
 public:
     Expr(Final *L, Operator Op, Expr *R) : 
@@ -244,8 +244,8 @@ public:
 
 private:
     Expr *Left; // Left-hand side Expr
-    Expr *Right; // Right-hand side Expr
     Operator Op;      // Operator of the boolean operation
+    Expr *Right; // Right-hand side Expr
 
 public:
     Condition(Expr *left, Operator Op, Expr *right) : 
@@ -292,7 +292,6 @@ public:
 
 class If : public Statement
 {
-
 private:
     Conditions *Conds;
     llvm::SmallVector<Assign *> Assignments;
@@ -302,37 +301,28 @@ private:
 public:
     If(Conditions *Conds, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
     Conds(Conds), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
-    If(): Statement(Statement::StatementType::If) {}
+    
+    Conditions *getConds() { return Conds; }
 
-    Conditions *getConds()
-    {
-        return Conds;
-    }
+    llvm::SmallVector<Assign *> getAssignments() { return Assignments; }
 
-    llvm::SmallVector<Assign *> getAssignments()
-    {
-        return Assignments;
-    }
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsBegin() { return Assignments.begin(); }
 
-    llvm::SmallVector<Elif *> getElifs()
-    {
-        return Elifs;
-    }
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsEnd() { return Assignments.end(); }
 
-    Else *getElseBranch()
-    {
-        return ElseBranch;
-    }
+    llvm::SmallVector<Elif *> getElifs() { return Elifs; }
 
-    virtual void accept(ASTVisitor &V) override
-    {
-        V.visit(*this);
-    }
+    llvm::SmallVector<Elif *>::const_iterator ElifsBegin() { return Elifs.begin(); }
+
+    llvm::SmallVector<Elif *>::const_iterator ElifsEnd() { return Elifs.end(); }
+
+    Else *getElse() { return ElseBranch; }
+
+    virtual void accept(ASTVisitor &V) override { V.visit(*this); }
 };
 
 class Elif : public If
 {
-    
 private:
     Conditions *Conds;
     llvm::SmallVector<Assign *> Assignments;
@@ -341,15 +331,13 @@ public:
     Elif(Conditions *Conds, llvm::SmallVector<Assign *> Assignments) :
      Conds(Conds), Assignments(Assignments), If() {}
 
-    Conditions *getConds()
-    {
-        return Conds;
-    }
+    Conditions *getConds() { return Conds; }
 
-    llvm::SmallVector<Assign *> getAssignments()
-    {
-        return Assignments;
-    }
+    llvm::SmallVector<Assign *> getAssignments() { return Assignments; }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsBegin() { return Assignments.begin(); }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsEnd() { return Assignments.end(); }
 
     virtual void accept(ASTVisitor &V) override
     {
@@ -359,7 +347,6 @@ public:
 
 class Else : public If
 {
-
 private:
     llvm::SmallVector<Assign *> Assignments;
 
@@ -367,10 +354,12 @@ public:
     Else(llvm::SmallVector<Assign *> Assignments) : 
     Assignments(Assignments), If() {}
 
-    llvm::SmallVector<Assign *> getAssignments()
-    {
-        return Assignments;
-    }
+    llvm::SmallVector<Assign *> getAssignments() { return Assignments; }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsBegin() { return Assignments.begin(); }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsEnd() { return Assignments.end(); }
+
 
 virtual void accept(ASTVisitor &V) override
     {
@@ -380,7 +369,6 @@ virtual void accept(ASTVisitor &V) override
 
 class Loop : public Statement
 {
-
 private:
     Conditions *Conds;
     llvm::SmallVector<Assign *> Assignments;
@@ -389,15 +377,13 @@ public:
     Loop(Conditions *Conds, llvm::SmallVector<Assign *> Assignments) : 
     Conds(Conds), Assignments(Assignments), Statement(Statement::StatementType::If) {}
 
-    Conditions *getConds()
-    {
-        return Conds;
-    }
+    Conditions *getConds() { return Conds; }
 
-    llvm::SmallVector<Assign *> getAssignments()
-    {
-        return Assignments;
-    }
+    llvm::SmallVector<Assign *> getAssignments() { return Assignments; }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsBegin() { return Assignments.begin(); }
+
+    llvm::SmallVector<Assign *>::const_iterator AssignmentsEnd() { return Assignments.end(); }
 
     virtual void accept(ASTVisitor &V) override
     {
