@@ -301,7 +301,7 @@ private:
 
 public:
     If(Conditions *Conditions, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs,Else *ElseBranch) : 
-    conditions(Conditions), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
+    Conditions(Conditions), Assignments(Assignments), Statement(Statement::StatementType::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     If(): Statement(Statement::StatementType::If) {}
 
     Conditions *getConditions()
@@ -316,7 +316,7 @@ public:
 
     llvm::SmallVector<Elif *> getElifs()
     {
-        return Elifs;
+        return EliConditionsLofs;
     }
 
     Else *getElseBranch()
