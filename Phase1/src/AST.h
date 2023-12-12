@@ -131,16 +131,16 @@ public:
     };
 
 private:
-    llvm::StringRef Var;
+    Final *Left;
     AssOp AssignmentOp;
     Expr *Right;
 
 public:
-    Assign(llvm::StringRef Var, AssOp AssignmentOp, Expr *Right) :
-     Var(Var), AssignmentOp(AssignmentOp), Right(Right), Statement(StatementType::Assignment) {}
-    llvm::StringRef getVar()
+    Assign(Final *Left, AssOp AssignmentOp, Expr *Right) :
+     Left(Left), AssignmentOp(AssignmentOp), Right(Right), Statement(StatementType::Assignment) {}
+    Final *getLeft()
     {
-        return Var;
+        return Left;
     }
 
     Expr *getRight()
