@@ -33,6 +33,7 @@ public:
 
 
   virtual void visit(Statement &Node) override {
+    Node *pointer = &Node;
     switch (Node.getKind())
     {
       case Statement::Declaration:
