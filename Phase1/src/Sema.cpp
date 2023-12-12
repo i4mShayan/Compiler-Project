@@ -37,25 +37,25 @@ public:
     {
       case Statement::Declaration:
       {
-        Declare *dec = dynamic_cast<Declare*> Node;
+        Declare *dec = dynamic_cast<Declare*> (Node);
         dec->accept(*this);
         break;
       }
       case Statement::Assignment:
       {
-        Assign *assign = dynamic_cast<Assign*> Node;
+        Assign *assign = dynamic_cast<Assign*> (Node);
         assign->accept(*this);
         break;
       }
       case Statement::If:
       {
-        If *if_condition = dynamic_cast<If*> Node;
+        If *if_condition = dynamic_cast<If*> (Node);
         if_condition->accept(*this);
         break;
       }
       case Statement::Loop:
       {
-        Loop *loop = dynamic_cast<Loop*> Node;
+        Loop *loop = dynamic_cast<Loop*> (Node);
         loop->accept(*this);
         break;
       }
