@@ -298,7 +298,7 @@ public:
     If(Conditions *Conds, llvm::SmallVector<Assign *> Assignments,llvm::SmallVector<Elif *> Elifs, Else *ElseBranch) : 
     Conds(Conds), Assignments(Assignments), Statement(Statement::If), Elifs(Elifs), ElseBranch(ElseBranch) {}
     
-    If() : {}
+    If() : Statement(Statement::If) {}
 
     Conditions *getConds() { return Conds; }
 
