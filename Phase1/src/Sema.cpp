@@ -27,43 +27,7 @@ public:
   virtual void visit(ARK &Node) override {
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
-      // (*I)->accept(*this); // Visit each child node
-      Statement *pointer = *I;
-      llvm::errs() << "Statement! \n";
-      llvm::errs() << (*I)->getKind() << "\n";
-      switch ((*I)->getKind())
-      {
-        case Statement::Declaration:
-        {
-          llvm::errs() << "Declare! \n";
-          Declare *dec = static_cast<Declare*> (pointer);
-          dec->accept(*this);
-          break;
-        }
-        case Statement::Assignment:
-        {
-          llvm::errs() << "Assign! \n";
-          Assign *assign = static_cast<Assign*> (pointer);
-          assign->accept(*this);
-          break;
-        }
-        case Statement::If:
-        {
-          llvm::errs() << "If! \n";
-          If *if_condition = static_cast<If*> (pointer);
-          if_condition->accept(*this);
-          break;
-        }
-        case Statement::Loop:
-        {
-          llvm::errs() << "Loop! \n";
-          Loop *loop = static_cast<Loop*> (pointer);
-          loop->accept(*this);
-          break;
-        }
-        default:
-          break;
-      }
+      (*I)->accept(*this); // Visit each child node
     }
   };
 
@@ -71,33 +35,29 @@ public:
   virtual void visit(Statement &Node) override {
     Statement *pointer = &Node;
     llvm::errs() << "Statement! \n";
-    llvm::errs() << Node.getKind() << "\n";
+    llvm::errs() << Node.getKind << "\n";
     switch (Node.getKind())
     {
       case Statement::Declaration:
       {
-        llvm::errs() << "Declare! \n";
         Declare *dec = static_cast<Declare*> (pointer);
         dec->accept(*this);
         break;
       }
       case Statement::Assignment:
       {
-        llvm::errs() << "Assign! \n";
         Assign *assign = static_cast<Assign*> (pointer);
         assign->accept(*this);
         break;
       }
       case Statement::If:
       {
-        llvm::errs() << "If! \n";
         If *if_condition = static_cast<If*> (pointer);
         if_condition->accept(*this);
         break;
       }
       case Statement::Loop:
       {
-        llvm::errs() << "Loop! \n";
         Loop *loop = static_cast<Loop*> (pointer);
         loop->accept(*this);
         break;
@@ -109,6 +69,7 @@ public:
 
 
   virtual void visit(Declare &Node) override {
+    llvm::errs() << "Declare! \n";
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
         error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
@@ -120,6 +81,7 @@ public:
 
 
   virtual void visit(Assign &Node) override {
+    llvm::errs() << "Assign! \n";
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
@@ -133,6 +95,7 @@ public:
 
 
   virtual void visit(Expr &Node) override {
+    llvm::errs() << "Expr! \n";
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
@@ -159,6 +122,7 @@ public:
 
 
   virtual void visit(Conditions &Node) override {
+    llvm::errs() << "ConditionS! \n";
     Condition *left = Node.getLeft();
     Conditions *right = Node.getRight();
 
@@ -169,6 +133,7 @@ public:
 
 
   virtual void visit(Condition &Node) override {
+    llvm::errs() << "Condition! \n";
     Expr *left = Node.getLeft();
     Expr *right = Node.getRight();
 
@@ -178,6 +143,7 @@ public:
 
 
   virtual void visit(Final &Node) override {
+    llvm::errs() << "Final! \n";
     if (Node.getKind() == Final::Ident) {
       // Check if identifier is in the scope
       if (Scope.find(Node.getVal()) == Scope.end())
@@ -187,6 +153,7 @@ public:
 
 
   virtual void visit(If &Node) override {
+    llvm::errs() << "If! \n";
     Conditions *conds = Node.getConds();
     Else *ElseBranch = Node.getElse();
 
@@ -205,6 +172,7 @@ public:
 
 
   virtual void visit(Elif &Node) override {
+    llvm::errs() << "Elif! \n";
     Conditions *conds = Node.getConds();
 
     conds->accept(*this);
@@ -216,6 +184,7 @@ public:
 
 
   virtual void visit(Else &Node) override {
+    llvm::errs() << "Else! \n";
     for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
@@ -223,6 +192,7 @@ public:
 
 
   virtual void visit(Loop &Node) override {
+    llvm::errs() << "Loop! \n";
     Conditions *conds = Node.getConds();
 
     conds->accept(*this);
