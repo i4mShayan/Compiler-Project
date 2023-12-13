@@ -27,7 +27,6 @@ public:
   virtual void visit(ARK &Node) override {
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
-      if((I+1) == E) break;
       (*I)->accept(*this); // Visit each child node
       llvm::errs() << "------------------\n";
     }
