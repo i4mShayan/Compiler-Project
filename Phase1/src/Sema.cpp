@@ -169,7 +169,7 @@ public:
         (*I)->accept(*this);
     }
 
-    // if(ElseBranch) ElseBranch->accept(*this);
+    if(ElseBranch) ElseBranch->accept(*this);
 
     llvm::errs() << "Here" << "\n";
   };
