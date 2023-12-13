@@ -33,40 +33,40 @@ public:
   };
 
 
-  // virtual void visit(Statement &Node) override {
-  //   Statement *pointer = &Node;
-  //   llvm::errs() << "Statement! \n";
-  //   llvm::errs() << Node.getKind() << "\n";
-  //   switch (Node.getKind())
-  //   {
-  //     case Statement::Declaration:
-  //     {
-  //       Declare *dec = static_cast<Declare*> (pointer);
-  //       dec->accept(*this);
-  //       break;
-  //     }
-  //     case Statement::Assignment:
-  //     {
-  //       Assign *assign = static_cast<Assign*> (pointer);
-  //       assign->accept(*this);
-  //       break;
-  //     }
-  //     case Statement::If:
-  //     {
-  //       If *if_condition = static_cast<If*> (pointer);
-  //       if_condition->accept(*this);
-  //       break;
-  //     }
-  //     case Statement::Loop:
-  //     {
-  //       Loop *loop = static_cast<Loop*> (pointer);
-  //       loop->accept(*this);
-  //       break;
-  //     }
-  //     default:
-  //       break;
-  //   }
-  // };
+  virtual void visit(Statement &Node) override {
+    // Statement *pointer = &Node;
+    // llvm::errs() << "Statement! \n";
+    // llvm::errs() << Node.getKind() << "\n";
+    // switch (Node.getKind())
+    // {
+    //   case Statement::Declaration:
+    //   {
+    //     Declare *dec = static_cast<Declare*> (pointer);
+    //     dec->accept(*this);
+    //     break;
+    //   }
+    //   case Statement::Assignment:
+    //   {
+    //     Assign *assign = static_cast<Assign*> (pointer);
+    //     assign->accept(*this);
+    //     break;
+    //   }
+    //   case Statement::If:
+    //   {
+    //     If *if_condition = static_cast<If*> (pointer);
+    //     if_condition->accept(*this);
+    //     break;
+    //   }
+    //   case Statement::Loop:
+    //   {
+    //     Loop *loop = static_cast<Loop*> (pointer);
+    //     loop->accept(*this);
+    //     break;
+    //   }
+    //   default:
+    //     break;
+    // }
+  };
 
 
   virtual void visit(Declare &Node) override {
