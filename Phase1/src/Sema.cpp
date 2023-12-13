@@ -35,7 +35,7 @@ public:
   virtual void visit(Statement &Node) override {
     Statement *pointer = &Node;
     llvm::errs() << "Statement! \n";
-    llvm::errs() << Node.getKind << "\n";
+    llvm::errs() << Node.getKind() << "\n";
     switch (Node.getKind())
     {
       case Statement::Declaration:
