@@ -82,8 +82,8 @@ public:
 
     left->accept(*this);
 
-    if (Scope.find(left->getVal()) == Scope.end())
-      error(Not, left->getVal()); // Variable Not Found
+    // if (Scope.find(left->getVal()) == Scope.end())
+    //   error(Not, left->getVal()); // Variable Not Found
 
     Node.getRight()->accept(*this);
   };
