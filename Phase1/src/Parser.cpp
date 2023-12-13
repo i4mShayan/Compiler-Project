@@ -370,7 +370,7 @@ If *Parser::parseIf()
     Conditions *Cond;
     llvm::SmallVector<Assign *> Assigns;
     llvm::SmallVector<Elif *> Elifs;
-    Else *ElseBranch;
+    Else *ElseBranch = nullptr;
 
     if (expect(Token::KW_if))
         goto _error;
