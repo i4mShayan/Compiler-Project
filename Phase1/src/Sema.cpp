@@ -28,6 +28,7 @@ public:
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
       (*I)->accept(*this); // Visit each child node
+      llvm::errs() << "------------------\n";
     }
   };
 
