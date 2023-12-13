@@ -10,13 +10,18 @@ class InputCheck : public ASTVisitor {
 
   enum ErrorType { Twice, Not }; // Enum to represent error types: Twice - variable declared twice, Not - variable not declared
 
-  void error(ErrorType ET, llvm::StringRef V) {
-    // Function to report errors
+  void declare_error(ErrorType ET, llvm::StringRef V) {
     llvm::errs() << "Variable " << V << " is "
                  << (ET == Twice ? "already" : "not")
                  << " declared\n";
-    HasError = true; // Set error flag to true
+    HasError = true;
   }
+
+  void divide_by_zero_error() {
+    llvm::errs() << "Division by zero is not allowed." << "\n";
+    HasError = true;
+  }
+
 
 public:
   InputCheck() : HasError(false) {} // Constructor
@@ -28,7 +33,6 @@ public:
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
       (*I)->accept(*this); // Visit each child node
-      llvm::errs() << "------------------\n";
     }
   };
 
@@ -70,7 +74,6 @@ public:
 
 
   virtual void visit(Declare &Node) override {
-    llvm::errs() << "Declare! \n";
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
         error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
@@ -82,32 +85,26 @@ public:
 
 
   virtual void visit(Assign &Node) override {
-    llvm::errs() << "Assign! \n";
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
     left->accept(*this);
 
     right->accept(*this);
-    llvm::errs() << Node.getAssignmentOP() << "\n";
 
-    if (Node.getAssignmentOP() == Assign::DivAssign) {
+    if (Node.getAssignmentOP() == Assign::DivAssign || Node.getAssignmentOP() == Assign::ModAssign) {
       Final * f = (Final *)right;
       if (f->getKind() == Final::Number) {
         int intval;
         f->getVal().getAsInteger(10, intval);
 
-        if (intval == 0) {
-          llvm::errs() << "Division by zero is not allowed." << "\n";
-          HasError = true;
-        }
+        if (intval == 0) divide_by_zero_error()
       }
     }
   };
 
 
   virtual void visit(Expr &Node) override {
-    llvm::errs() << "Expr! \n";
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
@@ -116,17 +113,14 @@ public:
     if (right) {
       right->accept(*this);
 
-      if (Node.getOperator() == Expr::Div && right) {
+      if (Node.getOperator() == Expr::Div || Node.getOperator() == Expr::Mod || && right) {
         Final * f = (Final *)right;
 
         if (right && f->getKind() == Final::Number) {
           int intval;
           f->getVal().getAsInteger(10, intval);
 
-          if (intval == 0) {
-            llvm::errs() << "Division by zero is not allowed." << "\n";
-            HasError = true;
-          }
+          if (intval == 0) divide_by_zero_error()
         }
       }
     }
@@ -134,7 +128,6 @@ public:
 
 
   virtual void visit(Conditions &Node) override {
-    llvm::errs() << "ConditionS! \n";
     Condition *left = Node.getLeft();
     Conditions *right = Node.getRight();
 
@@ -145,7 +138,6 @@ public:
 
 
   virtual void visit(Condition &Node) override {
-    llvm::errs() << "Condition! \n";
     Expr *left = Node.getLeft();
     Expr *right = Node.getRight();
 
@@ -155,17 +147,15 @@ public:
 
 
   virtual void visit(Final &Node) override {
-    llvm::errs() << "Final! \n";
     if (Node.getKind() == Final::Ident) {
       // Check if identifier is in the scope
       if (Scope.find(Node.getVal()) == Scope.end())
-        error(Not, Node.getVal()); // Variable Not Found
+        declare_error(Not, Node.getVal()); // Variable Not Found
     }
   };
 
 
   virtual void visit(If &Node) override {
-    llvm::errs() << "If! \n";
     Conditions *conds = Node.getConds();
     Else *ElseBranch = Node.getElse();
 
@@ -184,7 +174,6 @@ public:
 
 
   virtual void visit(Elif &Node) override {
-    llvm::errs() << "Elif! \n";
     Conditions *conds = Node.getConds();
 
     conds->accept(*this);
@@ -196,7 +185,6 @@ public:
 
 
   virtual void visit(Else &Node) override {
-    llvm::errs() << "Else! \n";
     for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
@@ -204,7 +192,6 @@ public:
 
 
   virtual void visit(Loop &Node) override {
-    llvm::errs() << "Loop! \n";
     Conditions *conds = Node.getConds();
 
     conds->accept(*this);
