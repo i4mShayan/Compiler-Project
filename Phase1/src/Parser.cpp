@@ -412,7 +412,7 @@ If *Parser::parseIf()
     if (Tok.is(Token::KW_else))
     {
         ElseBranch = parseElse();
-        else:
+        if(!ElseBranch)
             goto _error;
     }
 
