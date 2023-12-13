@@ -88,13 +88,11 @@ public:
 
     left->accept(*this);
 
-    // if (Scope.find(left->getVal()) == Scope.end())
-    //   error(Not, left->getVal()); // Variable Not Found
-
     right->accept(*this);
+    llvm::errs() << "Here" << "\n";
+
     if (Node.getAssignmentOP() == Assign::DivAssign) {
       Final * f = (Final *)right;
-      llvm::errs() << "Here" << "\n";
       if (f->getKind() == Final::Number) {
         int intval;
         f->getVal().getAsInteger(10, intval);
