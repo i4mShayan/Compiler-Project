@@ -27,7 +27,6 @@ public:
   virtual void visit(ARK &Node) override {
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
-        llvm::errs() << "Statement! \n";
       (*I)->accept(*this); // Visit each child node
     }
   };
@@ -35,6 +34,8 @@ public:
 
   virtual void visit(Statement &Node) override {
     Statement *pointer = &Node;
+    llvm::errs() << "Statement! \n";
+    llvm::errs() << Node.getKind() << "\n";
     switch (Node.getKind())
     {
       case Statement::Declaration:
