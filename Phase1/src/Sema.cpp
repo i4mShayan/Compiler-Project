@@ -98,7 +98,7 @@ public:
         int intval;
         f->getVal().getAsInteger(10, intval);
 
-        if (intval == 0) divide_by_zero_error()
+        if (intval == 0) divide_by_zero_error();
       }
     }
   };
@@ -120,7 +120,7 @@ public:
           int intval;
           f->getVal().getAsInteger(10, intval);
 
-          if (intval == 0) divide_by_zero_error()
+          if (intval == 0) divide_by_zero_error();
         }
       }
     }
