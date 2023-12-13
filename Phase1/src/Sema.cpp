@@ -165,7 +165,7 @@ public:
     for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
-
+    llvm::errs() << "Here" << "\n";
     for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
