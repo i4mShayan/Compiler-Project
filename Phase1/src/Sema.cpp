@@ -67,11 +67,11 @@ public:
 
 
   virtual void visit(Declare &Node) override {
-    for (auto I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
+    for (auto llvm::SmallVector<llvm::StringRef, 8>::const_iterator = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
         error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
     }
-    for (auto I = Node.ExprsBegin(), E = Node.ExprsEnd(); I != E; ++I) {
+    for (llvm::SmallVector<Expr *>::const_iterator  I = Node.ExprsBegin(), E = Node.ExprsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
   };
@@ -79,20 +79,23 @@ public:
 
   virtual void visit(Assign &Node) override {
     Final *left = Node.getLeft();
+    Expr *right = Node.getRight();
 
     left->accept(*this);
 
     // if (Scope.find(left->getVal()) == Scope.end())
     //   error(Not, left->getVal()); // Variable Not Found
 
-    Node.getRight()->accept(*this);
+    right->accept(*this);
   };
 
 
   virtual void visit(Expr &Node) override {
-    Node.getLeft()->accept(*this);
-
+    Final *left = Node.getLeft();
     Expr *right = Node.getRight();
+
+    left->accept(*this);
+
     if (right) {
       right->accept(*this);
 
@@ -114,14 +117,21 @@ public:
 
 
   virtual void visit(Conditions &Node) override {
-    Node.getLeft()->accept(*this);
-    if(Node.getRight()) Node.getRight()->accept(*this);
+    Condition *left = Node.getLeft();
+    Conditions *right = Node.getRight();
+
+    left->accept(*this);
+
+    if(right) right->accept(*this);
   };
 
 
   virtual void visit(Condition &Node) override {
-    Node.getLeft()->accept(*this);
-    Node.getRight()->accept(*this);
+    Expr *left = Node.getLeft();
+    Expr *right = Node.getRight();
+
+    left->accept(*this);
+    right->accept(*this);
   };
 
 
@@ -135,40 +145,47 @@ public:
 
 
   virtual void visit(If &Node) override {
-    Node.getConds()->accept(*this);
+    Conditions *conds = Node.getConds();
+    Else *ElseBranch = Node.getElse();
 
-    for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
+    conds->accept(*this);
+
+    for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
 
-    for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
+    for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
 
-    if(Node.getElse()) Node.getElse()->accept(*this);
+    if(ElseBranch) ElseBranch->accept(*this);
   };
 
 
   virtual void visit(Elif &Node) override {
-    Node.getConds()->accept(*this);
+    Conditions *conds = Node.getConds();
 
-    for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
+    conds->accept(*this);
+
+    for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
   };
 
 
   virtual void visit(Else &Node) override {
-    for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
+    for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
   };
 
 
   virtual void visit(Loop &Node) override {
-    Node.getConds()->accept(*this);
+    Conditions *conds = Node.getConds();
 
-    for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
+    conds->accept(*this);
+
+    for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
   };
