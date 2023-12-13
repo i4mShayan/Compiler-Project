@@ -89,7 +89,7 @@ public:
     left->accept(*this);
 
     right->accept(*this);
-    llvm::errs() << "Here" << "\n";
+    llvm::errs() << Node.getAssignmentOP() << "\n";
 
     if (Node.getAssignmentOP() == Assign::DivAssign) {
       Final * f = (Final *)right;
