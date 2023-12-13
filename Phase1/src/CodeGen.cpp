@@ -238,53 +238,56 @@ namespace
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getOperator())
       {
-      case Expr::Plus:
-      {
-        V = Builder.CreateNSWAdd(Left, Right);
-        break;
-      }
-      case Expr::Minus:
-      {
-        V = Builder.CreateNSWSub(Left, Right);
-        break;
-      }
-      case Expr::Mul:
-      {
-        V = Builder.CreateNSWMul(Left, Right);
-        break;
-      }
-      case Expr::Div:
-      {
-        V = Builder.CreateSDiv(Left, Right);
-        break;
-      }
-      case Expr::Pow:
-      {
-        Final *right_final = Right.getLeft();
-        int intval;
-        intval = right_final->getVal().getAsInteger(10, intval);
-        if (intval == 0)
+        case Expr::Plus:
         {
-          V = ConstantInt::get(Int32Ty, 1, true);
+          V = Builder.CreateNSWAdd(Left, Right);
+          break;
         }
-        else
+        case Expr::Minus:
         {
-          Final *temp = new Final(Left.getKind(), Left.getVal());
-          for (int i = 1; i < intval; i++)
+          V = Builder.CreateNSWSub(Left, Right);
+          break;
+        }
+        case Expr::Mul:
+        {
+          V = Builder.CreateNSWMul(Left, Right);
+          break;
+        }
+        case Expr::Div:
+        {
+          V = Builder.CreateSDiv(Left, Right);
+          break;
+        }
+        case Expr::Pow:
+        {
+          Final *right_final = Node.getRight().getLeft();
+          int intval;
+          intval = right_final->getVal().getAsInteger(10, intval);
+          if (intval == 0)
           {
-            Left = Builder.CreateNSWMul(Left, temp);
+            V = ConstantInt::get(Int32Ty, 1, true);
           }
-          V = Left;
+          else
+          {
+            Final *temp_left_final = new Final(Node.getLeft().getKind(), Node.getLeft().getVal());
+            temp_left_final->accept(*this);
+            Value *temp_value = V;
+            for (int i = 1; i < intval; i++)
+            {
+              Left = Builder.CreateNSWMul(Left, temp_value);
+            }
+            V = Left;
+          }
+          break;
         }
-        break;
-      }
-      case Expr::Mod:
-      {
-        // x % y = x - (x / y) * y
-        Value *divison = Builder.CreateSDiv(Left, Right);
-        Value *multiply = Builder.CreateNSWMul(div, Right);
-        V = Builder.CreateNSWSub(Left, mul);
-        break;
+        case Expr::Mod:
+        {
+          // x % y = x - (x / y) * y
+          Value *divison = Builder.CreateSDiv(Left, Right);
+          Value *multiply = Builder.CreateNSWMul(division, Right);
+          V = Builder.CreateNSWSub(Left, multiply);
+          break;
+        }
       }
     };
 
@@ -319,7 +322,7 @@ namespace
       }
     };
 
-    virtula void visit(Condition &Node) override
+    virtual void visit(Condition &Node) override
     {
       Node.getLeft()->accept(*this);
       Value *Left = V;
@@ -331,24 +334,24 @@ namespace
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getSign())
       {
-      case Condition::LessEqual:
-        V = Builder.CreateICmpSLE(Left, Right);
-        break;
-      case Condition::LessThan:
-        V = Builder.CreateICmpSLT(Left, Right);
-        break;
-      case Condition::GreaterThan:
-        V = Builder.CreateICmpSGT(Left, Right);
-        break;
-      case Condition::GreaterEqual:
-        V = Builder.CreateICmpSGE(Left, Right);
-        break;
-      case Condition::EqualEqual:
-        V = Builder.CreateICmpEQ(Left, Right);
-        break;
-      case Condition::NotEqual:
-        V = Builder.CreateICmpNE(Left, Right);
-        break;
+        case Condition::LessEqual:
+          V = Builder.CreateICmpSLE(Left, Right);
+          break;
+        case Condition::LessThan:
+          V = Builder.CreateICmpSLT(Left, Right);
+          break;
+        case Condition::GreaterThan:
+          V = Builder.CreateICmpSGT(Left, Right);
+          break;
+        case Condition::GreaterEqual:
+          V = Builder.CreateICmpSGE(Left, Right);
+          break;
+        case Condition::EqualEqual:
+          V = Builder.CreateICmpEQ(Left, Right);
+          break;
+        case Condition::NotEqual:
+          V = Builder.CreateICmpNE(Left, Right);
+          break;
       }
     };
 
