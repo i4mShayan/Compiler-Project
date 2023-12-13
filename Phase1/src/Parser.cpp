@@ -370,7 +370,7 @@ If *Parser::parseIf()
     Conditions *Cond;
     llvm::SmallVector<Assign *> Assigns;
     llvm::SmallVector<Elif *> Elifs;
-    Else *Else;
+    Else *ElseBranch = nullptr;
 
     if (expect(Token::KW_if))
         goto _error;
@@ -411,12 +411,12 @@ If *Parser::parseIf()
 
     if (Tok.is(Token::KW_else))
     {
-        Else = parseElse();
-        if (!Else)
+        ElseBranch = parseElse();
+        if(!ElseBranch)
             goto _error;
     }
 
-    return new If(Cond, Assigns, Elifs, Else);
+    return new If(Cond, Assigns, Elifs, ElseBranch);
 
 _error:
     llvm::errs() << "If Error at: " << Tok.getText() << "\n";
