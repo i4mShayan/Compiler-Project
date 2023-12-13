@@ -98,7 +98,8 @@ namespace
 
       switch (Node.getAssignmentOP())
       {
-      case Assign::AssOP::EqualAssign:
+      case Assign::EqualAssign:
+      {
         // Create a store instruction to assign the value to the variable.
         Builder.CreateStore(val, nameMap[varName]);
 
@@ -112,7 +113,9 @@ namespace
         CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
         break;
-      case Assign::AssOP::PlusAssign :
+      }
+      case Assign::PlusAssign :
+      {
         // Create a load instruction to get the current value of the variable.
         Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -132,7 +135,9 @@ namespace
         CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
 
         break;
-      case Assign::AssOP::MinusAssign:
+      }
+      case Assign::MinusAssign:
+      {
         // Create a load instruction to get the current value of the variable.
         Value *oldVal2 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -152,7 +157,9 @@ namespace
         CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy3, CalcWriteFn3, {newVal2});
 
         break;
-      case Assign::AssOP::MulAssign:
+      }
+      case Assign::MulAssign:
+        {
         // Create a load instruction to get the current value of the variable.
         Value *oldVal3 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -172,7 +179,9 @@ namespace
         CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy4, CalcWriteFn4, {newVal3});
 
         break;
-      case Assign::AssOP::DivAssign:
+        }
+      case Assign::DivAssign:
+      {
         // Create a load instruction to get the current value of the variable.
         Value *oldVal4 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
         // Create a div instruction to divide the old value and the new value.
@@ -186,6 +195,7 @@ namespace
         // Create a call instruction to invoke the "gsm_write" function with the new value.
         CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
         break;
+      }
       }
     };
 
