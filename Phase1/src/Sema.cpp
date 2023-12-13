@@ -25,7 +25,7 @@ public:
 
   // Visit function for GSM nodes
   virtual void visit(ARK &Node) override {
-    for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
+    for (Statement* I = Node.begin(), E = Node.end(); I != E; ++I)
     {
       (*I)->accept(*this); // Visit each child node
     }
@@ -39,25 +39,25 @@ public:
       case Statement::Declaration:
       {
         Declare *dec = static_cast<Declare*> (pointer);
-        dec->accept(*this);
+        (dec*)->accept(*this);
         break;
       }
       case Statement::Assignment:
       {
         Assign *assign = static_cast<Assign*> (pointer);
-        assign->accept(*this);
+        (assign*)->accept(*this);
         break;
       }
       case Statement::If:
       {
         If *if_condition = static_cast<If*> (pointer);
-        if_condition->accept(*this);
+        (if_condition*)->accept(*this);
         break;
       }
       case Statement::Loop:
       {
         Loop *loop = static_cast<Loop*> (pointer);
-        loop->accept(*this);
+        (loop*)->accept(*this);
         break;
       }
       default:
