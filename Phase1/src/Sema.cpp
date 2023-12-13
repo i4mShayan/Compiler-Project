@@ -76,7 +76,7 @@ public:
   virtual void visit(Declare &Node) override {
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
-        error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
+        declare_error(Twice, *I); // If the insertion fails (element already exists in Scope), report a "Twice" error
     }
     for (llvm::SmallVector<Expr *>::const_iterator I = Node.ExprsBegin(), E = Node.ExprsEnd(); I != E; ++I) {
         (*I)->accept(*this);
