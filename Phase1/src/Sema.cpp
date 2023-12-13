@@ -113,7 +113,7 @@ public:
     if (right) {
       right->accept(*this);
 
-      if (Node.getOperator() == Expr::Div || Node.getOperator() == Expr::Mod || && right) {
+      if (Node.getOperator() == Expr::Div || Node.getOperator() == Expr::Mod && right) {
         Final * f = (Final *)right;
 
         if (right && f->getKind() == Final::Number) {
