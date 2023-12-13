@@ -98,7 +98,7 @@ namespace
 
       switch (Node.getAssignmentOP())
       {
-      case Assign::EqualAssign:
+      case Assign::AssOP::EqualAssign:
         // Create a store instruction to assign the value to the variable.
         Builder.CreateStore(val, nameMap[varName]);
 
@@ -112,7 +112,7 @@ namespace
         CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
         break;
-      case Assign::PlusAssign:
+      case Assign::AssOP::PlusAssign :
         // Create a load instruction to get the current value of the variable.
         Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -132,7 +132,7 @@ namespace
         CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
 
         break;
-      case Assign::MinusAssign:
+      case Assign::AssOP::MinusAssign:
         // Create a load instruction to get the current value of the variable.
         Value *oldVal2 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -152,7 +152,7 @@ namespace
         CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy3, CalcWriteFn3, {newVal2});
 
         break;
-      case Assign::MulAssign:
+      case Assign::AssOP::MulAssign:
         // Create a load instruction to get the current value of the variable.
         Value *oldVal3 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
@@ -172,7 +172,7 @@ namespace
         CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy4, CalcWriteFn4, {newVal3});
 
         break;
-      case Assign::DivAssign:
+      case Assign::AssOP::DivAssign:
         // Create a load instruction to get the current value of the variable.
         Value *oldVal4 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
         // Create a div instruction to divide the old value and the new value.
