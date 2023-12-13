@@ -229,28 +229,51 @@ namespace
       switch (Node.getOperator())
       {
       case Expr::Plus:
+      {
         V = Builder.CreateNSWAdd(Left, Right);
         break;
+      }
       case Expr::Minus:
+      {
         V = Builder.CreateNSWSub(Left, Right);
         break;
+      }
       case Expr::Mul:
+      {
         V = Builder.CreateNSWMul(Left, Right);
         break;
+      }
       case Expr::Div:
+      {
         V = Builder.CreateSDiv(Left, Right);
         break;
+      }
       case Expr::Pow:
-        // Create a function type for the "pow" function.
-        FunctionType *PowFnTy = FunctionType::get(Int32Ty, {Int32Ty, Int32Ty}, false);
-
-        // Create a function declaration for the "pow" function.
-        Function *PowFn = Function::Create(PowFnTy, GlobalValue::ExternalLinkage, "pow", M);
-
-        // Create a call instruction to invoke the "pow" function with the left and right values.
-        CallInst *Call = Builder.CreateCall(PowFnTy, PowFn, {Left, Right});
-
-        V = Call;
+      {
+        Final *right_final = static_cast<Final*>(Right);
+        int intval;
+        intval = right_final->getVal().getAsInteger(10, intval);
+        if (intval == 0)
+        {
+          V = ConstantInt::get(Int32Ty, 1, true);
+        }
+        else
+        {
+          for (int i = 1; i < intval; i++)
+          {
+            Left = Builder.CreateNSWMul(Left, Left);
+          }
+          V = Left;
+        }
+        break;
+      }
+      case Expr::Mod:
+      {
+        // x % y = x - (x / y) * y
+        Value *divison = Builder.CreateSDiv(Left, Right);
+        Value *multiply = Builder.CreateNSWMul(div, Right);
+        V = Builder.CreateNSWSub(Left, mul);
+        break;
       }
     };
 
@@ -285,89 +308,77 @@ namespace
       }
     };
 
-    // virtula void visit(Condition &Node) override
-    // {
-    //   Node.getLeft()->accept(*this);
-    //   Value *Left = V;
+    virtula void visit(Condition &Node) override
+    {
+      Node.getLeft()->accept(*this);
+      Value *Left = V;
 
-    //   // Visit the right-hand side of the binary operation and get its value.
-    //   Node.getRight()->accept(*this);
-    //   Value *Right = V;
+      // Visit the right-hand side of the binary operation and get its value.
+      Node.getRight()->accept(*this);
+      Value *Right = V;
 
-    //   // Perform the binary operation based on the operator type and create the corresponding instruction.
-    //   switch (Node.getSign())
-    //   {
-    //   case Condition::LessEqual:
-    //     V = Builder.CreateICmpSLE(Left, Right);
-    //     break;
-    //   case Condition::LessThan:
-    //     V = Builder.CreateICmpSLT(Left, Right);
-    //     break;
-    //   case Condition::GreaterThan:
-    //     V = Builder.CreateICmpSGT(Left, Right);
-    //     break;
-    //   case Condition::GreaterEqual:
-    //     V = Builder.CreateICmpSGE(Left, Right);
-    //     break;
-    //   case Condition::EqualEqual:
-    //     V = Builder.CreateICmpEQ(Left, Right);
-    //     break;
-    //   case Condition::NotEqual:
-    //     V = Builder.CreateICmpNE(Left, Right);
-    //     break;
-    //   }
-    // };
+      // Perform the binary operation based on the operator type and create the corresponding instruction.
+      switch (Node.getSign())
+      {
+      case Condition::LessEqual:
+        V = Builder.CreateICmpSLE(Left, Right);
+        break;
+      case Condition::LessThan:
+        V = Builder.CreateICmpSLT(Left, Right);
+        break;
+      case Condition::GreaterThan:
+        V = Builder.CreateICmpSGT(Left, Right);
+        break;
+      case Condition::GreaterEqual:
+        V = Builder.CreateICmpSGE(Left, Right);
+        break;
+      case Condition::EqualEqual:
+        V = Builder.CreateICmpEQ(Left, Right);
+        break;
+      case Condition::NotEqual:
+        V = Builder.CreateICmpNE(Left, Right);
+        break;
+      }
+    };
 
-    // virtual void visit(If &Node)
-    // {
-    //   Node.getConds()->accept(*this);
-    //   Value *val = V;
-      
-    //   if (V)
-    //   {
-    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //     }
-    //   }
-    //   else
-    //   {
-    //     Value *cond;
-    //     for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E ; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //       cond = V;
-    //       if (cond)
-    //       {
-    //         break;
-    //       }
-    //     }
-    //     if (V == 0)
-    //     {
-    //       Node.getElseBranch()->accept(*this);
-    //     }
-    //   }
-    // };
-    // virtual void visit(Elif &Node)
-    // {
-    //   Node.getConds()->accept(*this);
-    //   Value *val = V;
-    //   if (V)
-    //   {
-    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //     }
-    //   }
-    // };
-    // virtual void visit(Else &Node)
-    // {
-      
-    // };
-    // virtual void visit(Loop &Node)
-    // {
-      
-    // };
+    virtual void visit(If &Node)
+    {
+      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
+      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "ifc.body", MainFn);
+      llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.ifc", MainFn);
+
+      Builder.CreateBr(IfCond);
+      Builder.SetInsertPoint(IfCond);
+      Node.getConditions()->accept(*this);
+      Value* Cond = V;
+      Builder.CreateCondBr(Cond, IfBody, AfterIf);
+      Builder.SetInsertPoint(IfBody);
+
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      {
+        (*I)->accept(*this);
+      }
+      Builder.CreateBr(AfterIf);
+
+      Builder.SetInsertPoint(AfterIf);
+
+
+    };
+    virtual void visit(Elif &Node)
+    {
+      llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
+
+
+    };
+    virtual void visit(Else &Node)
+    {
+
+    };
+    virtual void visit(Loop &Node)
+    {
+       
+
+    };
   };
 }; // namespace
 
