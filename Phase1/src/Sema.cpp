@@ -94,7 +94,7 @@ public:
     right->accept(*this);
     if (Node.getAssignmentOP() == Assign::DivAssign) {
       Final * f = (Final *)right;
-
+      llvm::errs() << "Here" << "\n";
       if (f->getKind() == Final::Number) {
         int intval;
         f->getVal().getAsInteger(10, intval);
