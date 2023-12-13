@@ -92,6 +92,19 @@ public:
     //   error(Not, left->getVal()); // Variable Not Found
 
     right->accept(*this);
+    if (Node.getAssignmentOP() == Assign::DivAssign) {
+      Final * f = (Final *)right;
+
+      if (f->getKind() == Final::Number) {
+        int intval;
+        f->getVal().getAsInteger(10, intval);
+
+        if (intval == 0) {
+          llvm::errs() << "Division by zero is not allowed." << "\n";
+          HasError = true;
+        }
+      }
+    }
   };
 
 
