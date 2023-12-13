@@ -30,8 +30,8 @@ public:
       // (*I)->accept(*this); // Visit each child node
       Statement *pointer = *I;
       llvm::errs() << "Statement! \n";
-      llvm::errs() << (*I).getKind() << "\n";
-      switch ((*I).getKind())
+      llvm::errs() << (*I)->getKind() << "\n";
+      switch ((*I)->getKind())
       {
         case Statement::Declaration:
         {
