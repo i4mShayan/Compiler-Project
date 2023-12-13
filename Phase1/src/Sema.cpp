@@ -97,7 +97,7 @@ public:
     left->accept(*this);
 
     if (right) {
-      llvm::errs() << "Visiting Expr: " << right->getLeft()->getLeft()->getVal();
+      llvm::errs() << "Here! \n";
       right->accept(*this);
 
       // if (Node.getOperator() == Expr::Div && right) {
