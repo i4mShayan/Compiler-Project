@@ -52,8 +52,8 @@ namespace
       Builder.CreateRet(Int32Zero);
     }
 
-    // Visit function for the MSM node in the AST.
-    virtual void visit(MSM &Node) override
+    // Visit function for the ARK node in the AST.
+    virtual void visit(ARK &Node) override
     {
       // Iterate over the children of the MSM node and visit each child.
       for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
@@ -62,11 +62,30 @@ namespace
       }
     };
 
-    virtual void visit(Statement &) override
+    virtual void visit(Statement &Node) override
     {
-      // dont know what to do
-    }
-
+      if (Node.getKind() == Statement::Assignment)
+      {
+        Assign *assign = (Assign*) Node; 
+        assign->accept(*this);
+      }
+      else if (Node.getKind() == Statement::Declaration)
+      {
+        Declare *declare = (Declare*) Node;
+        declare->accept(*this);
+      }
+      else if (Node.getKind() == Statement::If)
+      {
+        If *if_stm = (If*) Node;
+        if_stm->accept(*this);
+      }
+      else if (Node.getKind() == Statement::Loop)
+      {
+        Loop *loop = (Loop*) Node;
+        loop->accept(*this);
+      }
+    
+    };
     virtual void visit(Assign &Node) override
     {
       // Visit the right-hand side of the assignment and get its value.
@@ -166,8 +185,6 @@ namespace
         // Create a call instruction to invoke the "gsm_write" function with the new value.
         CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
         break;
-      default:
-        break;
       }
     };
 
@@ -213,7 +230,6 @@ namespace
         V = Builder.CreateSDiv(Left, Right);
         break;
       case Expr::Pow:
-        // handle for power
         // Create a function type for the "pow" function.
         FunctionType *PowFnTy = FunctionType::get(Int32Ty, {Int32Ty, Int32Ty}, false);
 
@@ -232,7 +248,7 @@ namespace
       Value *val = nullptr;
 
       // Iterate over the variables declared in the declaration statement.
-      for (auto I = Node.getVars().begin(), g = Node.getExprs().begin(), E = Node.getVars().end(); I != E; ++I, ++g)
+      for (auto I = Node.VarsBegin(), g = Node.ExprsBegin(), E = Node.VarsEnd(); I != E; ++I, ++g)
       {
         StringRef Var = *I;
 
@@ -251,95 +267,96 @@ namespace
         {
           Builder.CreateStore(val, nameMap[Var]);
         }
+        else
+        {
+          Builder.CreateStore(Int32Zero, nameMap[Var]);
+        }
       }
     };
 
-    virtula void visit(Condition &Node) override
-    {
-      Node.getLeft()->accept(*this);
-      Value *Left = V;
+    // virtula void visit(Condition &Node) override
+    // {
+    //   Node.getLeft()->accept(*this);
+    //   Value *Left = V;
 
-      // Visit the right-hand side of the binary operation and get its value.
-      Node.getRight()->accept(*this);
-      Value *Right = V;
+    //   // Visit the right-hand side of the binary operation and get its value.
+    //   Node.getRight()->accept(*this);
+    //   Value *Right = V;
 
-      // Perform the binary operation based on the operator type and create the corresponding instruction.
-      switch (Node.getSign())
-      {
-      case Condition::LessEqual:
-        V = Left <= Right;
-        break;
-      case Condition::LessThan:
-        V = Left < Right;
-        break;
-      case Condition::EqualEqual:
-        V = Left == Right;
-        break;
-      case Condition::NotEqual:
-        V = Left != Right;
-        break;
-      case Condition::GreaterThan:
-        V = Left > Right;
-        break;
-      case Condition::GreaterEqual:
-        V = Left >= Right;
-        break;
-      }
-    }
+    //   // Perform the binary operation based on the operator type and create the corresponding instruction.
+    //   switch (Node.getSign())
+    //   {
+    //   case Condition::LessEqual:
+    //     V = Builder.CreateICmpSLE(Left, Right);
+    //     break;
+    //   case Condition::LessThan:
+    //     V = Builder.CreateICmpSLT(Left, Right);
+    //     break;
+    //   case Condition::GreaterThan:
+    //     V = Builder.CreateICmpSGT(Left, Right);
+    //     break;
+    //   case Condition::GreaterEqual:
+    //     V = Builder.CreateICmpSGE(Left, Right);
+    //     break;
+    //   case Condition::EqualEqual:
+    //     V = Builder.CreateICmpEQ(Left, Right);
+    //     break;
+    //   case Condition::NotEqual:
+    //     V = Builder.CreateICmpNE(Left, Right);
+    //     break;
+    //   }
+    // };
 
-    virtual void visit(If &Node)
-    {
-      Node.getCondition()->accept(*this);
-      Value *val = V;
-      if (V)
-      {
-        for (auto I = Node.getStatements().begin(), E = Node.getStatements().end(); I != E; ++I)
-        {
-          (*I)->accept(*this);
-        }
-      }
-      else
-      {
-        V = 0;
-        for (auto I = Node.getElifs().begin(), E = Node.getElifs().end(); I != E && V == 0; ++I)
-        {
-          (*I)->accept(*this);
-        }
-        if (V == 0)
-        {
-          Node.getElse()->accept(*this);
-        }
-      }
-    }
-    virtual void visit(Elif &Node)
-    {
-      Node.getCondition()->accept(*this);
-      Value *val = V;
-      if (V)
-      {
-        for (auto I = Node.getStatements().begin(), E = Node.getStatements().end(); I != E; ++I)
-        {
-          (*I)->accept(*this);
-        }
-      }
-    }
-    virtual void visit(Else &Node)
-    {
-      Value *v;
-      do
-      {
-        Node.getCondition()->accept(*this);
-        v = V;
-
-        if (v)
-        {
-          for (auto I = Node.getStatements().begin(), E = Node.getStatements().end(); I != E; ++I)
-          {
-            (*I)->accept(*this);
-          }
-        }
-      } while (v)
-    }
+    // virtual void visit(If &Node)
+    // {
+    //   Node.getConds()->accept(*this);
+    //   Value *val = V;
+      
+    //   if (V)
+    //   {
+    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
+    //     {
+    //       (*I)->accept(*this);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     Value *cond;
+    //     for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E ; ++I)
+    //     {
+    //       (*I)->accept(*this);
+    //       cond = V;
+    //       if (cond)
+    //       {
+    //         break;
+    //       }
+    //     }
+    //     if (V == 0)
+    //     {
+    //       Node.getElseBranch()->accept(*this);
+    //     }
+    //   }
+    // };
+    // virtual void visit(Elif &Node)
+    // {
+    //   Node.getConds()->accept(*this);
+    //   Value *val = V;
+    //   if (V)
+    //   {
+    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
+    //     {
+    //       (*I)->accept(*this);
+    //     }
+    //   }
+    // };
+    // virtual void visit(Else &Node)
+    // {
+      
+    // };
+    // virtual void visit(Loop &Node)
+    // {
+      
+    // };
   };
 }; // namespace
 
