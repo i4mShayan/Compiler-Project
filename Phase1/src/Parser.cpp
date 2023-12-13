@@ -207,7 +207,7 @@ Expr *Parser::parseExpr()
 
     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
     {
-        return new Expr(Left);
+        return (Expr*) Left;
     }
 
     tokKind = Tok.getKind();
