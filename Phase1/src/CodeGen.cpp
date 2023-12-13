@@ -64,27 +64,27 @@ namespace
 
     virtual void visit(Statement &Node) override
     {
-      Statement *pointer = &Node;
-      if (Node.getKind() == Statement::Assignment)
-      {
-        Assign *assign = static_cast<Assign*>(pointer);
-        assign->accept(*this);
-      }
-      else if (Node.getKind() == Statement::Declaration)
-      {
-        Declare *declare = static_cast<Declare*>(pointer);
-        declare->accept(*this);
-      }
-      else if (Node.getKind() == Statement::If)
-      {
-        If *if_stm = static_cast<If*>(pointer);
-        if_stm->accept(*this);
-      }
-      else if (Node.getKind() == Statement::Loop)
-      {
-        Loop *loop = static_cast<Loop*>(pointer);
-        loop->accept(*this);
-      }
+      // Statement *pointer = &Node;
+      // if (Node.getKind() == Statement::Assignment)
+      // {
+      //   Assign *assign = static_cast<Assign*>(pointer);
+      //   assign->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Declaration)
+      // {
+      //   Declare *declare = static_cast<Declare*>(pointer);
+      //   declare->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::If)
+      // {
+      //   If *if_stm = static_cast<If*>(pointer);
+      //   if_stm->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Loop)
+      // {
+      //   Loop *loop = static_cast<Loop*>(pointer);
+      //   loop->accept(*this);
+      // }
     
     };
     virtual void visit(Assign &Node) override
@@ -196,6 +196,16 @@ namespace
         CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
         break;
       }
+      case Assign::ModAssign:
+      {
+        Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+        Value *newVal5 = Builder.CreateSRem(oldVal5, val);
+        Builder.CreateStore(newVal5, nameMap[varName]);
+        FunctionType *CalcWriteFnTy6 = FunctionType::get(VoidTy, {Int32Ty}, false);
+        Function *CalcWriteFn6 = Function::Create(CalcWriteFnTy6, GlobalValue::ExternalLinkage, "gsm_write", M);
+        CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy6, CalcWriteFn6, {newVal5});
+        break;
+      }
       }
     };
 
@@ -250,7 +260,7 @@ namespace
       }
       case Expr::Pow:
       {
-        Final *right_final = static_cast<Final*>(Right);
+        Final *right_final = Right.getLeft();
         int intval;
         intval = right_final->getVal().getAsInteger(10, intval);
         if (intval == 0)
@@ -259,9 +269,10 @@ namespace
         }
         else
         {
+          Final *temp = new Final(Left.getKind(), Left.getVal());
           for (int i = 1; i < intval; i++)
           {
-            Left = Builder.CreateNSWMul(Left, Left);
+            Left = Builder.CreateNSWMul(Left, temp);
           }
           V = Left;
         }
@@ -341,59 +352,65 @@ namespace
       }
     };
 
-    virtual void visit(If &Node)
+    virtual void visit(If &Node) override
     {
-      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
-      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "ifc.body", MainFn);
-      llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.ifc", MainFn);
+      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
+      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
+      llvm::BasicBlock* ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
 
       Builder.CreateBr(IfCond);
       Builder.SetInsertPoint(IfCond);
       Node.getConditions()->accept(*this);
       Value* Cond = V;
-      Builder.CreateCondBr(Cond, IfBody, AfterIf);
+      Builder.CreateCondBr(Cond, IfBody, ElseBody);
       Builder.SetInsertPoint(IfBody);
 
       for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
       {
-        (*I)->accept(*this);
+          (*I)->accept(*this);
       }
-      Builder.CreateBr(AfterIf);
+      Builder.CreateBr(ElseBody);
 
-      Builder.SetInsertPoint(AfterIf);
+      Builder.SetInsertPoint(ElseBody);
 
-
+      for (auto I = Node.getElse().AssignmentsBegin(), E = Node.getElse().AssignmentsEnd(); I != E; ++I)
+      {
+          (*I)->accept(*this);
+      }
+      
     };
-    virtual void visit(Elif &Node)
+
+    // virtual void visit(Elif &Node) override
+    // {
+      
+    // };
+
+    // virtual void visit(Else &Node) override
+    // {
+    //   
+    // };
+
+
+    virtual void visit(Loop &Node) override
     {
-      // llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
+      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
-
-    };
-    virtual void visit(Else &Node)
-    {
-
-    };
-    virtual void visit(Loop &Node)
-    {
-       llvm::BasicBlock* WhileCond = llvm::BasicBlock::Create(M->getContext(), "loopc.cond", MainFn);
-      llvm::BasicBlock* WhileBody = llvm::BasicBlock::Create(M->getContext(), "loopc.body", MainFn);
-      llvm::BasicBlock* AfterWhile = llvm::BasicBlock::Create(M->getContext(), "after.loopc", MainFn);
-
-      Builder.CreateBr(WhileCond); 
-      Builder.SetInsertPoint(WhileCond); 
+      Builder.CreateBr(LoopCond); 
+      Builder.SetInsertPoint(LoopCond); 
       Node.getConditions()->accept(*this); 
       Value* Cond = V; 
-      Builder.CreateCondBr(Cond, WhileBody, AfterWhile); 
-      Builder.SetInsertPoint(WhileBody); 
+      Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
+      Builder.SetInsertPoint(LoopBody); 
       
       for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
           (*I)->accept(*this); 
       }
-      Builder.CreateBr(WhileCond); 
+      Builder.CreateBr(LoopCond); 
 
-      Builder.SetInsertPoint(AfterWhile);
+      Builder.SetInsertPoint(AfterLoop);
 
     };
   };
