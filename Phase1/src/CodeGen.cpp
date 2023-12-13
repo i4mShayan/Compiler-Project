@@ -283,7 +283,7 @@ namespace
         case Expr::Mod:
         {
           // x % y = x - (x / y) * y
-          Value *divison = Builder.CreateSDiv(Left, Right);
+          Value *division = Builder.CreateSDiv(Left, Right);
           Value *multiply = Builder.CreateNSWMul(division, Right);
           V = Builder.CreateNSWSub(Left, multiply);
           break;
