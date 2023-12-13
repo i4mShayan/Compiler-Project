@@ -172,7 +172,7 @@ Assign *Parser::parseAssign()
         Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
         break;
     case Token::slash_equal:
-        Ans = new Assign(Left, Assign::AssOp::MulAssign, Right);
+        Ans = new Assign(Left, Assign::AssOp::DivAssign, Right);
         break;
     case Token::mod_equal:
         Ans = new Assign(Left, Assign::AssOp::ModAssign, Right);
