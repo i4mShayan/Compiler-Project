@@ -168,9 +168,10 @@ public:
     for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
-    llvm::errs() << "Here" << "\n";
 
     if(ElseBranch) ElseBranch->accept(*this);
+
+    llvm::errs() << "Here" << "\n";
   };
 
 
