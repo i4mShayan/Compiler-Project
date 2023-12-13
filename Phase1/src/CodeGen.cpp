@@ -366,7 +366,7 @@ namespace
     };
     virtual void visit(Elif &Node)
     {
-      llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
+      // llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "ifc.cond", MainFn);
 
 
     };
@@ -376,7 +376,24 @@ namespace
     };
     virtual void visit(Loop &Node)
     {
-       
+       llvm::BasicBlock* WhileCond = llvm::BasicBlock::Create(M->getContext(), "loopc.cond", MainFn);
+      llvm::BasicBlock* WhileBody = llvm::BasicBlock::Create(M->getContext(), "loopc.body", MainFn);
+      llvm::BasicBlock* AfterWhile = llvm::BasicBlock::Create(M->getContext(), "after.loopc", MainFn);
+
+      Builder.CreateBr(WhileCond); 
+      Builder.SetInsertPoint(WhileCond); 
+      Node.getConditions()->accept(*this); 
+      Value* Cond = V; 
+      Builder.CreateCondBr(Cond, WhileBody, AfterWhile); 
+      Builder.SetInsertPoint(WhileBody); 
+      
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
+      {
+          (*I)->accept(*this); 
+      }
+      Builder.CreateBr(WhileCond); 
+
+      Builder.SetInsertPoint(AfterWhile);
 
     };
   };
