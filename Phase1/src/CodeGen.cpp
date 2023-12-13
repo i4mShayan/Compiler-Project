@@ -259,7 +259,7 @@ namespace
       Value *val = nullptr;
 
       // Iterate over the variables declared in the declaration statement.
-      for (auto I = Node.VarsBegin(), auto g = Node.ExprsBegin(), E = Node.VarsEnd(); I != E; ++I, ++g)
+      for (auto I = Node.VarsBegin(), g = Node.ExprsBegin(), E = Node.VarsEnd(); I != E; ++I, ++g)
       {
         StringRef Var = *I;
 
