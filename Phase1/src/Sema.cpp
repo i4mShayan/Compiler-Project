@@ -28,10 +28,10 @@ public:
     for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
     {
       // (*I)->accept(*this); // Visit each child node
-      Statement *pointer = I*;
+      Statement *pointer = *I;
       llvm::errs() << "Statement! \n";
-      llvm::errs() << I.getKind() << "\n";
-      switch (I.getKind())
+      llvm::errs() << (*I).getKind() << "\n";
+      switch ((*I).getKind())
       {
         case Statement::Declaration:
         {
