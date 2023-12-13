@@ -205,6 +205,8 @@ Expr *Parser::parseExpr()
 
     if(!Left) goto _error;
 
+    return new Expr(Left);
+    
     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
     {
         return new Expr(Left);
