@@ -38,24 +38,28 @@ public:
     {
       case Statement::Declaration:
       {
+        llvm::errs() << "Declare! \n";
         Declare *dec = static_cast<Declare*> (pointer);
         dec->accept(*this);
         break;
       }
       case Statement::Assignment:
       {
+        llvm::errs() << "Assign! \n";
         Assign *assign = static_cast<Assign*> (pointer);
         assign->accept(*this);
         break;
       }
       case Statement::If:
       {
+        llvm::errs() << "If! \n";
         If *if_condition = static_cast<If*> (pointer);
         if_condition->accept(*this);
         break;
       }
       case Statement::Loop:
       {
+        llvm::errs() << "Loop! \n";
         Loop *loop = static_cast<Loop*> (pointer);
         loop->accept(*this);
         break;
@@ -97,7 +101,6 @@ public:
     left->accept(*this);
 
     if (right) {
-      llvm::errs() << "Here! \n";
       right->accept(*this);
 
       // if (Node.getOperator() == Expr::Div && right) {
