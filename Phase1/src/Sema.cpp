@@ -156,6 +156,7 @@ public:
 
 
   virtual void visit(If &Node) override {
+    llvm::errs() << "IF" << "\n";
     Conditions *conds = Node.getConds();
     Else *ElseBranch = Node.getElse();
 
@@ -174,6 +175,7 @@ public:
 
 
   virtual void visit(Elif &Node) override {
+    llvm::errs() << "ELIF" << "\n";
     Conditions *conds = Node.getConds();
 
     conds->accept(*this);
@@ -185,6 +187,7 @@ public:
 
 
   virtual void visit(Else &Node) override {
+    llvm::errs() << "ELSE" << "\n";
     for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) {
         (*I)->accept(*this);
     }
