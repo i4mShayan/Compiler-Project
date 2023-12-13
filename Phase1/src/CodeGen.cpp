@@ -64,27 +64,27 @@ namespace
 
     virtual void visit(Statement &Node) override
     {
-      Statement *pointer = &Node;
-      if (Node.getKind() == Statement::Assignment)
-      {
-        Assign *assign = static_cast<Assign*>(pointer);
-        assign->accept(*this);
-      }
-      else if (Node.getKind() == Statement::Declaration)
-      {
-        Declare *declare = static_cast<Declare*>(pointer);
-        declare->accept(*this);
-      }
-      else if (Node.getKind() == Statement::If)
-      {
-        If *if_stm = static_cast<If*>(pointer);
-        if_stm->accept(*this);
-      }
-      else if (Node.getKind() == Statement::Loop)
-      {
-        Loop *loop = static_cast<Loop*>(pointer);
-        loop->accept(*this);
-      }
+      // Statement *pointer = &Node;
+      // if (Node.getKind() == Statement::Assignment)
+      // {
+      //   Assign *assign = static_cast<Assign*>(pointer);
+      //   assign->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Declaration)
+      // {
+      //   Declare *declare = static_cast<Declare*>(pointer);
+      //   declare->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::If)
+      // {
+      //   If *if_stm = static_cast<If*>(pointer);
+      //   if_stm->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Loop)
+      // {
+      //   Loop *loop = static_cast<Loop*>(pointer);
+      //   loop->accept(*this);
+      // }
     
     };
     virtual void visit(Assign &Node) override
@@ -196,6 +196,16 @@ namespace
         CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
         break;
       }
+      case Assign::ModAssign:
+      {
+        Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+        Value *newVal5 = Builder.CreateSRem(oldVal5, val);
+        Builder.CreateStore(newVal5, nameMap[varName]);
+        FunctionType *CalcWriteFnTy6 = FunctionType::get(VoidTy, {Int32Ty}, false);
+        Function *CalcWriteFn6 = Function::Create(CalcWriteFnTy6, GlobalValue::ExternalLinkage, "gsm_write", M);
+        CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy6, CalcWriteFn6, {newVal5});
+        break;
+      }
       }
     };
 
@@ -229,28 +239,52 @@ namespace
       switch (Node.getOperator())
       {
       case Expr::Plus:
+      {
         V = Builder.CreateNSWAdd(Left, Right);
         break;
+      }
       case Expr::Minus:
+      {
         V = Builder.CreateNSWSub(Left, Right);
         break;
+      }
       case Expr::Mul:
+      {
         V = Builder.CreateNSWMul(Left, Right);
         break;
+      }
       case Expr::Div:
+      {
         V = Builder.CreateSDiv(Left, Right);
         break;
+      }
       case Expr::Pow:
-        // Create a function type for the "pow" function.
-        FunctionType *PowFnTy = FunctionType::get(Int32Ty, {Int32Ty, Int32Ty}, false);
-
-        // Create a function declaration for the "pow" function.
-        Function *PowFn = Function::Create(PowFnTy, GlobalValue::ExternalLinkage, "pow", M);
-
-        // Create a call instruction to invoke the "pow" function with the left and right values.
-        CallInst *Call = Builder.CreateCall(PowFnTy, PowFn, {Left, Right});
-
-        V = Call;
+      {
+        Final *right_final = Right.getLeft();
+        int intval;
+        intval = right_final->getVal().getAsInteger(10, intval);
+        if (intval == 0)
+        {
+          V = ConstantInt::get(Int32Ty, 1, true);
+        }
+        else
+        {
+          Final *temp = new Final(Left.getKind(), Left.getVal());
+          for (int i = 1; i < intval; i++)
+          {
+            Left = Builder.CreateNSWMul(Left, temp);
+          }
+          V = Left;
+        }
+        break;
+      }
+      case Expr::Mod:
+      {
+        // x % y = x - (x / y) * y
+        Value *divison = Builder.CreateSDiv(Left, Right);
+        Value *multiply = Builder.CreateNSWMul(div, Right);
+        V = Builder.CreateNSWSub(Left, mul);
+        break;
       }
     };
 
@@ -285,89 +319,100 @@ namespace
       }
     };
 
-    // virtula void visit(Condition &Node) override
-    // {
-    //   Node.getLeft()->accept(*this);
-    //   Value *Left = V;
+    virtula void visit(Condition &Node) override
+    {
+      Node.getLeft()->accept(*this);
+      Value *Left = V;
 
-    //   // Visit the right-hand side of the binary operation and get its value.
-    //   Node.getRight()->accept(*this);
-    //   Value *Right = V;
+      // Visit the right-hand side of the binary operation and get its value.
+      Node.getRight()->accept(*this);
+      Value *Right = V;
 
-    //   // Perform the binary operation based on the operator type and create the corresponding instruction.
-    //   switch (Node.getSign())
-    //   {
-    //   case Condition::LessEqual:
-    //     V = Builder.CreateICmpSLE(Left, Right);
-    //     break;
-    //   case Condition::LessThan:
-    //     V = Builder.CreateICmpSLT(Left, Right);
-    //     break;
-    //   case Condition::GreaterThan:
-    //     V = Builder.CreateICmpSGT(Left, Right);
-    //     break;
-    //   case Condition::GreaterEqual:
-    //     V = Builder.CreateICmpSGE(Left, Right);
-    //     break;
-    //   case Condition::EqualEqual:
-    //     V = Builder.CreateICmpEQ(Left, Right);
-    //     break;
-    //   case Condition::NotEqual:
-    //     V = Builder.CreateICmpNE(Left, Right);
-    //     break;
-    //   }
-    // };
+      // Perform the binary operation based on the operator type and create the corresponding instruction.
+      switch (Node.getSign())
+      {
+      case Condition::LessEqual:
+        V = Builder.CreateICmpSLE(Left, Right);
+        break;
+      case Condition::LessThan:
+        V = Builder.CreateICmpSLT(Left, Right);
+        break;
+      case Condition::GreaterThan:
+        V = Builder.CreateICmpSGT(Left, Right);
+        break;
+      case Condition::GreaterEqual:
+        V = Builder.CreateICmpSGE(Left, Right);
+        break;
+      case Condition::EqualEqual:
+        V = Builder.CreateICmpEQ(Left, Right);
+        break;
+      case Condition::NotEqual:
+        V = Builder.CreateICmpNE(Left, Right);
+        break;
+      }
+    };
 
-    // virtual void visit(If &Node)
-    // {
-    //   Node.getConds()->accept(*this);
-    //   Value *val = V;
+    virtual void visit(If &Node) override
+    {
+      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
+      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
+      llvm::BasicBlock* ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
+
+      Builder.CreateBr(IfCond);
+      Builder.SetInsertPoint(IfCond);
+      Node.getConditions()->accept(*this);
+      Value* Cond = V;
+      Builder.CreateCondBr(Cond, IfBody, ElseBody);
+      Builder.SetInsertPoint(IfBody);
+
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      {
+          (*I)->accept(*this);
+      }
+      Builder.CreateBr(ElseBody);
+
+      Builder.SetInsertPoint(ElseBody);
+
+      for (auto I = Node.getElse().AssignmentsBegin(), E = Node.getElse().AssignmentsEnd(); I != E; ++I)
+      {
+          (*I)->accept(*this);
+      }
       
-    //   if (V)
-    //   {
-    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //     }
-    //   }
-    //   else
-    //   {
-    //     Value *cond;
-    //     for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E ; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //       cond = V;
-    //       if (cond)
-    //       {
-    //         break;
-    //       }
-    //     }
-    //     if (V == 0)
-    //     {
-    //       Node.getElseBranch()->accept(*this);
-    //     }
-    //   }
-    // };
-    // virtual void visit(Elif &Node)
-    // {
-    //   Node.getConds()->accept(*this);
-    //   Value *val = V;
-    //   if (V)
-    //   {
-    //     for (auto I = Node.AssignsBegin(), E = Node.AssignsEnd(); I != E; ++I)
-    //     {
-    //       (*I)->accept(*this);
-    //     }
-    //   }
-    // };
-    // virtual void visit(Else &Node)
+    };
+
+    // virtual void visit(Elif &Node) override
     // {
       
     // };
-    // virtual void visit(Loop &Node)
+
+    // virtual void visit(Else &Node) override
     // {
-      
+    //   
     // };
+
+
+    virtual void visit(Loop &Node) override
+    {
+      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+
+      Builder.CreateBr(LoopCond); 
+      Builder.SetInsertPoint(LoopCond); 
+      Node.getConditions()->accept(*this); 
+      Value* Cond = V; 
+      Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
+      Builder.SetInsertPoint(LoopBody); 
+      
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
+      {
+          (*I)->accept(*this); 
+      }
+      Builder.CreateBr(LoopCond); 
+
+      Builder.SetInsertPoint(AfterLoop);
+
+    };
   };
 }; // namespace
 
