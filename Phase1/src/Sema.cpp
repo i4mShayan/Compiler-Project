@@ -92,8 +92,8 @@ public:
   virtual void visit(Expr &Node) override {
     Node.getLeft()->accept(*this);
 
-    if (Node.getRight()) {
-      auto right = Node.getRight();
+    Expr *right = Node.getRight();
+    if (right) {
       right->accept(*this);
 
       // if (Node.getOperator() == Expr::Div && right) {
