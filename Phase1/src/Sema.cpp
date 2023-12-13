@@ -92,24 +92,24 @@ public:
   virtual void visit(Expr &Node) override {
     Node.getLeft()->accept(*this);
 
-    if (Node.getRight()) {
-      auto right = Node.getRight();
-      right->accept(*this);
+    // if (Node.getRight()) {
+    //   auto right = Node.getRight();
+    //   right->accept(*this);
 
-      if (Node.getOperator() == Expr::Div && right) {
-        Final * f = (Final *)right;
+    //   if (Node.getOperator() == Expr::Div && right) {
+    //     Final * f = (Final *)right;
 
-        if (right && f->getKind() == Final::Number) {
-          int intval;
-          f->getVal().getAsInteger(10, intval);
+    //     if (right && f->getKind() == Final::Number) {
+    //       int intval;
+    //       f->getVal().getAsInteger(10, intval);
 
-          if (intval == 0) {
-            llvm::errs() << "Division by zero is not allowed." << "\n";
-            HasError = true;
-          }
-        }
-      }
-    }
+    //       if (intval == 0) {
+    //         llvm::errs() << "Division by zero is not allowed." << "\n";
+    //         HasError = true;
+    //       }
+    //     }
+    //   }
+    // }
   };
 
 
