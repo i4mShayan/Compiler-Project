@@ -113,7 +113,7 @@ Declare *Parser::parseDec()
                 Exprs.push_back(E);
                 if (++expressionCount > varsCount)
                 {
-                    goto _error2;
+                    goto _error;
                 }
             }
             else
@@ -126,7 +126,6 @@ Declare *Parser::parseDec()
     advance();
 
     return new Declare(Vars, Exprs);
-_error2:
 _error:
     llvm::errs() << "Declration Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
