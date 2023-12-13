@@ -18,7 +18,7 @@ class InputCheck : public ASTVisitor {
   }
 
   void divide_by_zero_error() {
-    llvm::errs() << "Division by zero is not allowed." << "\n";
+    llvm::errs() << "Division/Mod by zero is not allowed." << "\n";
     HasError = true;
   }
 
