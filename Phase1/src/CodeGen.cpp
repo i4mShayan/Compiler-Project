@@ -376,7 +376,7 @@ namespace ns
       case Conditions::And:
           V = Builder.CreateAnd(Left, Right);
           break;
-      case Conditions:::Or:
+      case Conditions::Or:
           V = Builder.CreateOr(Left, Right);
           break;
       }
