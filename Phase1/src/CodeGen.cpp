@@ -274,7 +274,7 @@ namespace
         else
         {
           Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
-          temp.accept();
+          temp->accept(*this);
           for (int i = 1; i < intval; i++)
           {
             Left = Builder.CreateNSWMul(Left, V);
