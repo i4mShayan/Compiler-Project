@@ -193,7 +193,7 @@ public:
     }
 };
 
-class Conditions : public ARK
+class Conditions : public AST
 {
 public:
     enum Operator
