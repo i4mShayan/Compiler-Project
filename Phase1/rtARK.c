@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ark_write(int value)
+void ark_write(int value, char* str)
 {
-    printf("Variable %s becomes %d after %d, \n", "test".c_str() , value, "==".c_str());
+    printf(str);
 }
 
 int ark_read(char *s)
