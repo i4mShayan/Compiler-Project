@@ -332,36 +332,36 @@ namespace ns
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getSign())
       {
-      case Condition::LessEqual:
-      {
-        V = Builder.CreateICmpSLE(Left, Right);
-        break;
-      }
-      case Condition::LessThan:
-      {
-        V = Builder.CreateICmpSLT(Left, Right);
-        break;
-      }
-      case Condition::GreaterThan:
-      {
-        V = Builder.CreateICmpSGT(Left, Right);
-        break;
-      }
-      case Condition::GreaterEqual:
-      {
-        V = Builder.CreateICmpSGE(Left, Right);
-        break;
-      }
-      case Condition::EqualEqual:
-      {
-        V = Builder.CreateICmpEQ(Left, Right);
-        break;
-      }
-      case Condition::NotEqual:
-      {
-        V = Builder.CreateICmpNE(Left, Right);
-        break;
-      }
+        case Condition::LessEqual:
+        {
+          V = Builder.CreateICmpSLE(Left, Right);
+          break;
+        }
+        case Condition::LessThan:
+        {
+          V = Builder.CreateICmpSLT(Left, Right);
+          break;
+        }
+        case Condition::GreaterThan:
+        {
+          V = Builder.CreateICmpSGT(Left, Right);
+          break;
+        }
+        case Condition::GreaterEqual:
+        {
+          V = Builder.CreateICmpSGE(Left, Right);
+          break;
+        }
+        case Condition::EqualEqual:
+        {
+          V = Builder.CreateICmpEQ(Left, Right);
+          break;
+        }
+        case Condition::NotEqual:
+        {
+          V = Builder.CreateICmpNE(Left, Right);
+          break;
+        }
       }
     };
 
@@ -371,6 +371,11 @@ namespace ns
       Value* Left = V;
       Node.getRight()->accept(*this);
       Value* Right = V;
+      if (Node.getRight() == nullptr)
+      {
+        V = Left;
+        return;
+      }
       switch (Node.getSign())
       {
       case Conditions::And:
