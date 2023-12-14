@@ -151,7 +151,7 @@ namespace ns
       // Create a store instruction to assign the new value to the variable.
       Builder.CreateStore(newVal, nameMap[varName]);
 
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
     };
 
     virtual void visit(Final &Node) override
