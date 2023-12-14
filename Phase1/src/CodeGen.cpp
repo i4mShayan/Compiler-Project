@@ -428,9 +428,9 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Loop &Node) override
     {
-      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loopcond", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loopbody", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "afterloop", MainFn);
 
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
