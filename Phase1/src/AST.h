@@ -219,7 +219,7 @@ public:
 
     Conditions *getRight() { return Right; }
 
-    virtual void accept(ASTVisitor &V) override
+    virtual void accept(ASTVisitor &V)
     {
         V.visit(*this);
     }
