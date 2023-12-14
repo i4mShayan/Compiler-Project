@@ -67,7 +67,7 @@ namespace ns
     virtual void visit(ARK &Node) override
     {
       // Iterate over the children of the MSM node and visit each child.
-      for (auto I = Node.begin(), E = Node.end(); I != E; ++I)
+      for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
@@ -107,7 +107,7 @@ virtual void visit(Assign &Node) override
       Value *val = V;
 
       // Get the name of the variable being assigned.
-      auto varName = Node.getLeft()->getVal();
+      llvm::StringRef varName = Node.getLeft()->getVal();
 
       switch (Node.getAssignmentOP())
       {
@@ -396,7 +396,7 @@ virtual void visit(Assign &Node) override
 
       Builder.SetInsertPoint(IfBody);
       
-      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
+      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
@@ -407,7 +407,7 @@ virtual void visit(Assign &Node) override
       llvm::BasicBlock* PrevBody = IfBody;
       llvm::Value* PrevCondVal = IfCondVal;
 
-      for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
+      for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
         llvm::BasicBlock* ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
 
@@ -448,7 +448,7 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Elif &Node) override
     {
-      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
       {
           (*I)->accept(*this);
       }
@@ -456,7 +456,7 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Else &Node) override
     {
-      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
       {
           (*I)->accept(*this);
       }
