@@ -111,6 +111,7 @@ namespace ns
           FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
 
           // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
 
           // Create a call instruction to invoke the "gsm_write" function with the value.
           CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
@@ -132,6 +133,7 @@ namespace ns
           FunctionType *CalcWriteFnTy2 = FunctionType::get(VoidTy, {Int32Ty}, false);
 
           // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn2 = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
           CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
@@ -153,6 +155,7 @@ namespace ns
           FunctionType *CalcWriteFnTy3 = FunctionType::get(VoidTy, {Int32Ty}, false);
 
           // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn3 = Function::Create(CalcWriteFnTy3, GlobalValue::ExternalLinkage, "ark_write", M);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
           CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy3, CalcWriteFn3, {newVal2});
@@ -174,6 +177,7 @@ namespace ns
           FunctionType *CalcWriteFnTy4 = FunctionType::get(VoidTy, {Int32Ty}, false);
 
           // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn4 = Function::Create(CalcWriteFnTy4, GlobalValue::ExternalLinkage, "ark_write", M);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
           CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy4, CalcWriteFn4, {newVal3});
@@ -191,6 +195,7 @@ namespace ns
           // Create a function type for the "gsm_write" function.
           FunctionType *CalcWriteFnTy5 = FunctionType::get(VoidTy, {Int32Ty}, false);
           // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn5 = Function::Create(CalcWriteFnTy5, GlobalValue::ExternalLinkage, "ark_write", M);
           // Create a call instruction to invoke the "gsm_write" function with the new value.
           CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
           break;
@@ -201,6 +206,7 @@ namespace ns
           Value *newVal5 = Builder.CreateSRem(oldVal5, val);
           Builder.CreateStore(newVal5, nameMap[varName]);
           FunctionType *CalcWriteFnTy6 = FunctionType::get(VoidTy, {Int32Ty}, false);
+          Function *CalcWriteFn6 = Function::Create(CalcWriteFnTy6, GlobalValue::ExternalLinkage, "ark_write", M);
           CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy6, CalcWriteFn6, {newVal5});
           break;
         }
@@ -279,7 +285,10 @@ namespace ns
         }
         case Expr::Mod:
         {
-          V = Builder.CreateSRem(Left, Right);
+          // x % y = x - (x / y) * y
+          Value *division = Builder.CreateSDiv(Left, Right);
+          Value *multiply = Builder.CreateNSWMul(division, Right);
+          V = Builder.CreateNSWSub(Left, multiply);
           break;
         }
       }
@@ -326,58 +335,36 @@ namespace ns
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getSign())
       {
-        case Condition::LessEqual:
-        {
-          V = Builder.CreateICmpSLE(Left, Right);
-          break;
-        }
-        case Condition::LessThan:
-        {
-          V = Builder.CreateICmpSLT(Left, Right);
-          break;
-        }
-        case Condition::GreaterThan:
-        {
-          V = Builder.CreateICmpSGT(Left, Right);
-          break;
-        }
-        case Condition::GreaterEqual:
-        {
-          V = Builder.CreateICmpSGE(Left, Right);
-          break;
-        }
-        case Condition::EqualEqual:
-        {
-          V = Builder.CreateICmpEQ(Left, Right);
-          break;
-        }
-        case Condition::NotEqual:
-        {
-          V = Builder.CreateICmpNE(Left, Right);
-          break;
-        }
-      }
-    };
-
-    virtual void visit(Conditions &Node) override
-    {
-      Node.getLeft()->accept(*this);
-      Value* Left = V;
-      if (Node.getRight() == nullptr)
+      case Condition::LessEqual:
       {
-        V = Left;
-        return;
+        V = Builder.CreateICmpSLE(Left, Right);
+        break;
       }
-      Node.getRight()->accept(*this);
-      Value* Right = V;
-      switch (Node.getSign())
+      case Condition::LessThan:
       {
-      case Conditions::And:
-          V = Builder.CreateAnd(Left, Right);
-          break;
-      case Conditions::Or:
-          V = Builder.CreateOr(Left, Right);
-          break;
+        V = Builder.CreateICmpSLT(Left, Right);
+        break;
+      }
+      case Condition::GreaterThan:
+      {
+        V = Builder.CreateICmpSGT(Left, Right);
+        break;
+      }
+      case Condition::GreaterEqual:
+      {
+        V = Builder.CreateICmpSGE(Left, Right);
+        break;
+      }
+      case Condition::EqualEqual:
+      {
+        V = Builder.CreateICmpEQ(Left, Right);
+        break;
+      }
+      case Condition::NotEqual:
+      {
+        V = Builder.CreateICmpNE(Left, Right);
+        break;
+      }
       }
     };
 
