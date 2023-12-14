@@ -350,6 +350,29 @@ virtual void visit(Assign &Node) override
       }
     };
 
+    virtual void visit(Conditions &Node) override
+    {
+      Node.getLeft()->accept(*this);
+      Value* Left = V;
+      
+      if (Node.getRight() = nullptr)
+      {
+        V = Left;
+        return;
+      }
+      Node.getRight()->accept(*this);
+      Value* Right = V;
+
+      switch (Node.getSign())
+      {
+      case Conditions::And:
+          V = Builder.CreateAnd(Left, Right);
+          break;
+      case Conditions::Or:
+          V = Builder.CreateOr(Left, Right);
+          break;
+      }
+
     virtual void visit(If &Node) override
     {
       llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);

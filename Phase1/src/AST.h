@@ -204,7 +204,7 @@ public:
 private:
     Condition *Left;
     Operator Sign;
-    Conditions *Right;
+    Conditions *Right = nullptr;
 
 public:
     Conditions(Condition *left, Operator sign, Conditions *right) : 
