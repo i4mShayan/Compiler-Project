@@ -273,10 +273,7 @@ virtual void visit(Assign &Node) override
             break;
           }
         }
-      }
-
- 
-      
+      }     
     };
 
     virtual void visit(Declare &Node) override
