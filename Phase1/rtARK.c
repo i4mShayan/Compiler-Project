@@ -3,8 +3,7 @@
 
 void ark_write(int value, char* str)
 {
-    printf('%s', str);
-    
+    printf("%s", str);
 }
 
 int ark_read(char *s)
