@@ -466,12 +466,11 @@ virtual void visit(Assign &Node) override
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
       llvm::errs() << "loopcond entered " << "\n";
-      Node.getConds()->accept(*this); 
+      // Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "loopcond excuted " << "\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
       Builder.SetInsertPoint(LoopBody);
-
 
       llvm::errs() << "loopbody excuted " << "\n";
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
