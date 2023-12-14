@@ -198,6 +198,7 @@ virtual void visit(Assign &Node) override
       {
         // If the factor is an identifier, load its value from memory.
         V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
+        CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {V});
       }
       else
       {
