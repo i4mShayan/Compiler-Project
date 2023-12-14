@@ -3,7 +3,7 @@
 
 void ark_write(const char* varName,  int value, int opCode)
 {
-    printf("Variable %s becomes %d after %s, \n", varName, value, opCode);
+    printf("Variable %s becomes %d after %d, \n", varName, value, opCode);
 }
 
 int ark_read(char *s)
