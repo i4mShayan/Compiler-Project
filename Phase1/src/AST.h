@@ -169,9 +169,9 @@ public:
     };
 
 private:
-    Final *Left; // Left-hand side Expr
-    Operator Op;      // Operator of the binary operation
-    Expr *Right; // Right-hand side Expr
+    Final *Left = nullptr; // Left-hand side Expr
+    Operator Op = nullptr;      // Operator of the binary operation
+    Expr *Right = nullptr; // Right-hand side Expr
 
 public:
     Expr(Final *L, Operator Op, Expr *R) : 
