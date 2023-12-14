@@ -17,3 +17,16 @@ Then you can run it using:
 ```
 ./ARK
 ```
+### How to see the result?
+```
+./ARK > ark.ll
+```
+```
+llc --filetype=obj -o=ark.o ark.ll
+```
+```
+clang -o arkbin ark.o ../../rtARK.c
+```
+```
+./arkbin
+```
