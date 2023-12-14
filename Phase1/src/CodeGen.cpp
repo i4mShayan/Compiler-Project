@@ -157,7 +157,7 @@ namespace ns
       FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
 
       // Create a function declaration for the "ark_write" function.
-      Function *CalcWriteFn = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
+      Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
 
       // Create a call instruction to invoke the "ark_write" function with the new value.
       CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
