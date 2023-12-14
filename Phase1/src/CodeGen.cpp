@@ -66,36 +66,6 @@ namespace ns
     };
 
 
-    virtual void visit(Declare &Node) override
-    {
-      Value *val = nullptr;
-
-      llvm::SmallVector<Expr *>::const_iterator L = Node.ExprsBegin();
-      llvm::SmallVector<Expr *>::const_iterator R = Node.ExprsEnd();
-      for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I)
-      {
-        StringRef Var = *I;
-        nameMap[Var] = Builder.CreateAlloca(Int32Ty);
-
-        if (L != R)
-        {
-          (*L)->accept(*this);
-          val = V;
-          if (val != nullptr)
-          {
-            Builder.CreateStore(val, nameMap[Var]);
-          }
-
-          ++L;
-        }
-        else
-        {
-          Builder.CreateStore(Int32Zero, nameMap[Var]);
-        }
-      }
-    };
-  
-
     virtual void visit(Assign &Node) override
     {
       // Visit the right-hand side of the assignment and get its value.
@@ -130,6 +100,19 @@ namespace ns
 
           // Create an add instruction to add the old value and the new value.
           Value *newVal = Builder.CreateNSWAdd(oldVal, val);
+
+          // Create a store instruction to assign the new value to the variable.
+          Builder.CreateStore(newVal, nameMap[varName]);
+
+          // Create a function type for the "gsm_write" function.
+          FunctionType *CalcWriteFnTy2 = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+          // Create a function declaration for the "gsm_write" function.
+          Function *CalcWriteFn2 = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
+
+          // Create a call instruction to invoke the "gsm_write" function with the new value.
+          CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
+
           break;
         }
         case Assign::MinusAssign:
@@ -203,17 +186,6 @@ namespace ns
           break;
         }
       }
-      // Create a store instruction to assign the new value to the variable.
-      Builder.CreateStore(newVal, nameMap[varName]);
-
-      // Create a function type for the "gsm_write" function.
-      FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
-
-      // Create a function declaration for the "ark_write" function.
-      Function *CalcWriteFn = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
-
-      // Create a call instruction to invoke the "ark_write" function with the new value.
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
     };
 
     virtual void visit(Final &Node) override
