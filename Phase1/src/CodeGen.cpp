@@ -110,7 +110,7 @@ namespace ns
       Value *newVal;
 
       if (Node.getAssignmentOP() != Assign::EqualAssign) {
-        oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName])
+        oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
       }
 
       switch (Node.getAssignmentOP())
