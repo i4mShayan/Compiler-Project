@@ -251,7 +251,7 @@ virtual void visit(Assign &Node) override
           }
           case Expr::Pow:
           {
-            Final *right_final = (Node.getRight())->getLeft();
+            Final *right_final = Node.getRight()->getLeft();
             int intval;
             right_final->getVal().getAsInteger(10, intval);
             if (intval == 0)
@@ -260,8 +260,7 @@ virtual void visit(Assign &Node) override
             }
             else
             {
-              Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
-              temp->accept(*this);
+              V = Node.getLeft()->getVal().getAsInteger(10, intval);
               for (int i = 1; i < intval; i++)
               {
                 Left = Builder.CreateNSWMul(Left, V);
