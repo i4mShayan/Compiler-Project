@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ark_write(int value, char* str)
+void ark_write(int v)
 {
-    printf("%s", str);
+    printf("Assigment result is: %d\n", v);
 }
 
 int ark_read(char *s)

@@ -151,13 +151,7 @@ namespace ns
       // Create a store instruction to assign the new value to the variable.
       Builder.CreateStore(newVal, nameMap[varName]);
 
-      // Create a global string pointer for varName
-      Value *varNameValue = Builder.CreateGlobalStringPtr(varName);
-
-      // Create a global string pointer for the opcode
-      Value *opCodeValue = Builder.getInt32(Node.getAssignmentOP());
-      
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val, varNameValue});
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val, opCodeValue});
     };
 
     virtual void visit(Final &Node) override
