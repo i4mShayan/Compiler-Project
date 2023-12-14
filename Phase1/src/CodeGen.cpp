@@ -25,6 +25,7 @@ namespace ns
     llvm::FunctionType* MainFty;
     llvm::Function* MainFn;
 
+    FunctionType *CalcWriteFnTy;
     Function *CalcWriteFn;
 
   public:
@@ -38,8 +39,10 @@ namespace ns
       Int8PtrPtrTy = Int8PtrTy->getPointerTo();
       Int32Zero = ConstantInt::get(Int32Ty, 0, true);
 
-      // // Create a function declaration for the "gsm_write" function.
-      CalcWriteFn = Function::Create(FunctionType::get(VoidTy, {Int32Ty}, false), GlobalValue::ExternalLinkage, "ark_write", M);
+      // Create a function type for the "gsm_write" function.
+      CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+      // Create a function declaration for the "gsm_write" function.
+      CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
     }
 
     // Entry point for generating LLVM IR from the AST.
