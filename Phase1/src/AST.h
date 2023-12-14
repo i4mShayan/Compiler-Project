@@ -193,7 +193,7 @@ public:
     }
 };
 
-class Conditions : public Loop
+class Conditions : public AST, public Loop, public If
 {
 public:
     enum Operator
@@ -219,7 +219,7 @@ public:
 
     Conditions *getRight() { return Right; }
 
-    virtual void accept(ASTVisitor &V)
+    virtual void accept(ASTVisitor &V) override
     {
         V.visit(*this);
     }
