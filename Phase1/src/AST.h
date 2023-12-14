@@ -25,7 +25,7 @@ public:
     // Virtual visit functions for each AST node type
     virtual void visit(AST &) {};
     virtual void visit(ARK &) {};
-    virtual void visit(Statement &) {};
+    virtual void visit(Statement &) = 0;
     virtual void visit(Declare &) = 0;
     virtual void visit(Assign &) = 0;
     virtual void visit(Expr &) = 0;
