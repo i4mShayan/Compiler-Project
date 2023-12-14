@@ -277,6 +277,8 @@ _error:
 
 Conditions *Parser::parseConditions()
 {
+    llvm::errs() << "kiram to rafiee conditionS. " << "\n";
+
     Condition *Left;
     Conditions *Right = nullptr;
     Token::TokenKind tokKind;
@@ -287,6 +289,8 @@ Conditions *Parser::parseConditions()
 
     if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
     {
+        llvm::errs() << "kiram to rafiee end of conditionS. " << "\n";
+        
         return (Conditions*)Left;
     }
 
@@ -296,7 +300,7 @@ Conditions *Parser::parseConditions()
     Right = parseConditions();
 
     if (!Right) goto _error;
-
+    
     switch (tokKind)
     {
         case Token::KW_and:
@@ -318,6 +322,8 @@ _error:
 
 Condition *Parser::parseCondition()
 {
+    llvm::errs() << "kiram to rafiee condition. " << "\n";
+
     Expr *Left;
     Expr *Right;
 
@@ -358,6 +364,8 @@ Condition *Parser::parseCondition()
 
     if(!Right)
         goto _error;
+
+    llvm::errs() << "kiram to rafiee end of condition. " << "\n";
 
     return new Condition(Left, Op, Right);
 _error:

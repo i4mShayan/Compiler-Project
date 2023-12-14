@@ -70,8 +70,6 @@ public:
 
 
   virtual void visit(Expr &Node) override {
-    llvm::errs() << "kiram to rafiee 100000. " << "\n";
-
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
