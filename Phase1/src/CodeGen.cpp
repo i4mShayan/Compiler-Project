@@ -130,7 +130,7 @@ namespace ns
           Builder.CreateStore(newVal, nameMap[varName]);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
+          // CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
 
           break;
         }
@@ -146,7 +146,7 @@ namespace ns
           Builder.CreateStore(newVal2, nameMap[varName]);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal2});
+          // CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal2});
 
           break;
         }
@@ -162,7 +162,7 @@ namespace ns
           Builder.CreateStore(newVal3, nameMap[varName]);
 
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal3});
+          // CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal3});
 
           break;
         }
@@ -175,7 +175,7 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal4, nameMap[varName]);
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal4});
+          // CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal4});
           break;
         }
         case Assign::ModAssign:
@@ -183,7 +183,7 @@ namespace ns
           Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           Value *newVal5 = Builder.CreateSRem(oldVal5, val);
           Builder.CreateStore(newVal5, nameMap[varName]);
-          CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal5});
+          // CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal5});
           break;
         }
       }
