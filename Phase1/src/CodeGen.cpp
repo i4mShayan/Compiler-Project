@@ -65,7 +65,9 @@ namespace ns
       }
     };
 
-    virtual void visit(Statement &Node) override {};
+    virtual void visit(Statement &Node) override {
+      // comment
+    };
 
     virtual void visit(Declare &Node) override
     {
