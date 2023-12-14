@@ -100,7 +100,7 @@ namespace ns
     };
 
 
-    virtual void visit(Assign &Node) override
+virtual void visit(Assign &Node) override
     {
       // Visit the right-hand side of the assignment and get its value.
       Node.getRight()->accept(*this);
@@ -109,54 +109,117 @@ namespace ns
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
-      Builder.CreateStore(val, nameMap[varName]);
-
-      Value *newVal;
-
       switch (Node.getAssignmentOP())
       {
-        case Assign::EqualAssign:
-        {
-          Builder.CreateStore(val, nameMap[varName]);
-          break;
-        }
-        case Assign::PlusAssign :
-        {
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          newVal = Builder.CreateNSWAdd(oldVal, val);
-          break;
-        }
-        case Assign::MinusAssign:
-        {
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          newVal = Builder.CreateNSWSub(oldVal, val);
-          break;
-        }
-        case Assign::MulAssign:
-        {
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          newVal = Builder.CreateNSWMul(oldVal, val);
-          break;
-        }
-        case Assign::DivAssign:
-        {
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          newVal = Builder.CreateSDiv(oldVal, val);
-          break;
-        }
-        case Assign::ModAssign:
-        {
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          newVal = Builder.CreateSRem(oldVal, val);
-          Builder.CreateStore(newVal, nameMap[varName]);
-          break;
-        }
+      case Assign::EqualAssign:
+      {
+        // Create a store instruction to assign the value to the variable.
+        Builder.CreateStore(val, nameMap[varName]);
+
+        // Create a function type for the "gsm_write" function.
+        FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+        // Create a function declaration for the "gsm_write" function.
+        Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
+
+        // Create a call instruction to invoke the "gsm_write" function with the value.
+        CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+
+        break;
       }
+      case Assign::PlusAssign :
+      {
+        // Create a load instruction to get the current value of the variable.
+        Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
 
-      // Create a store instruction to assign the new value to the variable.
-      Builder.CreateStore(newVal, nameMap[varName]);
+        // Create an add instruction to add the old value and the new value.
+        Value *newVal = Builder.CreateNSWAdd(oldVal, val);
 
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+        // Create a store instruction to assign the new value to the variable.
+        Builder.CreateStore(newVal, nameMap[varName]);
+
+        // Create a function type for the "gsm_write" function.
+        FunctionType *CalcWriteFnTy2 = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+        // Create a function declaration for the "gsm_write" function.
+        Function *CalcWriteFn2 = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
+
+        // Create a call instruction to invoke the "gsm_write" function with the new value.
+        CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
+
+        break;
+      }
+      case Assign::MinusAssign:
+      {
+        // Create a load instruction to get the current value of the variable.
+        Value *oldVal2 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+
+        // Create a sub instruction to subtract the old value and the new value.
+        Value *newVal2 = Builder.CreateNSWSub(oldVal2, val);
+
+        // Create a store instruction to assign the new value to the variable.
+        Builder.CreateStore(newVal2, nameMap[varName]);
+
+        // Create a function type for the "gsm_write" function.
+        FunctionType *CalcWriteFnTy3 = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+        // Create a function declaration for the "gsm_write" function.
+        Function *CalcWriteFn3 = Function::Create(CalcWriteFnTy3, GlobalValue::ExternalLinkage, "ark_write", M);
+
+        // Create a call instruction to invoke the "gsm_write" function with the new value.
+        CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy3, CalcWriteFn3, {newVal2});
+
+        break;
+      }
+      case Assign::MulAssign:
+        {
+        // Create a load instruction to get the current value of the variable.
+        Value *oldVal3 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+
+        // Create a mul instruction to multiply the old value and the new value.
+        Value *newVal3 = Builder.CreateNSWMul(oldVal3, val);
+
+        // Create a store instruction to assign the new value to the variable.
+        Builder.CreateStore(newVal3, nameMap[varName]);
+
+        // Create a function type for the "gsm_write" function.
+        FunctionType *CalcWriteFnTy4 = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+        // Create a function declaration for the "gsm_write" function.
+        Function *CalcWriteFn4 = Function::Create(CalcWriteFnTy4, GlobalValue::ExternalLinkage, "ark_write", M);
+
+        // Create a call instruction to invoke the "gsm_write" function with the new value.
+        CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy4, CalcWriteFn4, {newVal3});
+
+        break;
+        }
+      case Assign::DivAssign:
+      {
+        // Create a load instruction to get the current value of the variable.
+        Value *oldVal4 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+        // Create a div instruction to divide the old value and the new value.
+        Value *newVal4 = Builder.CreateSDiv(oldVal4, val);
+        // Create a store instruction to assign the new value to the variable.
+        Builder.CreateStore(newVal4, nameMap[varName]);
+        // Create a function type for the "gsm_write" function.
+        FunctionType *CalcWriteFnTy5 = FunctionType::get(VoidTy, {Int32Ty}, false);
+        // Create a function declaration for the "gsm_write" function.
+        Function *CalcWriteFn5 = Function::Create(CalcWriteFnTy5, GlobalValue::ExternalLinkage, "ark_write", M);
+        // Create a call instruction to invoke the "gsm_write" function with the new value.
+        CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
+        break;
+      }
+      case Assign::ModAssign:
+      {
+        Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+        Value *newVal5 = Builder.CreateSRem(oldVal5, val);
+        Builder.CreateStore(newVal5, nameMap[varName]);
+        FunctionType *CalcWriteFnTy6 = FunctionType::get(VoidTy, {Int32Ty}, false);
+        Function *CalcWriteFn6 = Function::Create(CalcWriteFnTy6, GlobalValue::ExternalLinkage, "ark_write", M);
+        CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy6, CalcWriteFn6, {newVal5});
+        break;
+      }
+      }
     };
 
     virtual void visit(Final &Node) override
