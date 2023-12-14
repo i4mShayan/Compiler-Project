@@ -113,10 +113,7 @@ virtual void visit(Assign &Node) override
       {
       case Assign::EqualAssign:
       {
-        Value *oldVal2 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-
-        // Create a sub instruction to subtract the old value and the new value.
-        Value *newVal2 = Builder.CreateNSWSub(oldVal2, oldVal2);
+        CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
         // Create a store instruction to assign the value to the variable.
         Builder.CreateStore(val, nameMap[varName]);
