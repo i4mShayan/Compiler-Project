@@ -274,11 +274,10 @@ namespace
         else
         {
           Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
+          temp.accept();
           for (int i = 1; i < intval; i++)
           {
-            int temp_int;
-            temp->getVal().getAsInteger(10, temp_int);
-            Left = Builder.CreateNSWMul(Left, temp_int);
+            Left = Builder.CreateNSWMul(Left, V);
           }
           V = Left;
         }
