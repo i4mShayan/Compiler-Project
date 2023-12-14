@@ -114,7 +114,7 @@ namespace ns
           Builder.CreateStore(val, nameMap[varName]);
 
           // Create a call instruction to invoke the "gsm_write" function with the value.
-          CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+          // CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
           break;
         }
