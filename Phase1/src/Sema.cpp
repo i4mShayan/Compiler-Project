@@ -35,8 +35,9 @@ public:
       (*I)->accept(*this); // Visit each child node
     }
   };
-  
 
+  virtual void visit(Statement &Node) override {};
+  
   virtual void visit(Declare &Node) override {
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
