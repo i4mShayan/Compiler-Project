@@ -161,6 +161,7 @@ Assign *Parser::parseAssign()
     {
     case Token::equal:
         Ans = new Assign(Left, Assign::AssOp::EqualAssign, Right);
+        break;
     case Token::plus_equal:
         Ans = new Assign(Left, Assign::AssOp::PlusAssign, Right);
         break;

@@ -105,7 +105,7 @@ virtual void visit(Assign &Node) override
       // Visit the right-hand side of the assignment and get its value.
       Node.getRight()->accept(*this);
       Value *val = V;
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+      
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
@@ -113,8 +113,6 @@ virtual void visit(Assign &Node) override
       {
       case Assign::EqualAssign:
       {
-        Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
-
         // Create a store instruction to assign the value to the variable.
         Builder.CreateStore(val, nameMap[varName]);
 
