@@ -273,10 +273,10 @@ namespace
         }
         else
         {
-          Final *temp = new Final((Node.getLeft)->getKind(), (Node.getLeft)->getVal());
+          Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
           for (int i = 1; i < intval; i++)
           {
-            Left = Builder.CreateNSWMul(Left, temp.getVal());
+            Left = Builder.CreateNSWMul(Left, temp->getVal());
           }
           V = Left;
         }
@@ -304,7 +304,7 @@ namespace
         StringRef Var = *I;
         nameMap[Var] = Builder.CreateAlloca(Int32Ty);
 
-        if (L != E)
+        if (L != R)
         {
           (*L)->accept(*this);
           val = V;
