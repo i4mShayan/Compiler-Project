@@ -432,16 +432,20 @@ virtual void visit(Assign &Node) override
     virtual void visit(Loop &Node) override
     {
       llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loopcond", MainFn);
+      llvm::errs() << "loopcond created " << "\n";
       llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loopbody", MainFn);
       llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "afterloop", MainFn);
 
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
+      llvm::errs() << "loopcond entered " << "\n";
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
+      llvm::errs() << "loopcond excuted " << "\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
-      Builder.SetInsertPoint(LoopBody); 
-      
+      Builder.SetInsertPoint(LoopBody);
+
+      llvm::errs() << "loopbody excuted " << "\n";
       for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
           (*I)->accept(*this); 
@@ -449,6 +453,8 @@ virtual void visit(Assign &Node) override
       Builder.CreateBr(LoopCond); 
 
       Builder.SetInsertPoint(AfterLoop);
+      llvm::errs() << "after loop" << "\n";
+
     };
   };
 }; // namespace
