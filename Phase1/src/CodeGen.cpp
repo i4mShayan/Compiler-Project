@@ -196,18 +196,18 @@ virtual void visit(Assign &Node) override
     {
       llvm::errs() << "Visiting Final" << "\n";
 
-      if (Node.getKind() == Final::Ident)
-      {
-        // If the factor is an identifier, load its value from memory.
-        V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
-      }
-      else
-      {
-        // If the factor is a literal, convert it to an integer and create a constant.
-        int intval;
-        Node.getVal().getAsInteger(10, intval);
-        V = ConstantInt::get(Int32Ty, intval, true);
-      }
+      // if (Node.getKind() == Final::Ident)
+      // {
+      //   // If the factor is an identifier, load its value from memory.
+      //   V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
+      // }
+      // else
+      // {
+      //   // If the factor is a literal, convert it to an integer and create a constant.
+      //   int intval;
+      //   Node.getVal().getAsInteger(10, intval);
+      //   V = ConstantInt::get(Int32Ty, intval, true);
+      // }
       llvm::errs() << "Visiting Final End" << "\n";
 
     };
