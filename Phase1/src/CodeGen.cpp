@@ -149,7 +149,7 @@ namespace ns
       }
 
       // Create a store instruction to assign the new value to the variable.
-      Builder.CreateStore(newVal2, nameMap[varName]);
+      Builder.CreateStore(newVal, nameMap[varName]);
 
       CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
     };
