@@ -277,7 +277,7 @@ _error:
 Conditions *Parser::parseConditions()
 {
     Condition *Left;
-    Conditions *Right;
+    Conditions *Right = nullptr;
     Token::TokenKind tokKind;
 
     Left = parseCondition();

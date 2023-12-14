@@ -369,13 +369,13 @@ namespace ns
     {
       Node.getLeft()->accept(*this);
       Value* Left = V;
-      Node.getRight()->accept(*this);
-      Value* Right = V;
       if (Node.getRight() == nullptr)
       {
         V = Left;
         return;
       }
+      Node.getRight()->accept(*this);
+      Value* Right = V;
       switch (Node.getSign())
       {
       case Conditions::And:
