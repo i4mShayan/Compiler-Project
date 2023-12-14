@@ -356,19 +356,19 @@ virtual void visit(Assign &Node) override
       llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
       llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
 
+      IfCond->insertInto(MainFn);
+      
       Builder.SetInsertPoint(IfCond);
       Node.getConds()->accept(*this);
       llvm::Value* IfCondVal = V;
 
       Builder.SetInsertPoint(IfBody);
-      llvm::errs() << "hhh\n";
       
       for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
       Builder.CreateBr(AfterIf);
-      llvm::errs() << "hhh2\n";
            
 
       llvm::BasicBlock* PrevCond = IfCond;
