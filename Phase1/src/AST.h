@@ -193,71 +193,7 @@ public:
     }
 };
 
-class Conditions : public AST, public Loop, public If
-{
-public:
-    enum Operator
-    {
-        And,
-        Or
-    };
-private:
-    Condition *Left;
-    Operator Sign;
-    Conditions *Right = nullptr;
 
-public:
-    Conditions(Condition *left, Operator sign, Conditions *right) : 
-    Left(left), Sign(sign), Right(right) {}
-    Conditions(Condition *left) : 
-    Left(left) {}
-    Conditions() {}
-
-    Condition *getLeft() { return Left; }
-
-    Operator getSign() { return Sign; }
-
-    Conditions *getRight() { return Right; }
-
-    virtual void accept(ASTVisitor &V) override
-    {
-        V.visit(*this);
-    }
-};
-
-class Condition : public Conditions
-{
-public:
-    enum Operator
-    {
-        LessEqual,
-        LessThan,
-        GreaterThan,
-        GreaterEqual,
-        EqualEqual,
-        NotEqual
-    };
-
-private:
-    Expr *Left; // Left-hand side Expr
-    Operator Op;      // Operator of the boolean operation
-    Expr *Right; // Right-hand side Expr
-
-public:
-    Condition(Expr *left, Operator Op, Expr *right) : 
-    Left(left), Op(Op), Right(right), Conditions() {}
-
-    Expr *getLeft() { return Left; }
-
-    Operator getSign() { return Op; }
-
-    Expr *getRight() { return Right; }
-
-    virtual void accept(ASTVisitor &V) override
-    {
-        V.visit(*this);
-    }
-};
 
 class Final : public Expr
 {
@@ -382,6 +318,72 @@ public:
     llvm::SmallVector<Assign *>::const_iterator AssignmentsBegin() { return Assignments.begin(); }
 
     llvm::SmallVector<Assign *>::const_iterator AssignmentsEnd() { return Assignments.end(); }
+
+    virtual void accept(ASTVisitor &V) override
+    {
+        V.visit(*this);
+    }
+};
+
+class Conditions : public AST, public Loop, public If
+{
+public:
+    enum Operator
+    {
+        And,
+        Or
+    };
+private:
+    Condition *Left;
+    Operator Sign;
+    Conditions *Right = nullptr;
+
+public:
+    Conditions(Condition *left, Operator sign, Conditions *right) : 
+    Left(left), Sign(sign), Right(right) {}
+    Conditions(Condition *left) : 
+    Left(left) {}
+    Conditions() {}
+
+    Condition *getLeft() { return Left; }
+
+    Operator getSign() { return Sign; }
+
+    Conditions *getRight() { return Right; }
+
+    virtual void accept(ASTVisitor &V) override
+    {
+        V.visit(*this);
+    }
+};
+
+class Condition : public Conditions
+{
+public:
+    enum Operator
+    {
+        LessEqual,
+        LessThan,
+        GreaterThan,
+        GreaterEqual,
+        EqualEqual,
+        NotEqual
+    };
+
+private:
+    Expr *Left; // Left-hand side Expr
+    Operator Op;      // Operator of the boolean operation
+    Expr *Right; // Right-hand side Expr
+
+public:
+    Condition(Expr *left, Operator Op, Expr *right) : 
+    Left(left), Op(Op), Right(right), Conditions() {}
+
+    Expr *getLeft() { return Left; }
+
+    Operator getSign() { return Op; }
+
+    Expr *getRight() { return Right; }
 
     virtual void accept(ASTVisitor &V) override
     {
