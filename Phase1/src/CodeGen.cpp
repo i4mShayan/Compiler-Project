@@ -105,7 +105,7 @@ virtual void visit(Assign &Node) override
       // Visit the right-hand side of the assignment and get its value.
       Node.getRight()->accept(*this);
       Value *val = V;
-      
+
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
@@ -198,7 +198,6 @@ virtual void visit(Assign &Node) override
       {
         // If the factor is an identifier, load its value from memory.
         V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
-        CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {V});
       }
       else
       {
@@ -450,7 +449,6 @@ virtual void visit(Assign &Node) override
       Builder.CreateBr(LoopCond); 
 
       Builder.SetInsertPoint(AfterLoop);
-
     };
   };
 }; // namespace
