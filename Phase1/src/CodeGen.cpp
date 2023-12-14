@@ -106,7 +106,7 @@ namespace ns
       auto varName = Node.getLeft()->getVal();
 
       // Create a store instruction to assign the value to the variable.
-      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);;
+      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
       Value *newVal;
 
       // if (Node.getAssignmentOP() != Assign::EqualAssign) {
