@@ -307,6 +307,8 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Condition &Node) override
     {
+      llvm::errs() << "Visiting Condition " << "\n";
+
       Node.getLeft()->accept(*this);
       Value *Left = V;
 
