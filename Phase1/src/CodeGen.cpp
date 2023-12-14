@@ -307,48 +307,49 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Condition &Node) override
     {
-      llvm::errs() << "Visiting Condition " << "\n";
 
       Node.getLeft()->accept(*this);
       Value *Left = V;
+      llvm::errs() << "Visiting Condition " << "\n";
 
       // Visit the right-hand side of the binary operation and get its value.
       Node.getRight()->accept(*this);
       Value *Right = V;
-
+      llvm::errs() << "Visiting Condition 2" << "\n";
+      
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getSign())
       {
-      case Condition::LessEqual:
-      {
-        V = Builder.CreateICmpSLE(Left, Right);
-        break;
-      }
-      case Condition::LessThan:
-      {
-        V = Builder.CreateICmpSLT(Left, Right);
-        break;
-      }
-      case Condition::GreaterThan:
-      {
-        V = Builder.CreateICmpSGT(Left, Right);
-        break;
-      }
-      case Condition::GreaterEqual:
-      {
-        V = Builder.CreateICmpSGE(Left, Right);
-        break;
-      }
-      case Condition::EqualEqual:
-      {
-        V = Builder.CreateICmpEQ(Left, Right);
-        break;
-      }
-      case Condition::NotEqual:
-      {
-        V = Builder.CreateICmpNE(Left, Right);
-        break;
-      }
+        case Condition::LessEqual:
+        {
+          V = Builder.CreateICmpSLE(Left, Right);
+          break;
+        }
+        case Condition::LessThan:
+        {
+          V = Builder.CreateICmpSLT(Left, Right);
+          break;
+        }
+        case Condition::GreaterThan:
+        {
+          V = Builder.CreateICmpSGT(Left, Right);
+          break;
+        }
+        case Condition::GreaterEqual:
+        {
+          V = Builder.CreateICmpSGE(Left, Right);
+          break;
+        }
+        case Condition::EqualEqual:
+        {
+          V = Builder.CreateICmpEQ(Left, Right);
+          break;
+        }
+        case Condition::NotEqual:
+        {
+          V = Builder.CreateICmpNE(Left, Right);
+          break;
+        }
       }
     };
 
