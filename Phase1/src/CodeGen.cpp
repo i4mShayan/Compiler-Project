@@ -194,8 +194,6 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Final &Node) override
     {
-      llvm::errs() << "Visiting Final" << "\n";
-
       if (Node.getKind() == Final::Ident)
       {
         // If the factor is an identifier, load its value from memory.
@@ -208,8 +206,6 @@ virtual void visit(Assign &Node) override
         Node.getVal().getAsInteger(10, intval);
         V = ConstantInt::get(Int32Ty, intval, true);
       }
-      llvm::errs() << "Visiting Final End" << "\n";
-
     };
 
     virtual void visit(Expr &Node) override
