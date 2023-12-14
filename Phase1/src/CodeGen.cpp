@@ -106,15 +106,15 @@ namespace ns
       auto varName = Node.getLeft()->getVal();
 
       // Create a store instruction to assign the value to the variable.
-      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+      Value *oldVal;
       Value *newVal;
+
+      if (Node.getAssignmentOP() != Assign::EqualAssign) {
+        oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName])
+      }
 
       switch (Node.getAssignmentOP())
       {
-        case Assign::EqualAssign:
-        {
-          break;
-        }
         case Assign::PlusAssign :
         {
           // Create an add instruction to add the old value and the new value.
@@ -124,29 +124,32 @@ namespace ns
         case Assign::MinusAssign:
         {
           // Create a sub instruction to subtract the old value and the new value.
-          Value *newVal = Builder.CreateNSWSub(oldVal2, val);
+          Value *newVal = Builder.CreateNSWSub(oldVal, val);
           break;
         }
         case Assign::MulAssign:
         {
           // Create a mul instruction to multiply the old value and the new value.
-          Value *newVal = Builder.CreateNSWMul(oldVal3, val);
+          Value *newVal = Builder.CreateNSWMul(oldVal, val);
           break;
         }
         case Assign::DivAssign:
         {
           // Create a div instruction to divide the old value and the new value.
-          Value *newVal = Builder.CreateSDiv(oldVal4, val);
+          Value *newVal = Builder.CreateSDiv(oldVal, val);
           break;
         }
         case Assign::ModAssign:
         {
           // Create a mod instruction to get module of the old value and the new value.
-          Value *newVal = Builder.CreateSRem(oldVal5, val);
+          Value *newVal = Builder.CreateSRem(oldVal, val);
           break;
         }
+        case Assign::EqualAssign:
+        default:
+          break;
       }
-      
+
       // Create a store instruction to assign the new value to the variable.
       Builder.CreateStore(newVal, nameMap[varName]);
 
