@@ -7,7 +7,7 @@
 using namespace llvm;
 
 // Define a visitor class for generating LLVM IR from the AST.
-namespace
+namespace ns
 {
   class ToIRVisitor : public ASTVisitor
   {
@@ -196,18 +196,18 @@ virtual void visit(Assign &Node) override
     {
       llvm::errs() << "Visiting Final" << "\n";
 
-      // if (Node.getKind() == Final::Ident)
-      // {
-      //   // If the factor is an identifier, load its value from memory.
-      //   V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
-      // }
-      // else
-      // {
-      //   // If the factor is a literal, convert it to an integer and create a constant.
-      //   int intval;
-      //   Node.getVal().getAsInteger(10, intval);
-      //   V = ConstantInt::get(Int32Ty, intval, true);
-      // }
+      if (Node.getKind() == Final::Ident)
+      {
+        // If the factor is an identifier, load its value from memory.
+        V = Builder.CreateLoad(Int32Ty, nameMap[Node.getVal()]);
+      }
+      else
+      {
+        // If the factor is a literal, convert it to an integer and create a constant.
+        int intval;
+        Node.getVal().getAsInteger(10, intval);
+        V = ConstantInt::get(Int32Ty, intval, true);
+      }
       llvm::errs() << "Visiting Final End" << "\n";
 
     };
@@ -465,25 +465,23 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Loop &Node) override
     {
-      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loopcond", MainFn);
+      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
       llvm::errs() << "loopcond created " << "\n";
-      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loopbody", MainFn);
-      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "afterloop", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
       llvm::errs() << "loopcond entered " << "\n";
-      if(Node.getConds()) {
-        llvm::errs() << "Conditions found" << "\n";
-        (Node.getConds())->accept(*this); 
-      }
+      Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "loopcond excuted " << "\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
       Builder.SetInsertPoint(LoopBody);
 
+
       llvm::errs() << "loopbody excuted " << "\n";
-      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
+      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
           (*I)->accept(*this); 
       }
@@ -503,8 +501,10 @@ void CodeGen::compile(AST *Tree)
   Module *M = new Module("ark", Ctx);
 
   // Create an instance of the ToIRVisitor and run it on the AST to generate LLVM IR.
-  ToIRVisitor ToIR(M);
-  ToIR.run(Tree);
+  // ToIRVisitor ToIR(M);
+  ns::ToIRVisitor *ToIR = new ns::ToIRVisitor(M);
+  
+  ToIR->run(Tree);
 
   // Print the generated module to the standard output.
   M->print(outs(), nullptr);
