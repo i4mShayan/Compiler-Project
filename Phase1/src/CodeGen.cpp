@@ -65,31 +65,6 @@ namespace ns
       }
     };
 
-    virtual void visit(Statement &Node) override
-    {
-      // Statement *pointer = &Node;
-      // if (Node.getKind() == Statement::Assignment)
-      // {
-      //   Assign *assign = static_cast<Assign*>(pointer);
-      //   assign->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::Declaration)
-      // {
-      //   Declare *declare = static_cast<Declare*>(pointer);
-      //   declare->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::If)
-      // {
-      //   If *if_stm = static_cast<If*>(pointer);
-      //   if_stm->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::Loop)
-      // {
-      //   Loop *loop = static_cast<Loop*>(pointer);
-      //   loop->accept(*this);
-      // }
-    
-    };
 
     virtual void visit(Assign &Node) override
     {
