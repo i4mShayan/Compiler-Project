@@ -242,55 +242,55 @@ namespace
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getOperator())
       {
-      case Expr::Plus:
-      {
-        V = Builder.CreateNSWAdd(Left, Right);
-        break;
-      }
-      case Expr::Minus:
-      {
-        V = Builder.CreateNSWSub(Left, Right);
-        break;
-      }
-      case Expr::Mul:
-      {
-        V = Builder.CreateNSWMul(Left, Right);
-        break;
-      }
-      case Expr::Div:
-      {
-        V = Builder.CreateSDiv(Left, Right);
-        break;
-      }
-      case Expr::Pow:
-      {
-        Final *right_final = (Node.getRight())->getLeft();
-        int intval;
-        right_final->getVal().getAsInteger(10, intval);
-        if (intval == 0)
+        case Expr::Plus:
         {
-          V = ConstantInt::get(Int32Ty, 1, true);
+          V = Builder.CreateNSWAdd(Left, Right);
+          break;
         }
-        else
+        case Expr::Minus:
         {
-          Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
-          temp->accept(*this);
-          for (int i = 1; i < intval; i++)
+          V = Builder.CreateNSWSub(Left, Right);
+          break;
+        }
+        case Expr::Mul:
+        {
+          V = Builder.CreateNSWMul(Left, Right);
+          break;
+        }
+        case Expr::Div:
+        {
+          V = Builder.CreateSDiv(Left, Right);
+          break;
+        }
+        case Expr::Pow:
+        {
+          Final *right_final = (Node.getRight())->getLeft();
+          int intval;
+          right_final->getVal().getAsInteger(10, intval);
+          if (intval == 0)
           {
-            Left = Builder.CreateNSWMul(Left, V);
+            V = ConstantInt::get(Int32Ty, 1, true);
           }
-          V = Left;
+          else
+          {
+            Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
+            temp->accept(*this);
+            for (int i = 1; i < intval; i++)
+            {
+              Left = Builder.CreateNSWMul(Left, V);
+            }
+            V = Left;
+          }
+          break;
         }
-        break;
-      }
-      case Expr::Mod:
-      {
-        // x % y = x - (x / y) * y
-        Value *division = Builder.CreateSDiv(Left, Right);
-        Value *multiply = Builder.CreateNSWMul(division, Right);
-        V = Builder.CreateNSWSub(Left, multiply);
-        break;
-      }
+        case Expr::Mod:
+        {
+          // x % y = x - (x / y) * y
+          Value *division = Builder.CreateSDiv(Left, Right);
+          Value *multiply = Builder.CreateNSWMul(division, Right);
+          V = Builder.CreateNSWSub(Left, multiply);
+          break;
+        }
       }
     };
 
@@ -336,23 +336,35 @@ namespace
       switch (Node.getSign())
       {
       case Condition::LessEqual:
+      {
         V = Builder.CreateICmpSLE(Left, Right);
         break;
+      }
       case Condition::LessThan:
+      {
         V = Builder.CreateICmpSLT(Left, Right);
         break;
+      }
       case Condition::GreaterThan:
+      {
         V = Builder.CreateICmpSGT(Left, Right);
         break;
+      }
       case Condition::GreaterEqual:
+      {
         V = Builder.CreateICmpSGE(Left, Right);
         break;
+      }
       case Condition::EqualEqual:
+      {
         V = Builder.CreateICmpEQ(Left, Right);
         break;
+      }
       case Condition::NotEqual:
+      {
         V = Builder.CreateICmpNE(Left, Right);
         break;
+      }
       }
     };
 
