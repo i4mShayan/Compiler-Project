@@ -310,12 +310,10 @@ virtual void visit(Assign &Node) override
 
       Node.getLeft()->accept(*this);
       Value *Left = V;
-      llvm::errs() << "Visiting Condition " << "\n";
 
       // Visit the right-hand side of the binary operation and get its value.
       Node.getRight()->accept(*this);
       Value *Right = V;
-      llvm::errs() << "Visiting Condition 2" << "\n";
       
       // Perform the binary operation based on the operator type and create the corresponding instruction.
       switch (Node.getSign())
@@ -460,20 +458,16 @@ virtual void visit(Assign &Node) override
     virtual void visit(Loop &Node) override
     {
       llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      llvm::errs() << "loopcond created " << "\n";
       llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
       llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
-      llvm::errs() << "loopcond entered " << "\n";
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
-      llvm::errs() << "loopcond excuted " << "\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
       Builder.SetInsertPoint(LoopBody);
 
-      llvm::errs() << "loopbody excuted " << "\n";
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
           (*I)->accept(*this); 
@@ -481,8 +475,6 @@ virtual void visit(Assign &Node) override
       Builder.CreateBr(LoopCond); 
 
       Builder.SetInsertPoint(AfterLoop);
-      llvm::errs() << "after loop" << "\n";
-
     };
   };
 }; // namespace
