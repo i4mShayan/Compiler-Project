@@ -358,12 +358,12 @@ virtual void visit(Assign &Node) override
       Node.getLeft()->accept(*this);
       Value* Left = V;
       
-      // if (!Node.getRight())
-      // {
-      //   V = Left;
-      //   return;
-      // }
-
+      if (!Node.getRight())
+      {
+        V = Left;
+        return;
+      }
+      
       Node.getRight()->accept(*this);
       Value* Right = V;
 
@@ -467,7 +467,7 @@ virtual void visit(Assign &Node) override
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
       llvm::errs() << "loopcond entered " << "\n";
-      // Node.getConds()->accept(*this); 
+      Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "loopcond excuted " << "\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
