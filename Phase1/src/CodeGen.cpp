@@ -260,7 +260,9 @@ virtual void visit(Assign &Node) override
             }
             else
             {
-              V = Node.getLeft()->getVal().getAsInteger(10, intval);
+              int x;
+              Node.getLeft()->getVal().getAsInteger(10, x);
+              V = ConstantInt::get(Int32Ty, x, true);
               for (int i = 1; i < intval; i++)
               {
                 Left = Builder.CreateNSWMul(Left, V);
