@@ -100,18 +100,18 @@ namespace ns
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
+      // Create a function type for the "gsm_write" function.
+      FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+
+      // Create a function declaration for the "gsm_write" function.
+      Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
+      
       switch (Node.getAssignmentOP())
       {
         case Assign::EqualAssign:
         {
           // Create a store instruction to assign the value to the variable.
           Builder.CreateStore(val, nameMap[varName]);
-
-          // Create a function type for the "gsm_write" function.
-          FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
-
-          // Create a function declaration for the "gsm_write" function.
-          Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
 
           // Create a call instruction to invoke the "gsm_write" function with the value.
           CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
@@ -129,14 +129,8 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal, nameMap[varName]);
 
-          // Create a function type for the "gsm_write" function.
-          FunctionType *CalcWriteFnTy2 = FunctionType::get(VoidTy, {Int32Ty}, false);
-
-          // Create a function declaration for the "gsm_write" function.
-          Function *CalcWriteFn2 = Function::Create(CalcWriteFnTy2, GlobalValue::ExternalLinkage, "ark_write", M);
-
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy2, CalcWriteFn2, {newVal});
+          CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
 
           break;
         }
@@ -151,14 +145,8 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal2, nameMap[varName]);
 
-          // Create a function type for the "gsm_write" function.
-          FunctionType *CalcWriteFnTy3 = FunctionType::get(VoidTy, {Int32Ty}, false);
-
-          // Create a function declaration for the "gsm_write" function.
-          Function *CalcWriteFn3 = Function::Create(CalcWriteFnTy3, GlobalValue::ExternalLinkage, "ark_write", M);
-
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy3, CalcWriteFn3, {newVal2});
+          CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal2});
 
           break;
         }
@@ -173,14 +161,8 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal3, nameMap[varName]);
 
-          // Create a function type for the "gsm_write" function.
-          FunctionType *CalcWriteFnTy4 = FunctionType::get(VoidTy, {Int32Ty}, false);
-
-          // Create a function declaration for the "gsm_write" function.
-          Function *CalcWriteFn4 = Function::Create(CalcWriteFnTy4, GlobalValue::ExternalLinkage, "ark_write", M);
-
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy4, CalcWriteFn4, {newVal3});
+          CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal3});
 
           break;
         }
@@ -192,12 +174,8 @@ namespace ns
           Value *newVal4 = Builder.CreateSDiv(oldVal4, val);
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal4, nameMap[varName]);
-          // Create a function type for the "gsm_write" function.
-          FunctionType *CalcWriteFnTy5 = FunctionType::get(VoidTy, {Int32Ty}, false);
-          // Create a function declaration for the "gsm_write" function.
-          Function *CalcWriteFn5 = Function::Create(CalcWriteFnTy5, GlobalValue::ExternalLinkage, "ark_write", M);
           // Create a call instruction to invoke the "gsm_write" function with the new value.
-          CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy5, CalcWriteFn5, {newVal4});
+          CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal4});
           break;
         }
         case Assign::ModAssign:
@@ -205,9 +183,7 @@ namespace ns
           Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           Value *newVal5 = Builder.CreateSRem(oldVal5, val);
           Builder.CreateStore(newVal5, nameMap[varName]);
-          FunctionType *CalcWriteFnTy6 = FunctionType::get(VoidTy, {Int32Ty}, false);
-          Function *CalcWriteFn6 = Function::Create(CalcWriteFnTy6, GlobalValue::ExternalLinkage, "ark_write", M);
-          CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy6, CalcWriteFn6, {newVal5});
+          CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal5});
           break;
         }
       }
