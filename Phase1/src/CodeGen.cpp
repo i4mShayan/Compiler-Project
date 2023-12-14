@@ -384,7 +384,7 @@ virtual void visit(Assign &Node) override
 
       Builder.SetInsertPoint(IfCond);
       Node.getConds()->accept(*this);
-      llvm::Value* IfCondVal = V;
+      Value* IfCondVal = V;
 
       Builder.SetInsertPoint(IfBody);
       
@@ -397,7 +397,7 @@ virtual void visit(Assign &Node) override
 
       llvm::BasicBlock* PrevCond = IfCond;
       llvm::BasicBlock* PrevBody = IfBody;
-      llvm::Value* PrevCondVal = IfCondVal;
+      Value* PrevCondVal = IfCondVal;
 
       for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
@@ -465,7 +465,7 @@ virtual void visit(Assign &Node) override
       Builder.SetInsertPoint(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
-       llvm::errs() << "Condition is ";
+      llvm::errs() << "Condition is ";
       Cond->print(llvm::errs());
       llvm::errs() << "\n-----------\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
