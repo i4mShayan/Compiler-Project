@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ark_write(const char* varName,  int value, const char* opCode)
+void ark_write(const char* varName,  int value, int opCode)
 {
     printf("Variable %s becomes %d after %s, \n", varName, value, opCode);
 }

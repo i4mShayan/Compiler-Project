@@ -102,20 +102,6 @@ namespace ns
 
     virtual void visit(Assign &Node) override
     {
-      struct X { // struct's as good as class
-        std::string getOpCodeString(Assign::OpCode opCode) {
-          switch (opCode) {
-            case Assign::EqualAssign: return "EqualAssign";
-            case Assign::PlusAssign: return "PlusAssign";
-            case Assign::MinusAssign: return "MinusAssign";
-            case Assign::MulAssign: return "MulAssign";
-            case Assign::DivAssign: return "DivAssign";
-            case Assign::ModAssign: return "ModAssign";
-            default: return "Unknown";
-          }
-        }
-      };
-
       // Visit the right-hand side of the assignment and get its value.
       Node.getRight()->accept(*this);
       Value *val = V;
@@ -169,7 +155,7 @@ namespace ns
       Value *varNameValue = Builder.CreateGlobalStringPtr(varName);
 
       // Create a global string pointer for the opcode
-      Value *opCodeValue = Builder.CreateGlobalStringPtr(X.getOpCodeString(Node.getAssignmentOP()));
+      Value *opCodeValue = Builder.getInt32(Node.getAssignmentOP());
       
       CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {varNameValue, val, opCodeValue});
     };
