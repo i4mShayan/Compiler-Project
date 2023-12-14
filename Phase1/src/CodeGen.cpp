@@ -316,7 +316,7 @@ namespace ns
       llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
 
       Builder.SetInsertPoint(IfCond);
-      Node.getCondition()->accept(*this);
+      Node.getConds()->accept(*this);
       llvm::Value* IfCondVal = V;
 
       Builder.SetInsertPoint(IfBody);
@@ -340,7 +340,7 @@ namespace ns
         Builder.CreateCondBr(PrevCondVal, PrevBody, ElifCond);
 
         Builder.SetInsertPoint(ElifCond);
-        (*I)->getCondition()->accept(*this);
+        (*I)->getConds()->accept(*this);
         llvm::Value* ElifCondVal = V;
         // Builder.CreateCondBr(ElifCondVal, ElifBody, nullptr);
 
