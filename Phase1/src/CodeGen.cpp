@@ -311,7 +311,63 @@ namespace ns
 
     virtual void visit(If &Node) override
     {
+      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
+      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
+      llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
+
+      Builder.SetInsertPoint(IfCond);
+      Node.getCondition()->accept(*this);
+      llvm::Value* IfCondVal = V;
+
+      Builder.SetInsertPoint(IfBody);
       
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
+      {
+        (*I)->accept(*this);
+      }
+      Builder.CreateBr(AfterIf);
+           
+
+      llvm::BasicBlock* PrevCond = IfCond;
+      llvm::BasicBlock* PrevBody = IfBody;
+      llvm::Value* PrevCondVal = IfCondVal;
+
+      for (auto I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
+        llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
+        llvm::BasicBlock* ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
+
+        Builder.SetInsertPoint(PrevCond); 
+        Builder.CreateCondBr(PrevCondVal, PrevBody, ElifCond);
+
+        Builder.SetInsertPoint(ElifCond);
+        (*I)->getCondition()->accept(*this);
+        llvm::Value* ElifCondVal = V;
+        // Builder.CreateCondBr(ElifCondVal, ElifBody, nullptr);
+
+        Builder.SetInsertPoint(ElifBody);
+        (*I)->accept(*this);
+        Builder.CreateBr(AfterIf);
+
+        PrevCond = ElifCond;
+        PrevCondVal = ElifCondVal;
+        PrevBody = ElifBody;
+      }
+
+      llvm::BasicBlock* ElseBody = nullptr;
+      if (Node.getElse()) {
+          ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
+          Builder.SetInsertPoint(ElseBody);
+          Node.getElse()->accept(*this);
+          Builder.CreateBr(AfterIf);
+
+          Builder.SetInsertPoint(PrevCond);
+          Builder.CreateCondBr(PrevCondVal, PrevBody, ElseBody);
+      } else {
+          Builder.SetInsertPoint(PrevCond);
+          Builder.CreateCondBr(IfCondVal, PrevBody, AfterIf);
+      }
+
+      Builder.SetInsertPoint(AfterIf);
       
     };
 
