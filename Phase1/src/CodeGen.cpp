@@ -106,7 +106,8 @@ namespace ns
       // // Create a function declaration for the "gsm_write" function.
       Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
       
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {0});
+      int x = 0;
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {x});
 
       switch (Node.getAssignmentOP())
       {
