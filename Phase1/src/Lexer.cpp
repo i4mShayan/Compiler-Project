@@ -37,7 +37,7 @@ void Lexer::next(Token &token)
     if (charinfo::isLetter(*BufferPtr))
     {
         const char *end = BufferPtr + 1;
-        while (charinfo::isLetter(*end))
+        while (charinfo::isLetter(*end) || charinfo::isDigit(*end))
             ++end;
         llvm::StringRef Name(BufferPtr, end - BufferPtr);
         Token::TokenKind kind;
