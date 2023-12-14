@@ -362,19 +362,14 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Conditions &Node) override
     {
-      llvm::errs() << "Visiting ConditionS. " << "\n";
       Node.getLeft()->accept(*this);
-      llvm::errs() << "conditions get left expr11111. " << "\n";
       Value* Left = V;
-      llvm::errs() << "conditions get left expr. " << "\n";
       
-      if (Node.getRight() == nullptr)
+      if (Node.getRight())
       {
-        llvm::errs() << "conditions just get left expr. " << "\n";
         V = Left;
         return;
       }
-      llvm::errs() << "conditions want to get right expr. " << "\n";
       Node.getRight()->accept(*this);
       Value* Right = V;
 
@@ -508,10 +503,8 @@ void CodeGen::compile(AST *Tree)
   Module *M = new Module("ark", Ctx);
 
   // Create an instance of the ToIRVisitor and run it on the AST to generate LLVM IR.
-  // ToIRVisitor ToIR(M);
-  ns::ToIRVisitor *ToIR = new ns::ToIRVisitor(M);
-  
-  ToIR->run(Tree);
+  ToIRVisitor ToIR(M);
+  ToIR.run(Tree);
 
   // Print the generated module to the standard output.
   M->print(outs(), nullptr);
