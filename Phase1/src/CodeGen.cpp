@@ -354,12 +354,15 @@ virtual void visit(Assign &Node) override
     {
       Node.getLeft()->accept(*this);
       Value* Left = V;
+      llvm::errs() << "conditions get left expr. " << "\n";
       
       if (Node.getRight() == nullptr)
       {
+        llvm::errs() << "conditions just get left expr. " << "\n";
         V = Left;
         return;
       }
+      llvm::errs() << "conditions want to get right expr. " << "\n";
       Node.getRight()->accept(*this);
       Value* Right = V;
 
