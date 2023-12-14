@@ -93,13 +93,18 @@ public:
 
 
   virtual void visit(Conditions &Node) override {
+    llvm::errs() << "kiram to rafiee. " << "\n";
     Condition *left = Node.getLeft();
+    llvm::errs() << "kiram to rafiee 2. " << "\n";
+
     Conditions *right = Node.getRight();
+    llvm::errs() << "kiram to rafiee 3. " << "\n";
 
     left->accept(*this);
+    llvm::errs() << "kiram to rafiee 4. " << "\n";
 
     if(right) right->accept(*this);
-    llvm::errs() << "kiram to rafiee. " << "\n";
+    llvm::errs() << "kiram to rafiee 5. " << "\n";
 
   };
 
