@@ -266,7 +266,7 @@ namespace
       {
         Final *right_final = (Node.getRight())->getLeft();
         int intval;
-        intval = right_final->getVal().getAsInteger(10, intval);
+        right_final->getVal().getAsInteger(10, intval);
         if (intval == 0)
         {
           V = ConstantInt::get(Int32Ty, 1, true);
@@ -276,7 +276,9 @@ namespace
           Final *temp = new Final((Node.getLeft())->getKind(), (Node.getLeft())->getVal());
           for (int i = 1; i < intval; i++)
           {
-            Left = Builder.CreateNSWMul(Left, temp->getVal());
+            int temp_int;
+            temp->getVal().getAsInteger(10, temp_int);
+            Left = Builder.CreateNSWMul(Left, temp_int);
           }
           V = Left;
         }
