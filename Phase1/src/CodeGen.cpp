@@ -465,6 +465,8 @@ virtual void visit(Assign &Node) override
       Builder.SetInsertPoint(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
+      Cond->print(llvm::errs());
+      llvm::errs() << "-----\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
       Builder.SetInsertPoint(LoopBody);
 
