@@ -7,7 +7,7 @@
 using namespace llvm;
 
 // Define a visitor class for generating LLVM IR from the AST.
-namespace
+ns
 {
   class ToIRVisitor : public ASTVisitor
   {
@@ -424,7 +424,7 @@ void CodeGen::compile(AST *Tree)
 
   // Create an instance of the ToIRVisitor and run it on the AST to generate LLVM IR.
   // ToIRVisitor ToIR(M);
-  namespace::ToIRVisitor *ToIR = new namespace::ToIRVisitor(M);
+  ns::ToIRVisitor *ToIR = new ns::ToIRVisitor(M);
   ToIR.run(Tree);
 
   // Print the generated module to the standard output.
