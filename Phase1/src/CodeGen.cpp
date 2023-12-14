@@ -264,7 +264,7 @@ namespace
       }
       case Expr::Pow:
       {
-        Final *right_final = Right->getLeft();
+        Final *right_final = (Node.getRight())->getLeft();
         int intval;
         intval = right_final->getVal().getAsInteger(10, intval);
         if (intval == 0)
@@ -273,10 +273,10 @@ namespace
         }
         else
         {
-          Final *temp = new Final(Left->getKind(), Left->getVal());
+          Final *temp = new Final((Node.getLeft)->getKind(), (Node.getLeft)->getVal());
           for (int i = 1; i < intval; i++)
           {
-            Left = Builder.CreateNSWMul(Left, temp);
+            Left = Builder.CreateNSWMul(Left, temp.getVal());
           }
           V = Left;
         }
@@ -285,9 +285,9 @@ namespace
       case Expr::Mod:
       {
         // x % y = x - (x / y) * y
-        Value *divison = Builder.CreateSDiv(Left, Right);
-        Value *multiply = Builder.CreateNSWMul(div, Right);
-        V = Builder.CreateNSWSub(Left, mul);
+        Value *division = Builder.CreateSDiv(Left, Right);
+        Value *multiply = Builder.CreateNSWMul(division, Right);
+        V = Builder.CreateNSWSub(Left, multiply);
         break;
       }
       }
@@ -297,8 +297,8 @@ namespace
     {
       Value *val = nullptr;
 
-      L = llvm::SmallVector<Expr *>::const_iterator I = Node.ExprsBegin();
-      R = llvm::SmallVector<Expr *>::const_iterator E = Node.ExprsEnd();
+      llvm::SmallVector<Expr *>::const_iterator L = Node.ExprsBegin();
+      llvm::SmallVector<Expr *>::const_iterator R = Node.ExprsEnd();
       for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I)
       {
         StringRef Var = *I;
