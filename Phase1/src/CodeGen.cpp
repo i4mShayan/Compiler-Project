@@ -102,6 +102,17 @@ namespace ns
 
     virtual void visit(Assign &Node) override
     {
+      std::string getOpCodeString(Assign::OpCode opCode) {
+        switch (opCode) {
+          case Assign::EqualAssign: return "EqualAssign";
+          case Assign::PlusAssign: return "PlusAssign";
+          case Assign::MinusAssign: return "MinusAssign";
+          case Assign::MulAssign: return "MulAssign";
+          case Assign::DivAssign: return "DivAssign";
+          case Assign::ModAssign: return "ModAssign";
+          default: return "Unknown";
+        }
+      }
       // Visit the right-hand side of the assignment and get its value.
       Node.getRight()->accept(*this);
       Value *val = V;
@@ -159,18 +170,6 @@ namespace ns
       
       CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {varNameValue, val, opCodeValue});
     };
-
-    std::string getOpCodeString(Assign::OpCode opCode) {
-      switch (opCode) {
-        case Assign::EqualAssign: return "EqualAssign";
-        case Assign::PlusAssign: return "PlusAssign";
-        case Assign::MinusAssign: return "MinusAssign";
-        case Assign::MulAssign: return "MulAssign";
-        case Assign::DivAssign: return "DivAssign";
-        case Assign::ModAssign: return "ModAssign";
-        default: return "Unknown";
-      }
-    }
 
     virtual void visit(Final &Node) override
     {
