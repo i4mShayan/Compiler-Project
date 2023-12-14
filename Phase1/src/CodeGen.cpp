@@ -105,10 +105,7 @@ namespace ns
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
-
-      
       Builder.CreateStore(val, nameMap[varName]);
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
       switch (Node.getAssignmentOP())
       {
@@ -116,9 +113,6 @@ namespace ns
         {
           // Create a store instruction to assign the value to the variable.
           Builder.CreateStore(val, nameMap[varName]);
-
-          // Create a call instruction to invoke the "gsm_write" function with the value.
-          // CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
           break;
         }
@@ -133,9 +127,6 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal, nameMap[varName]);
 
-          // Create a call instruction to invoke the "gsm_write" function with the new value.
-          // CallInst *Call2 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal});
-
           break;
         }
         case Assign::MinusAssign:
@@ -149,9 +140,6 @@ namespace ns
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal2, nameMap[varName]);
 
-          // Create a call instruction to invoke the "gsm_write" function with the new value.
-          // CallInst *Call3 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal2});
-
           break;
         }
         case Assign::MulAssign:
@@ -164,10 +152,6 @@ namespace ns
 
           // Create a store instruction to assign the new value to the variable.
           Builder.CreateStore(newVal3, nameMap[varName]);
-
-          // Create a call instruction to invoke the "gsm_write" function with the new value.
-          // CallInst *Call4 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal3});
-
           break;
         }
         case Assign::DivAssign:
@@ -191,6 +175,9 @@ namespace ns
           break;
         }
       }
+
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+
     };
 
     virtual void visit(Final &Node) override
