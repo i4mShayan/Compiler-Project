@@ -210,8 +210,6 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Expr &Node) override
     {
-      llvm::errs() << "Visiting Expr " << "\n";
-
       // Visit the left-hand side of the binary operation and get its value.
       Node.getLeft()->accept(*this);
       Value *Left = V;
@@ -276,7 +274,6 @@ virtual void visit(Assign &Node) override
           }
         }
       }  
-      llvm::errs() << "Visiting Expr Finished" << "\n";
     };
 
     virtual void visit(Declare &Node) override
