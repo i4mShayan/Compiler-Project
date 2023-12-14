@@ -285,10 +285,7 @@ namespace ns
         }
         case Expr::Mod:
         {
-          // x % y = x - (x / y) * y
-          Value *division = Builder.CreateSDiv(Left, Right);
-          Value *multiply = Builder.CreateNSWMul(division, Right);
-          V = Builder.CreateNSWSub(Left, multiply);
+          V = Builder.CreateSRem(Left, Right);
           break;
         }
       }
@@ -365,6 +362,23 @@ namespace ns
         V = Builder.CreateICmpNE(Left, Right);
         break;
       }
+      }
+    };
+
+    virtual void visit(Conditions &Node) override
+    {
+      Node.getLeft()->accept(*this);
+      Value* Left = V;
+      Node.getRight()->accept(*this);
+      Value* Right = V;
+      switch (Node.getSign())
+      {
+      case Conditions::And:
+          V = Builder.CreateAnd(Left, Right);
+          break;
+      case Conditions:::Or:
+          V = Builder.CreateOr(Left, Right);
+          break;
       }
     };
 
