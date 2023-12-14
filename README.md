@@ -18,6 +18,7 @@ Then you can run it using:
 ./ARK
 ```
 ### How to see the result?
+### Step by Step:
 ```
 ./ARK > ark.ll
 ```
@@ -29,4 +30,8 @@ clang -o arkbin ark.o ../../rtARK.c
 ```
 ```
 ./arkbin
+```
+#### One Step Run:
+```
+./ARK > ark.ll && llc --filetype=obj -o=ark.o ark.ll && clang -o arkbin ark.o ../../rtARK.c && ./arkbin
 ```
