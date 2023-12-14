@@ -106,16 +106,16 @@ namespace ns
       auto varName = Node.getLeft()->getVal();
 
       // Create a store instruction to assign the value to the variable.
-      Value *oldVal;
+      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);;
       Value *newVal;
 
-      if (Node.getAssignmentOP() != Assign::EqualAssign) {
-        oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-      }
+      // if (Node.getAssignmentOP() != Assign::EqualAssign) {
+      //   oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+      // }
 
       switch (Node.getAssignmentOP())
       {
-        case Assign::PlusAssign :
+        case Assign::PlusAssign:
         {
           // Create an add instruction to add the old value and the new value.
           Value *newVal = Builder.CreateNSWAdd(oldVal, val);
