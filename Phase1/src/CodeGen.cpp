@@ -152,12 +152,12 @@ namespace ns
       Builder.CreateStore(newVal, nameMap[varName]);
 
       // Create a global string pointer for varName
-      Value *varNameValue = Builder.CreateGlobalStringPtr('ate');
+      // Value *varNameValue = Builder.CreateGlobalStringPtr(varName);
 
       // Create a global string pointer for the opcode
       Value *opCodeValue = Builder.getInt32(Node.getAssignmentOP());
       
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {varNameValue, val, opCodeValue});
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
     };
 
     virtual void visit(Final &Node) override
