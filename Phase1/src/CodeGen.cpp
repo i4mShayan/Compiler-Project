@@ -152,7 +152,7 @@ namespace ns
       Builder.CreateStore(newVal, nameMap[varName]);
 
       // Create a global string pointer for varName
-      Value *varNameValue = Builder.CreateGlobalStringPtr(varName);
+      Value *varNameValue = Builder.CreateGlobalStringPtr('ate');
 
       // Create a global string pointer for the opcode
       Value *opCodeValue = Builder.getInt32(Node.getAssignmentOP());
