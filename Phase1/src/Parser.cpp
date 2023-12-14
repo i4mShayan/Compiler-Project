@@ -352,6 +352,7 @@ Condition *Parser::parseCondition()
     }
 
     advance();
+    
     Right = parseExpr();
 
     if(!Right)
