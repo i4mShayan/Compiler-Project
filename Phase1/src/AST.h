@@ -193,7 +193,7 @@ public:
     }
 };
 
-class Conditions : public AST
+class Conditions : public Loop
 {
 public:
     enum Operator
