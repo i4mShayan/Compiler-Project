@@ -36,7 +36,11 @@ public:
     }
   };
 
-  virtual void visit(Statement &Node) override {};
+  virtual void visit(Statement &Node) override 
+  {
+    llvm::errs() << "kiram to rafiee. " << "\n";
+
+  };
 
   virtual void visit(Declare &Node) override {
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
@@ -70,8 +74,6 @@ public:
 
 
   virtual void visit(Expr &Node) override {
-    llvm::errs() << "kiram to rafiee. " << "\n";
-
     Final *left = Node.getLeft();
     Expr *right = Node.getRight();
 
