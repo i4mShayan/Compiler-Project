@@ -113,13 +113,13 @@ virtual void visit(Assign &Node) override
       {
       case Assign::EqualAssign:
       {
-        CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+        Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
         // Create a store instruction to assign the value to the variable.
         Builder.CreateStore(val, nameMap[varName]);
 
         // Create a call instruction to invoke the "gsm_write" function with the value.
-        CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+        Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
 
         break;
       }
