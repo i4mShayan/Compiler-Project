@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 void ark_write(int value)
 {
-    printf("Variable %s becomes %d after %d, \n", 'v', value, 'o');
+    printf("Variable %s becomes %d after %d, \n", "test".c_str() , value, "==".c_str());
 }
 
 int ark_read(char *s)
