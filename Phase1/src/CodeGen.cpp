@@ -111,37 +111,42 @@ namespace ns
 
       Builder.CreateStore(val, nameMap[varName]);
 
-      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
       Value *newVal;
 
       switch (Node.getAssignmentOP())
       {
         case Assign::EqualAssign:
         {
+          Builder.CreateStore(val, nameMap[varName]);
           break;
         }
         case Assign::PlusAssign :
         {
+          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           newVal = Builder.CreateNSWAdd(oldVal, val);
           break;
         }
         case Assign::MinusAssign:
         {
+          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           newVal = Builder.CreateNSWSub(oldVal, val);
           break;
         }
         case Assign::MulAssign:
         {
+          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           newVal = Builder.CreateNSWMul(oldVal, val);
           break;
         }
         case Assign::DivAssign:
         {
+          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           newVal = Builder.CreateSDiv(oldVal, val);
           break;
         }
         case Assign::ModAssign:
         {
+          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
           newVal = Builder.CreateSRem(oldVal, val);
           Builder.CreateStore(newVal, nameMap[varName]);
           break;
