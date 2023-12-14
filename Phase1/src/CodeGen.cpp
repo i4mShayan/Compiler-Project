@@ -22,6 +22,9 @@ namespace
     Value *V;
     StringMap<AllocaInst *> nameMap;
 
+    llvm::FunctionType* MainFty;
+    llvm::Function* MainFn;
+
   public:
     // Constructor for the visitor class.
     ToIRVisitor(Module *M) : M(M), Builder(M->getContext())
@@ -305,7 +308,11 @@ namespace
         {
           (*L)->accept(*this);
           val = V;
-          Builder.CreateStore(val, nameMap[Var]);
+          if (val != nullptr)
+          {
+            Builder.CreateStore(val, nameMap[Var]);
+          }
+
           ++L;
         }
         else
@@ -350,63 +357,47 @@ namespace
 
     virtual void visit(If &Node) override
     {
-      // llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
-      // llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
-      // llvm::BasicBlock* ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
-
-      // Builder.CreateBr(IfCond);
-      // Builder.SetInsertPoint(IfCond);
-      // Node.getConditions()->accept(*this);
-      // Value* Cond = V;
-      // Builder.CreateCondBr(Cond, IfBody, ElseBody);
-      // Builder.SetInsertPoint(IfBody);
-
-      // for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
-      // {
-      //     (*I)->accept(*this);
-      // }
-      // Builder.CreateBr(ElseBody);
-
-      // Builder.SetInsertPoint(ElseBody);
-
-      // for (auto I = Node.getElse()->AssignmentsBegin(), E = Node.getElse()->AssignmentsEnd(); I != E; ++I)
-      // {
-      //     (*I)->accept(*this);
-      // }
+      
       
     };
 
-    // virtual void visit(Elif &Node) override
-    // {
-      
-    // };
+    virtual void visit(Elif &Node) override
+    {
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      {
+          (*I)->accept(*this);
+      }
+    };
 
-    // virtual void visit(Else &Node) override
-    // {
-    //   
-    // };
+    virtual void visit(Else &Node) override
+    {
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
+      {
+          (*I)->accept(*this);
+      }
+    };
 
 
     virtual void visit(Loop &Node) override
     {
-      // llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      // llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      // llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+      llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
-      // Builder.CreateBr(LoopCond); 
-      // Builder.SetInsertPoint(LoopCond); 
-      // Node.getConds()->accept(*this); 
-      // Value* Cond = V; 
-      // Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
-      // Builder.SetInsertPoint(LoopBody); 
+      Builder.CreateBr(LoopCond); 
+      Builder.SetInsertPoint(LoopCond); 
+      Node.getConds()->accept(*this); 
+      Value* Cond = V; 
+      Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
+      Builder.SetInsertPoint(LoopBody); 
       
-      // for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
-      // {
-      //     (*I)->accept(*this); 
-      // }
-      // Builder.CreateBr(LoopCond); 
+      for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
+      {
+          (*I)->accept(*this); 
+      }
+      Builder.CreateBr(LoopCond); 
 
-      // Builder.SetInsertPoint(AfterLoop);
+      Builder.SetInsertPoint(AfterLoop);
 
     };
   };
