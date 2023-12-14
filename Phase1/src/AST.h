@@ -32,7 +32,7 @@ public:
     virtual void visit(If &) = 0;
     virtual void visit(Elif &) = 0;
     virtual void visit(Else &) = 0;
-    virtual void visit(Conditions &) {};
+    virtual void visit(Conditions &) = 0;
     virtual void visit(Condition &) = 0;
     virtual void visit(Loop &) = 0;
     virtual void visit(Final &) = 0;
