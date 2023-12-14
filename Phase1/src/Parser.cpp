@@ -286,7 +286,7 @@ Conditions *Parser::parseConditions()
 
     if (!Tok.isOneOf(Token::KW_and, Token::KW_or))
     {
-        return Conditions(Left);
+        return new Conditions(Left);
     }
 
     tokKind = Tok.getKind();
