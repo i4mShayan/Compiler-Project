@@ -99,6 +99,8 @@ public:
     left->accept(*this);
 
     if(right) right->accept(*this);
+    llvm::errs() << "kiram to rafiee. " << "\n";
+
   };
 
 
