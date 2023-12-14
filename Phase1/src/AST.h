@@ -170,7 +170,7 @@ public:
 
 private:
     Final *Left = nullptr; // Left-hand side Expr
-    Operator Op = nullptr;      // Operator of the binary operation
+    Operator Op;      // Operator of the binary operation
     Expr *Right = nullptr; // Right-hand side Expr
 
 public:

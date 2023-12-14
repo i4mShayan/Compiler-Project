@@ -219,9 +219,7 @@ virtual void visit(Assign &Node) override
       if(Node.getRight()) {
         Node.getRight()->accept(*this);
         Right = V;
-      }
 
-      if(Node.getOperator()) {
         // Perform the binary operation based on the operator type and create the corresponding instruction.
         switch (Node.getOperator())
         {
@@ -276,6 +274,8 @@ virtual void visit(Assign &Node) override
           }
         }
       }
+
+ 
       
     };
 
