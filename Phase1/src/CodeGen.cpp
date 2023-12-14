@@ -110,77 +110,48 @@ namespace ns
 
       Builder.CreateStore(val, nameMap[varName]);
 
+
+      Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
+      Value *newVal;
+
       switch (Node.getAssignmentOP())
       {
         case Assign::EqualAssign:
         {
-          // Create a store instruction to assign the value to the variable.
-          Builder.CreateStore(val, nameMap[varName]);
-
           break;
         }
         case Assign::PlusAssign :
         {
-          // Create a load instruction to get the current value of the variable.
-          Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-
-          // Create an add instruction to add the old value and the new value.
-          Value *newVal = Builder.CreateNSWAdd(oldVal, val);
-
-          // Create a store instruction to assign the new value to the variable.
-          Builder.CreateStore(newVal, nameMap[varName]);
-
+          newVal = Builder.CreateNSWAdd(oldVal, val);
           break;
         }
         case Assign::MinusAssign:
         {
-          // Create a load instruction to get the current value of the variable.
-          Value *oldVal2 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-
-          // Create a sub instruction to subtract the old value and the new value.
-          Value *newVal2 = Builder.CreateNSWSub(oldVal2, val);
-
-          // Create a store instruction to assign the new value to the variable.
-          Builder.CreateStore(newVal2, nameMap[varName]);
-
+          newVal = Builder.CreateNSWSub(oldVal, val);
           break;
         }
         case Assign::MulAssign:
         {
-          // Create a load instruction to get the current value of the variable.
-          Value *oldVal3 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-
-          // Create a mul instruction to multiply the old value and the new value.
-          Value *newVal3 = Builder.CreateNSWMul(oldVal3, val);
-
-          // Create a store instruction to assign the new value to the variable.
-          Builder.CreateStore(newVal3, nameMap[varName]);
+          newVal = Builder.CreateNSWMul(oldVal, val);
           break;
         }
         case Assign::DivAssign:
         {
-          // Create a load instruction to get the current value of the variable.
-          Value *oldVal4 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          // Create a div instruction to divide the old value and the new value.
-          Value *newVal4 = Builder.CreateSDiv(oldVal4, val);
-          // Create a store instruction to assign the new value to the variable.
-          Builder.CreateStore(newVal4, nameMap[varName]);
-          // Create a call instruction to invoke the "gsm_write" function with the new value.
-          // CallInst *Call5 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal4});
+          newVal = Builder.CreateSDiv(oldVal, val);
           break;
         }
         case Assign::ModAssign:
         {
-          Value *oldVal5 = Builder.CreateLoad(Int32Ty, nameMap[varName]);
-          Value *newVal5 = Builder.CreateSRem(oldVal5, val);
-          Builder.CreateStore(newVal5, nameMap[varName]);
-          // CallInst *Call6 = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {newVal5});
+          newVal = Builder.CreateSRem(oldVal, val);
+          Builder.CreateStore(newVal, nameMap[varName]);
           break;
         }
       }
 
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+      // Create a store instruction to assign the new value to the variable.
+      Builder.CreateStore(newVal2, nameMap[varName]);
 
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
     };
 
     virtual void visit(Final &Node) override
