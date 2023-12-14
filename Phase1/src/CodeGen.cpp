@@ -408,7 +408,7 @@ void CodeGen::compile(AST *Tree)
 {
   // Create an LLVM context and a module.
   LLVMContext Ctx;
-  Module *M = new Module("calc.expr", Ctx);
+  Module *M = new Module("ark", Ctx);
 
   // Create an instance of the ToIRVisitor and run it on the AST to generate LLVM IR.
   ToIRVisitor ToIR(M);
