@@ -355,7 +355,7 @@ virtual void visit(Assign &Node) override
       Node.getLeft()->accept(*this);
       Value* Left = V;
       
-      if (Node.getRight() = nullptr)
+      if (Node.getRight() == nullptr)
       {
         V = Left;
         return;
@@ -372,6 +372,7 @@ virtual void visit(Assign &Node) override
           V = Builder.CreateOr(Left, Right);
           break;
       }
+    };
 
     virtual void visit(If &Node) override
     {
