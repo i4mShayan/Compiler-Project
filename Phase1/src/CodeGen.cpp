@@ -101,11 +101,13 @@ namespace ns
       auto varName = Node.getLeft()->getVal();
 
       // // Create a function type for the "gsm_write" function.
-      // FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+      FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
 
       // // Create a function declaration for the "gsm_write" function.
-      // Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
+      Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
       
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {0});
+
       switch (Node.getAssignmentOP())
       {
         case Assign::EqualAssign:
