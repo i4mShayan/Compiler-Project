@@ -65,7 +65,31 @@ namespace ns
       }
     };
 
-    virtual void visit(Statement &Node) override {};
+    virtual void visit(Statement &Node) override
+    {
+      // Statement *pointer = &Node;
+      // if (Node.getKind() == Statement::Assignment)
+      // {
+      //   Assign *assign = static_cast<Assign*>(pointer);
+      //   assign->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Declaration)
+      // {
+      //   Declare *declare = static_cast<Declare*>(pointer);
+      //   declare->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::If)
+      // {
+      //   If *if_stm = static_cast<If*>(pointer);
+      //   if_stm->accept(*this);
+      // }
+      // else if (Node.getKind() == Statement::Loop)
+      // {
+      //   Loop *loop = static_cast<Loop*>(pointer);
+      //   loop->accept(*this);
+      // }
+    
+    };
 
     virtual void visit(Assign &Node) override
     {
@@ -263,6 +287,35 @@ namespace ns
         {
           V = Builder.CreateSRem(Left, Right);
           break;
+        }
+      }
+    };
+
+    virtual void visit(Declare &Node) override
+    {
+      Value *val = nullptr;
+
+      llvm::SmallVector<Expr *>::const_iterator L = Node.ExprsBegin();
+      llvm::SmallVector<Expr *>::const_iterator R = Node.ExprsEnd();
+      for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I)
+      {
+        StringRef Var = *I;
+        nameMap[Var] = Builder.CreateAlloca(Int32Ty);
+
+        if (L != R)
+        {
+          (*L)->accept(*this);
+          val = V;
+          if (val != nullptr)
+          {
+            Builder.CreateStore(val, nameMap[Var]);
+          }
+
+          ++L;
+        }
+        else
+        {
+          Builder.CreateStore(Int32Zero, nameMap[Var]);
         }
       }
     };
