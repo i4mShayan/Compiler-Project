@@ -100,11 +100,11 @@ namespace ns
       // Get the name of the variable being assigned.
       auto varName = Node.getLeft()->getVal();
 
-      // Create a function type for the "gsm_write" function.
-      FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+      // // Create a function type for the "gsm_write" function.
+      // FunctionType *CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
 
-      // Create a function declaration for the "gsm_write" function.
-      Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
+      // // Create a function declaration for the "gsm_write" function.
+      // Function *CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
       
       switch (Node.getAssignmentOP())
       {
