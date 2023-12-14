@@ -358,11 +358,12 @@ virtual void visit(Assign &Node) override
       Node.getLeft()->accept(*this);
       Value* Left = V;
       
-      if (!Node.getRight())
-      {
-        V = Left;
-        return;
-      }
+      // if (!Node.getRight())
+      // {
+      //   V = Left;
+      //   return;
+      // }
+
       Node.getRight()->accept(*this);
       Value* Right = V;
 
