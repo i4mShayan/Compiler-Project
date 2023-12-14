@@ -23,7 +23,7 @@ class ASTVisitor
 {
 public:
     // Virtual visit functions for each AST node type
-    virtual void visit(AST &) {}
+    virtual void visit(AST &) = 0;
     virtual void visit(ARK &) = 0;
     virtual void visit(Statement &) = 0;
     virtual void visit(Declare &) = 0;
