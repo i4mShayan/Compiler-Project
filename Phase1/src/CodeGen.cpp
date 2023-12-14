@@ -25,8 +25,8 @@ namespace ns
     llvm::FunctionType* MainFty;
     llvm::Function* MainFn;
 
-    FunctionType *CalcWriteFnTy;
-    Function *CalcWriteFn;
+    // FunctionType *CalcWriteFnTy;
+    // Function *CalcWriteFn;
 
   public:
     // Constructor for the visitor class.
@@ -40,9 +40,9 @@ namespace ns
       Int32Zero = ConstantInt::get(Int32Ty, 0, true);
 
       // Create a function type for the "gsm_write" function.
-      CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
+      // CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
       // Create a function declaration for the "gsm_write" function.
-      CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
+      // CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
     }
 
     // Entry point for generating LLVM IR from the AST.
