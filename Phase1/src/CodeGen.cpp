@@ -99,6 +99,7 @@ namespace ns
     
     };
 
+
     virtual void visit(Assign &Node) override
     {
       // Visit the right-hand side of the assignment and get its value.
@@ -109,7 +110,6 @@ namespace ns
       auto varName = Node.getLeft()->getVal();
 
       Builder.CreateStore(val, nameMap[varName]);
-
 
       Value *oldVal = Builder.CreateLoad(Int32Ty, nameMap[varName]);
       Value *newVal;
@@ -151,8 +151,26 @@ namespace ns
       // Create a store instruction to assign the new value to the variable.
       Builder.CreateStore(newVal, nameMap[varName]);
 
-      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {val});
+      // Create a global string pointer for varName
+      Value *varNameValue = Builder.CreateGlobalStringPtr(varName);
+
+      // Create a global string pointer for the opcode
+      Value *opCodeValue = Builder.CreateGlobalStringPtr(getOpCodeString(Node.getAssignmentOP()));
+      
+      CallInst *Call = Builder.CreateCall(CalcWriteFnTy, CalcWriteFn, {varNameValue, val, opCodeValue});
     };
+
+    std::string getOpCodeString(Assign::OpCode opCode) {
+      switch (opCode) {
+        case Assign::EqualAssign: return "EqualAssign";
+        case Assign::PlusAssign: return "PlusAssign";
+        case Assign::MinusAssign: return "MinusAssign";
+        case Assign::MulAssign: return "MulAssign";
+        case Assign::DivAssign: return "DivAssign";
+        case Assign::ModAssign: return "ModAssign";
+        default: return "Unknown";
+      }
+    }
 
     virtual void visit(Final &Node) override
     {

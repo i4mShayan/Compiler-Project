@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ark_write(int v)
+void ark_write(const char* varName,  int value, const char* opCode)
 {
-    printf("The result is: %d\n", v);
+    printf("Variable %s becomes %d after %s, \n", varName, value, opCode);
 }
 
 int ark_read(char *s)

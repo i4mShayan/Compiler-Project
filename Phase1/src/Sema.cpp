@@ -18,7 +18,7 @@ class InputCheck : public ASTVisitor {
   }
 
   void divide_by_zero_error() {
-    llvm::errs() << "Division/Mod by zero is not allowed." << "\n";
+    llvm::errs() << "Division/Modulo by zero is not allowed." << "\n";
     HasError = true;
   }
 
@@ -37,7 +37,7 @@ public:
   };
 
   virtual void visit(Statement &Node) override {};
-  
+
   virtual void visit(Declare &Node) override {
     for (llvm::SmallVector<llvm::StringRef, 8>::const_iterator I = Node.VarsBegin(), E = Node.VarsEnd(); I != E; ++I) {
       if (!Scope.insert(*I).second)
