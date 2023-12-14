@@ -207,8 +207,8 @@ private:
     Conditions *Right = nullptr;
 
 public:
-    Conditions(Condition *left, Operator sign, Conditions *right) : 
-    Left(left), Sign(sign), Right(right) {}
+    Conditions(Condition *Left, Operator Sign, Conditions *Right) : 
+    Left(Left), Sign(Sign), Right(Right) {}
     Conditions(Condition *left) : 
     Left(left) {}
     Conditions() {}
@@ -244,8 +244,8 @@ private:
     Expr *Right; // Right-hand side Expr
 
 public:
-    Condition(Expr *left, Operator Op, Expr *right) : 
-    Left(left), Op(Op), Right(right), Conditions() {}
+    Condition(Expr *Left, Operator Op, Expr *Right) : 
+    Left(Left), Op(Op), Right(Right), Conditions() {}
 
     Expr *getLeft() { return Left; }
 
