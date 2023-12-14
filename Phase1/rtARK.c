@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ARK_write(int v)
+void ark_write(int v)
 {
     printf("The result is: %d\n", v);
 }
 
-int ARK_read(char *s)
+int ark_read(char *s)
 {
     char buf[64];
     int val;
