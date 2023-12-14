@@ -7,7 +7,7 @@
 using namespace llvm;
 
 // Define a visitor class for generating LLVM IR from the AST.
-ns
+namespace ns
 {
   class ToIRVisitor : public ASTVisitor
   {
