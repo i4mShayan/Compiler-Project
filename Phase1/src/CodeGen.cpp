@@ -361,12 +361,14 @@ virtual void visit(Assign &Node) override
       llvm::Value* IfCondVal = V;
 
       Builder.SetInsertPoint(IfBody);
+      llvm::errs() << "hhh\n";
       
       for (auto I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
       Builder.CreateBr(AfterIf);
+      llvm::errs() << "hhh2\n";
            
 
       llvm::BasicBlock* PrevCond = IfCond;
