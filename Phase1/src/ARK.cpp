@@ -1,4 +1,4 @@
-// #include "CodeGen.h"
+#include "CodeGen.h"
 #include "Parser.h"
 #include "Sema.h"
 #include "llvm/Support/CommandLine.h"
