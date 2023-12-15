@@ -462,7 +462,7 @@ virtual void visit(Assign &Node) override
       llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       Builder.CreateBr(LoopCond); 
-      // Builder.SetInsertPoint(LoopCond); 
+      Builder.SetInsertPoint(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "Loop Condition is ";
