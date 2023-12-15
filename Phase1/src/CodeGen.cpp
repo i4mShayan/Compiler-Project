@@ -439,10 +439,10 @@ virtual void visit(Assign &Node) override
         Builder.CreateBr(ElifBody);
         Builder.SetInsertPoint(ElifBody);
 
-        // for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
-        // {
-        //   (*I)->accept(*this);
-        // }
+        for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
+        {
+          (*I)->accept(*this);
+        }
 
         Builder.CreateBr(ElifAfter);
         Builder.SetInsertPoint(ElifAfter);
@@ -450,11 +450,16 @@ virtual void visit(Assign &Node) override
 
       if (Node.getElse())
       {
-          Builder.CreateBr(ElseBody);
-          Builder.SetInsertPoint(ElseBody);
+        Builder.CreateBr(ElseBody);
+        Builder.SetInsertPoint(ElseBody);
 
-          Builder.CreateBr(ElseAfter);
-          Builder.SetInsertPoint(ElseAfter);
+        for (llvm::SmallVector<Assign *>::const_iterator X = Node.getElse()->AssignmentsBegin(), Y = Node.getElse()->AssignmentsBegin(); X != Y; ++X)
+        {
+          (*I)->accept(*this);
+        }
+
+        Builder.CreateBr(ElseAfter);
+        Builder.SetInsertPoint(ElseAfter);
       }
     };
 
