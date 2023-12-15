@@ -46,10 +46,6 @@ namespace ns
       CalcWriteFnTy = FunctionType::get(VoidTy, {Int32Ty}, false);
       // Create a function declaration for the "gsm_write" function.
       CalcWriteFn = Function::Create(CalcWriteFnTy, GlobalValue::ExternalLinkage, "ark_write", M);
-
-      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
     }
 
     // Entry point for generating LLVM IR from the AST.
@@ -63,6 +59,10 @@ namespace ns
       BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
       Builder.SetInsertPoint(BB);
 
+
+      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
       Builder.SetInsertPoint(LoopCond);
 
 
