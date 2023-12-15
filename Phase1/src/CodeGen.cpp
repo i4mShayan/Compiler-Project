@@ -55,14 +55,14 @@ namespace ns
       FunctionType *MainFty = FunctionType::get(Int32Ty, {Int32Ty, Int8PtrPtrTy}, false);
       Function *MainFn = Function::Create(MainFty, GlobalValue::ExternalLinkage, "main", M);
 
-      // // Create a basic block for the entry point of the main function.
-      // BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
-      // Builder.SetInsertPoint(BB);
+      // Create a basic block for the entry point of the main function.
+      BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
+      Builder.SetInsertPoint(BB);
 
 
-      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn, BB);
+      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn, BB);
+      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn, BB);
 
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
