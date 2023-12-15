@@ -71,9 +71,9 @@ namespace ns
       Builder.SetInsertPoint(BB);
 
 
-      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+      // LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      // LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      // AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
       IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
@@ -453,10 +453,10 @@ virtual void visit(Assign &Node) override
         Builder.CreateBr(ElseBody);
         Builder.SetInsertPoint(ElseBody);
 
-        for (llvm::SmallVector<Assign *>::const_iterator X = Node.getElse()->AssignmentsBegin(), Y = Node.getElse()->AssignmentsBegin(); X != Y; ++X)
-        {
-          (*X)->accept(*this);
-        }
+        // for (llvm::SmallVector<Assign *>::const_iterator X = Node.getElse()->AssignmentsBegin(), Y = Node.getElse()->AssignmentsBegin(); X != Y; ++X)
+        // {
+        //   (*X)->accept(*this);
+        // }
 
         Builder.CreateBr(ElseAfter);
         Builder.SetInsertPoint(ElseAfter);
