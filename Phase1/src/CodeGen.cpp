@@ -63,6 +63,7 @@ namespace ns
       BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
       Builder.SetInsertPoint(BB);
 
+      Builder.SetInsertPoint(LoopCond);
 
 
       Builder.SetInsertPoint(LoopCond);
@@ -71,6 +72,7 @@ namespace ns
 
       // Create a return instruction at the end of the main function.
       Builder.CreateRet(Int32Zero);
+
     }
 
     // Visit function for the ARK node in the AST.
@@ -472,22 +474,22 @@ virtual void visit(Assign &Node) override
       // llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       Builder.CreateBr(LoopCond); 
-      Builder.SetInsertPoint(LoopCond); 
+      // Builder.SetInsertPoint(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "Loop Condition is ";
       Cond->print(llvm::errs());
       llvm::errs() << "\n-----------\n";
-      Builder.SetInsertPoint(LoopBody);
+      // Builder.SetInsertPoint(LoopBody);
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
 
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
           (*I)->accept(*this); 
       }
-      Builder.CreateBr(LoopCond); 
+      // Builder.CreateBr(LoopCond); 
 
-      Builder.SetInsertPoint(AfterLoop);
+      // Builder.SetInsertPoint(AfterLoop);
     };
   };
 }; // namespace
