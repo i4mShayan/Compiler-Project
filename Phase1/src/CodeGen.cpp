@@ -394,12 +394,13 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(If &Node) override
     {
-
-
+      Builder.CreateBr(IfCond);
       Builder.SetInsertPoint(IfCond);
+
       Node.getConds()->accept(*this);
       Value* IfCondVal = V;
 
+      Builder.CreateBr(AfterIf);
       Builder.SetInsertPoint(IfBody);
       
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
@@ -407,6 +408,7 @@ virtual void visit(Assign &Node) override
         (*I)->accept(*this);
       }
       Builder.CreateBr(AfterIf);
+      Builder.SetInsertPoint(AfterIf);
            
 
       llvm::BasicBlock* PrevCond = IfCond;
@@ -435,7 +437,8 @@ virtual void visit(Assign &Node) override
       }
 
       llvm::BasicBlock* ElseBody = nullptr;
-      if (Node.getElse()) {
+      if (Node.getElse())
+      {
           ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
           Builder.SetInsertPoint(ElseBody);
           Node.getElse()->accept(*this);
@@ -443,7 +446,9 @@ virtual void visit(Assign &Node) override
 
           Builder.SetInsertPoint(PrevCond);
           Builder.CreateCondBr(PrevCondVal, PrevBody, ElseBody);
-      } else {
+      }
+      else
+      {
           Builder.SetInsertPoint(PrevCond);
           Builder.CreateCondBr(IfCondVal, PrevBody, AfterIf);
       }
