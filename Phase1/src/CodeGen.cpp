@@ -63,10 +63,7 @@ namespace ns
       LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
       LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
       AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
-      Builder.SetInsertPoint(LoopCond);
-
-
-      Builder.SetInsertPoint(LoopCond);
+      
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
