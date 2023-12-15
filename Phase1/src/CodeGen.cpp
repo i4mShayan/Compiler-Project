@@ -461,7 +461,7 @@ virtual void visit(Assign &Node) override
       llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
       llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
-      Builder.CreateBr(LoopCond); 
+      // Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
@@ -475,7 +475,7 @@ virtual void visit(Assign &Node) override
       {
           (*I)->accept(*this); 
       }
-      // Builder.CreateBr(LoopCond); 
+      Builder.CreateBr(LoopCond); 
 
       Builder.SetInsertPoint(AfterLoop);
     };
