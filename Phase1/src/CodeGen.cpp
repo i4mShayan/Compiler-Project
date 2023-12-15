@@ -441,7 +441,7 @@ virtual void visit(Assign &Node) override
 
         for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
         {
-          (*I)->accept(*this);
+          (*X)->accept(*this);
         }
 
         Builder.CreateBr(ElifAfter);
@@ -455,7 +455,7 @@ virtual void visit(Assign &Node) override
 
         for (llvm::SmallVector<Assign *>::const_iterator X = Node.getElse()->AssignmentsBegin(), Y = Node.getElse()->AssignmentsBegin(); X != Y; ++X)
         {
-          (*I)->accept(*this);
+          (*X)->accept(*this);
         }
 
         Builder.CreateBr(ElseAfter);
