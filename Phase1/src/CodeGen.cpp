@@ -35,6 +35,13 @@ namespace ns
     llvm::BasicBlock* IfCond;
     llvm::BasicBlock* IfBody;
     llvm::BasicBlock* AfterIf;
+
+    llvm::BasicBlock* ElifCond;
+    llvm::BasicBlock* ElifBody;
+    llvm::BasicBlock* ElifAfter;
+
+    llvm::BasicBlock* ElseBody;
+    llvm::BasicBlock* ElseAfter;
   public:
     // Constructor for the visitor class.
     ToIRVisitor(Module *M) : M(M), Builder(M->getContext())
@@ -71,6 +78,13 @@ namespace ns
       IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
       IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
       AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
+
+      ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
+      ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
+      ElifAfter = llvm::BasicBlock::Create(M->getContext(), "elif.after", MainFn);
+
+      ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
+      ElseAfter = llvm::BasicBlock::Create(M->getContext(), "else.after", MainFn);
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
@@ -402,7 +416,6 @@ virtual void visit(Assign &Node) override
 
       Builder.CreateCondBr(IfCondVal, IfBody, AfterIf);
 
-
       Builder.CreateBr(IfBody);
       Builder.SetInsertPoint(IfBody);
       
@@ -415,10 +428,6 @@ virtual void visit(Assign &Node) override
       Builder.SetInsertPoint(AfterIf);
 
       for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
-        llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
-        llvm::BasicBlock* ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
-        llvm::BasicBlock* ElifAfter = llvm::BasicBlock::Create(M->getContext(), "elif.after", MainFn);
-
         Builder.CreateBr(ElifCond);
         Builder.SetInsertPoint(ElifCond);
 
@@ -441,9 +450,6 @@ virtual void visit(Assign &Node) override
 
       if (Node.getElse())
       {
-          llvm::BasicBlock* ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
-          llvm::BasicBlock* ElseAfter = llvm::BasicBlock::Create(M->getContext(), "else.after", MainFn);
-
           Builder.CreateBr(ElseBody);
           Builder.SetInsertPoint(ElseBody);
 
