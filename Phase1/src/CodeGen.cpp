@@ -55,9 +55,9 @@ namespace ns
       FunctionType *MainFty = FunctionType::get(Int32Ty, {Int32Ty, Int8PtrPtrTy}, false);
       Function *MainFn = Function::Create(MainFty, GlobalValue::ExternalLinkage, "main", M);
 
-      // Create a basic block for the entry point of the main function.
-      BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
-      Builder.SetInsertPoint(BB);
+      // // Create a basic block for the entry point of the main function.
+      // BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
+      // Builder.SetInsertPoint(BB);
 
 
       LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
