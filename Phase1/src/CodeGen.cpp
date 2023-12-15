@@ -439,10 +439,10 @@ virtual void visit(Assign &Node) override
         Builder.CreateBr(ElifBody);
         Builder.SetInsertPoint(ElifBody);
 
-        for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
-        {
-          (*X)->accept(*this);
-        }
+        // for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
+        // {
+        //   (*X)->accept(*this);
+        // }
 
         Builder.CreateBr(ElifAfter);
         Builder.SetInsertPoint(ElifAfter);
