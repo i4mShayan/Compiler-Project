@@ -59,6 +59,11 @@ namespace ns
       BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
       Builder.SetInsertPoint(BB);
 
+
+      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
@@ -73,9 +78,6 @@ namespace ns
       // Iterate over the children of the MSM node and visit each child.
       for (llvm::SmallVector<Statement *>::const_iterator I = Node.begin(), E = Node.end(); I != E; ++I)
       {
-        LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-        LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-        AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
         (*I)->accept(*this);
       }
     };
