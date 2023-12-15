@@ -56,6 +56,11 @@ namespace ns
       BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
       Builder.SetInsertPoint(BB);
 
+            llvm::BasicBlock* LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+
+      Builder.SetInsertPoint(LoopCond);
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
@@ -471,10 +476,10 @@ virtual void visit(Assign &Node) override
       // Builder.SetInsertPoint(LoopBody);
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
 
-      // for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
-      // {
-      //     (*I)->accept(*this); 
-      // }
+      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
+      {
+          (*I)->accept(*this); 
+      }
       // Builder.CreateBr(LoopCond); 
 
       Builder.SetInsertPoint(AfterLoop);
