@@ -477,8 +477,8 @@ virtual void visit(Assign &Node) override
       llvm::errs() << "Loop Condition is ";
       Cond->print(llvm::errs());
       llvm::errs() << "\n-----------\n";
-      Builder.SetInsertPoint(LoopBody);
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
+      Builder.SetInsertPoint(LoopBody);
 
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
       {
