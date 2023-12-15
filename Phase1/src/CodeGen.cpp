@@ -478,6 +478,7 @@ virtual void visit(Assign &Node) override
       Cond->print(llvm::errs());
       llvm::errs() << "\n-----------\n";
       Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
+      Builder.CreateBr(LoopBody); 
       Builder.SetInsertPoint(LoopBody);
 
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
@@ -485,7 +486,7 @@ virtual void visit(Assign &Node) override
           (*I)->accept(*this); 
       }
       // Builder.CreateBr(LoopCond); 
-
+      Builder.CreateBr(AfterLoop); 
       Builder.SetInsertPoint(AfterLoop);
     };
   };
