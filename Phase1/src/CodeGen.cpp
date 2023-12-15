@@ -71,7 +71,9 @@ namespace ns
       Builder.SetInsertPoint(BB);
 
 
-
+      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
       IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
@@ -480,11 +482,6 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(Loop &Node) override
     {
-      if(!LoopCond) {
-        LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-        LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-        AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
-      }
       Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
 
