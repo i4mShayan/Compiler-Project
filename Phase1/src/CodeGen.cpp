@@ -60,9 +60,9 @@ namespace ns
       Builder.SetInsertPoint(BB);
 
 
-      // LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      // LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      // AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
+      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
+      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
+      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
@@ -470,13 +470,8 @@ virtual void visit(Assign &Node) override
       // llvm::BasicBlock* LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
       // llvm::BasicBlock* AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
-
-      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
-      
-      Builder.CreateBr(LoopCond); 
       Builder.SetInsertPoint(LoopCond); 
+      Builder.CreateBr(LoopCond); 
       Node.getConds()->accept(*this); 
       Value* Cond = V; 
       llvm::errs() << "Loop Condition is ";
