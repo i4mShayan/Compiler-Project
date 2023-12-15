@@ -31,6 +31,10 @@ namespace ns
     llvm::BasicBlock* LoopCond;
     llvm::BasicBlock* LoopBody;
     llvm::BasicBlock* AfterLoop;
+
+    llvm::BasicBlock* IfCond;
+    llvm::BasicBlock* IfBody;
+    llvm::BasicBlock* AfterIf;
   public:
     // Constructor for the visitor class.
     ToIRVisitor(Module *M) : M(M), Builder(M->getContext())
@@ -64,6 +68,9 @@ namespace ns
       LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
       AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
 
+      IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
+      IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
+      AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
@@ -387,9 +394,7 @@ virtual void visit(Assign &Node) override
 
     virtual void visit(If &Node) override
     {
-      llvm::BasicBlock* IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
-      llvm::BasicBlock* IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
-      llvm::BasicBlock* AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
+
 
       Builder.SetInsertPoint(IfCond);
       Node.getConds()->accept(*this);
