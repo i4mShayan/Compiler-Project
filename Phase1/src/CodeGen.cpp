@@ -400,61 +400,56 @@ virtual void visit(Assign &Node) override
       Node.getConds()->accept(*this);
       Value* IfCondVal = V;
 
-      Builder.CreateBr(AfterIf);
+      Builder.CreateCondBr(IfCondVal, IfBody, AfterIf);
+
+
+      Builder.CreateBr(IfBody);
       Builder.SetInsertPoint(IfBody);
       
       for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
       {
         (*I)->accept(*this);
       }
+
       Builder.CreateBr(AfterIf);
       Builder.SetInsertPoint(AfterIf);
-           
-
-      llvm::BasicBlock* PrevCond = IfCond;
-      llvm::BasicBlock* PrevBody = IfBody;
-      Value* PrevCondVal = IfCondVal;
 
       for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
         llvm::BasicBlock* ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
         llvm::BasicBlock* ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
+        llvm::BasicBlock* ElifAfter = llvm::BasicBlock::Create(M->getContext(), "elif.after", MainFn);
 
-        Builder.SetInsertPoint(PrevCond); 
-        Builder.CreateCondBr(PrevCondVal, PrevBody, ElifCond);
-
+        Builder.CreateBr(ElifCond);
         Builder.SetInsertPoint(ElifCond);
+
         (*I)->getConds()->accept(*this);
         llvm::Value* ElifCondVal = V;
-        // Builder.CreateCondBr(ElifCondVal, ElifBody, nullptr);
 
+        Builder.CreateCondBr(ElifCondVal, PrevBody, ElifCond);
+
+        Builder.CreateBr(ElifBody);
         Builder.SetInsertPoint(ElifBody);
-        (*I)->accept(*this);
-        Builder.CreateBr(AfterIf);
 
-        PrevCond = ElifCond;
-        PrevCondVal = ElifCondVal;
-        PrevBody = ElifBody;
+        // for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
+        // {
+        //   (*I)->accept(*this);
+        // }
+
+        Builder.CreateBr(ElifAfter);
+        Builder.SetInsertPoint(ElifAfter);
       }
 
-      llvm::BasicBlock* ElseBody = nullptr;
       if (Node.getElse())
       {
-          ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
+          llvm::BasicBlock* ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
+          llvm::BasicBlock* ElseAfter = llvm::BasicBlock::Create(M->getContext(), "else.after", MainFn);
+
+          Builder.CreateBr(ElseBody);
           Builder.SetInsertPoint(ElseBody);
-          Node.getElse()->accept(*this);
-          Builder.CreateBr(AfterIf);
 
-          Builder.SetInsertPoint(PrevCond);
-          Builder.CreateCondBr(PrevCondVal, PrevBody, ElseBody);
+          Builder.CreateBr(ElseAfter);
+          Builder.SetInsertPoint(ElseAfter);
       }
-      else
-      {
-          Builder.SetInsertPoint(PrevCond);
-          Builder.CreateCondBr(IfCondVal, PrevBody, AfterIf);
-      }
-
-      Builder.SetInsertPoint(AfterIf);
-      
     };
 
     virtual void visit(Elif &Node) override
