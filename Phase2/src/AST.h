@@ -25,16 +25,16 @@ public:
     // Virtual visit functions for each AST node type
     virtual void visit(AST &) {};
     virtual void visit(ARK &) {};
-    virtual void visit(Statement &) = 0;
+    virtual void visit(Statement &) {};
     virtual void visit(Declare &) = 0;
     virtual void visit(Assign &) = 0;
     virtual void visit(Expr &) = 0;
-    virtual void visit(If &) = 0;
-    virtual void visit(Elif &) = 0;
-    virtual void visit(Else &) = 0;
-    virtual void visit(Conditions &) = 0;
-    virtual void visit(Condition &) = 0;
-    virtual void visit(Loop &) = 0;
+    virtual void visit(If &) {};
+    virtual void visit(Elif &) {};
+    virtual void visit(Else &) {};
+    virtual void visit(Conditions &) {};
+    virtual void visit(Condition &) {};
+    virtual void visit(Loop &) {};
     virtual void visit(Final &) = 0;
 };
 
