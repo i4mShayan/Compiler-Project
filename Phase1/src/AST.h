@@ -174,9 +174,9 @@ private:
     Expr *Right = nullptr; 
 
 public:
-    Expr(Term *L, Operator Op, Expr *R) : 
+    Expr(Expr *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
-    Expr(Term *L) : 
+    Expr(Expr *L) : 
     Left(L) {}
     Expr() {}
 
