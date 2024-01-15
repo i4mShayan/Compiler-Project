@@ -244,7 +244,7 @@ Expr *Parser::parseExpr()
 //     return nullptr;
 
     Term *Left;
-    Term *Right;
+    Expr *Right;
     Token::TokenKind tokKind;
 
     Left = (Term *) parseTerm();
@@ -259,7 +259,7 @@ Expr *Parser::parseExpr()
     tokKind = Tok.getKind();
     advance();
 
-    Right = (Term *) parseTerm();
+    Right = parseExpr();
 
     if (!Right) goto _error;
 
@@ -286,7 +286,7 @@ _error:
 Term *Parser::parseTerm()
 {
     Factor *Left;
-    Factor *Right;
+    Expr *Right;
     Token::TokenKind tokKind;
 
     Left = (Factor *) parseFactor();
@@ -301,7 +301,7 @@ Term *Parser::parseTerm()
     tokKind = Tok.getKind();
     advance();
 
-    Right = (Factor *) parseFactor();
+    Right = parseExpr();
 
     if (!Right) goto _error;
 
@@ -329,7 +329,7 @@ _error:
 Factor *Parser::parseFactor()
 {
     Final *Left;
-    Final *Right;
+    Expr *Right;
     Token::TokenKind tokKind;
 
     Left = (Final *) parseFinal();
@@ -344,7 +344,7 @@ Factor *Parser::parseFactor()
     tokKind = Tok.getKind();
     advance();
 
-    Right = (Final *) parseFinal();
+    Right = parseExpr();
 
     if (!Right) goto _error;
 

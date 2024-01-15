@@ -171,10 +171,10 @@ public:
 private:
     Term *Left = nullptr; // Left-hand side Expr
     Operator Op;      // Operator of the binary operation
-    Term *Right = nullptr; // Right-hand side Expr
+    Expr *Right = nullptr; // Right-hand side Expr
 
 public:
-    Expr(Term *L, Operator Op, Term *R) : 
+    Expr(Term *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
     Expr(Term *L) : 
     Left(L) {}
@@ -184,7 +184,7 @@ public:
 
     Operator getOperator() { return Op; }
 
-    Term *getRight() { return Right; }
+    Expr *getRight() { return Right; }
 
 
     virtual void accept(ASTVisitor &V) override
@@ -205,10 +205,10 @@ public:
 private:
     Factor *Left = nullptr; 
     Operator Op;      
-    Factor *Right = nullptr; 
+    Expr *Right = nullptr; 
 
 public:
-    Term(Factor *L, Operator Op, Factor *R) : 
+    Term(Factor *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
     Term(Factor *L) :
     Left(L) {}
@@ -218,7 +218,7 @@ public:
 
     Operator getOperator() { return Op; }
 
-    Factor *getRight() { return Right; }
+    Expr *getRight() { return Right; }
 
     virtual void accept(ASTVisitor &V) override
     {
@@ -237,10 +237,10 @@ public:
 private:
     Final *Left = nullptr; 
     Operator Op;      
-    Final *Right = nullptr;
+    Expr *Right = nullptr;
 
 public:
-    Factor(Final *L, Operator Op, Final *R) : 
+    Factor(Final *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
     Factor(Final *L) :
     Left(L) {}
@@ -250,7 +250,7 @@ public:
 
     Operator getOperator() { return Op; }
 
-    Final *getRight() { return Right; }
+    Expr *getRight() { return Right; }
 
     virtual void accept(ASTVisitor &V) override
     {
