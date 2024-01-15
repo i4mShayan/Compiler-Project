@@ -70,7 +70,7 @@ public:
 
 
   virtual void visit(Expr &Node) override {
-    Final *left = Node.getLeft();
+    Expr *left = Node.getLeft();
     Expr *right = Node.getRight();
 
     left->accept(*this);
