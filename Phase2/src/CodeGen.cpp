@@ -27,21 +27,6 @@ namespace ns
 
     FunctionType *CalcWriteFnTy;
     Function *CalcWriteFn;
-
-    llvm::BasicBlock* LoopCond;
-    llvm::BasicBlock* LoopBody;
-    llvm::BasicBlock* AfterLoop;
-
-    llvm::BasicBlock* IfCond;
-    llvm::BasicBlock* IfBody;
-    llvm::BasicBlock* AfterIf;
-
-    llvm::BasicBlock* ElifCond;
-    llvm::BasicBlock* ElifBody;
-    llvm::BasicBlock* ElifAfter;
-
-    llvm::BasicBlock* ElseBody;
-    llvm::BasicBlock* ElseAfter;
   public:
     // Constructor for the visitor class.
     ToIRVisitor(Module *M) : M(M), Builder(M->getContext())
@@ -70,21 +55,6 @@ namespace ns
       BasicBlock *BB = BasicBlock::Create(M->getContext(), "entry", MainFn);
       Builder.SetInsertPoint(BB);
 
-
-      LoopCond = llvm::BasicBlock::Create(M->getContext(), "loop.cond", MainFn);
-      LoopBody = llvm::BasicBlock::Create(M->getContext(), "loop.body", MainFn);
-      AfterLoop = llvm::BasicBlock::Create(M->getContext(), "after.loop", MainFn);
-
-      IfCond = llvm::BasicBlock::Create(M->getContext(), "if.cond", MainFn);
-      IfBody = llvm::BasicBlock::Create(M->getContext(), "if.body", MainFn);
-      AfterIf = llvm::BasicBlock::Create(M->getContext(), "after.if", MainFn);
-
-      ElifCond = llvm::BasicBlock::Create(M->getContext(), "elif.cond", MainFn);
-      ElifBody = llvm::BasicBlock::Create(M->getContext(), "elif.body", MainFn);
-      ElifAfter = llvm::BasicBlock::Create(M->getContext(), "elif.after", MainFn);
-
-      ElseBody = llvm::BasicBlock::Create(M->getContext(), "else.body", MainFn);
-      ElseAfter = llvm::BasicBlock::Create(M->getContext(), "else.after", MainFn);
       // Visit the root node of the AST to generate IR.
       Tree->accept(*this);
 
@@ -102,33 +72,6 @@ namespace ns
         (*I)->accept(*this);
       }
     };
-
-    virtual void visit(Statement &Node) override
-    {
-      // Statement *pointer = &Node;
-      // if (Node.getKind() == Statement::Assignment)
-      // {
-      //   Assign *assign = static_cast<Assign*>(pointer);
-      //   assign->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::Declaration)
-      // {
-      //   Declare *declare = static_cast<Declare*>(pointer);
-      //   declare->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::If)
-      // {
-      //   If *if_stm = static_cast<If*>(pointer);
-      //   if_stm->accept(*this);
-      // }
-      // else if (Node.getKind() == Statement::Loop)
-      // {
-      //   Loop *loop = static_cast<Loop*>(pointer);
-      //   loop->accept(*this);
-      // }
-    
-    };
-
 
 virtual void visit(Assign &Node) override
     {
@@ -404,106 +347,6 @@ virtual void visit(Assign &Node) override
           V = Builder.CreateOr(Left, Right);
           break;
       }
-    };
-
-    virtual void visit(If &Node) override
-    {
-      Builder.CreateBr(IfCond);
-      Builder.SetInsertPoint(IfCond);
-
-      Node.getConds()->accept(*this);
-      Value* IfCondVal = V;
-
-      Builder.CreateCondBr(IfCondVal, IfBody, AfterIf);
-
-      Builder.CreateBr(IfBody);
-      Builder.SetInsertPoint(IfBody);
-      
-      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsBegin(); I != E; ++I)
-      {
-        (*I)->accept(*this);
-      }
-
-      Builder.CreateBr(AfterIf);
-      Builder.SetInsertPoint(AfterIf);
-
-      for (llvm::SmallVector<Elif *>::const_iterator I = Node.ElifsBegin(), E = Node.ElifsEnd(); I != E; ++I) {
-        Builder.CreateBr(ElifCond);
-        Builder.SetInsertPoint(ElifCond);
-
-        (*I)->getConds()->accept(*this);
-        llvm::Value* ElifCondVal = V;
-
-        Builder.CreateCondBr(ElifCondVal, ElifBody, ElifAfter);
-
-        Builder.CreateBr(ElifBody);
-        Builder.SetInsertPoint(ElifBody);
-
-        // for (llvm::SmallVector<Assign *>::const_iterator X = I.AssignmentsBegin(), Y = I.AssignmentsBegin(); X != Y; ++X)
-        // {
-        //   (*X)->accept(*this);
-        // }
-
-        Builder.CreateBr(ElifAfter);
-        Builder.SetInsertPoint(ElifAfter);
-      }
-
-      if (Node.getElse())
-      {
-        Builder.CreateBr(ElseBody);
-        Builder.SetInsertPoint(ElseBody);
-
-        // for (llvm::SmallVector<Assign *>::const_iterator X = Node.getElse()->AssignmentsBegin(), Y = Node.getElse()->AssignmentsBegin(); X != Y; ++X)
-        // {
-        //   (*X)->accept(*this);
-        // }
-
-        Builder.CreateBr(ElseAfter);
-        Builder.SetInsertPoint(ElseAfter);
-      }
-    };
-
-    virtual void visit(Elif &Node) override
-    {
-      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
-      {
-          (*I)->accept(*this);
-      }
-    };
-
-    virtual void visit(Else &Node) override
-    {
-      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I)
-      {
-          (*I)->accept(*this);
-      }
-    };
-
-
-    virtual void visit(Loop &Node) override
-    {
-      Builder.CreateBr(LoopCond); 
-      Builder.SetInsertPoint(LoopCond); 
-
-      Node.getConds()->accept(*this); 
-      Value* Cond = V; 
-
-      llvm::errs() << "Loop Condition is ";
-      Cond->print(llvm::errs());
-      llvm::errs() << "\n-----------\n";
-
-      Builder.CreateCondBr(Cond, LoopBody, AfterLoop); 
-
-      Builder.CreateBr(LoopBody); 
-      Builder.SetInsertPoint(LoopBody);
-
-      for (llvm::SmallVector<Assign *>::const_iterator I = Node.AssignmentsBegin(), E = Node.AssignmentsEnd(); I != E; ++I) 
-      {
-          (*I)->accept(*this); 
-      }
-
-      Builder.CreateBr(LoopCond); 
-      Builder.SetInsertPoint(AfterLoop);
     };
   };
 }; // namespace
