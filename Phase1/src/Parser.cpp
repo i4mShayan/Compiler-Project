@@ -197,54 +197,6 @@ _error:
 
 Expr *Parser::parseExpr()
 {
-//     Final *Left;
-//     Expr *Right;
-//     Token::TokenKind tokKind;
-
-//     Left = (Final *) parseFinal();
-
-//     if(!Left) goto _error;
-
-//     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
-//     {
-//         return (Expr*) Left;
-//     }
-
-//     tokKind = Tok.getKind();
-//     advance();
-    
-//     Right = parseExpr();
-
-//     if (!Right) goto _error;
-
-//     switch (tokKind)
-//     {
-//         case Token::plus:
-//             return new Expr(Left, Expr::Plus, Right);
-//         case Token::minus:
-//             return new Expr(Left, Expr::Minus, Right);
-//         case Token::star:
-//             return new Expr(Left, Expr::Mul, Right);
-//         case Token::slash:
-//             return new Expr(Left, Expr::Div, Right);
-//         case Token::mod:
-//             return new Expr(Left, Expr::Mod, Right);
-//         case Token::hat:
-//             return new Expr(Left, Expr::Pow, Right);
-//         default:
-//         {
-//             goto _error;
-//             break;
-//         }
-//     }
-// _error:
-//     llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
-//     while (Tok.getKind() != Token::eoi)
-//         advance();
-//     return nullptr;
-
-    llvm::errs() << "Expr\n";
-
     Expr *Left;
     Expr *Right;
     Token::TokenKind tokKind;
@@ -271,8 +223,6 @@ _error:
 
 Expr *Parser::parseTerm()
 {
-    llvm::errs() << "Term\n";
-
     Expr *Left = parseFactor();
     while (Tok.isOneOf(Token::star, Token::slash))
     {
@@ -286,8 +236,6 @@ Expr *Parser::parseTerm()
 
 Expr *Parser::parseFactor()
 {
-    llvm::errs() << "Factor\n";
-
     Expr *Left = parseFinal();
     while (Tok.is(Token::hat))
     {
@@ -299,10 +247,8 @@ Expr *Parser::parseFactor()
 }
 
 
-Expr *Parser::parseFinal() // the return type MUST be Expr
+Expr *Parser::parseFinal() 
 {
-    llvm::errs() << "Final\n";
-
     Expr *Res;
     switch (Tok.getKind())
     {

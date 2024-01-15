@@ -25,16 +25,16 @@ public:
     // Virtual visit functions for each AST node type
     virtual void visit(AST &) {};
     virtual void visit(ARK &) {};
-    virtual void visit(Statement &) {};
+    virtual void visit(Statement &) = 0;
     virtual void visit(Declare &) = 0;
     virtual void visit(Assign &) = 0;
     virtual void visit(Expr &) = 0;
-    virtual void visit(If &) {};
-    virtual void visit(Elif &) {};
-    virtual void visit(Else &) {};
-    virtual void visit(Conditions &) {};
-    virtual void visit(Condition &) {};
-    virtual void visit(Loop &) {};
+    virtual void visit(If &) = 0;
+    virtual void visit(Elif &) = 0;
+    virtual void visit(Else &) = 0;
+    virtual void visit(Conditions &) = 0;
+    virtual void visit(Condition &) = 0;
+    virtual void visit(Loop &) = 0;
     virtual void visit(Final &) = 0;
 };
 
@@ -193,70 +193,6 @@ public:
     }
 };
 
-// class Term : public Expr
-// {
-// public:
-//     enum Operator
-//     {
-//         Mul,
-//         Div,
-//         Mod
-//     };
-// private:
-//     Factor *Left = nullptr; 
-//     Operator Op;      
-//     Factor *Right = nullptr; 
-
-// public:
-//     Term(Factor *L, Operator Op, Factor *R) : 
-//     Left(L), Op(Op), Right(R) {}
-//     Term(Factor *L) :
-//     Left(L) {}
-//     Term() {}
-
-//     Factor *getLeft() { return Left; }
-
-//     Operator getOperator() { return Op; }
-
-//     Factor *getRight() { return Right; }
-
-//     virtual void accept(ASTVisitor &V) override
-//     {
-//         V.visit(*this);
-//     }
-    
-// };
-
-// class Factor : public Term
-// {
-// public:
-//     enum Operator
-//     {
-//         Pow
-//     };
-// private:
-//     Final *Left = nullptr; 
-//     Operator Op;      
-//     Final *Right = nullptr;
-
-// public:
-//     Factor(Final *L, Operator Op, Final *R) : 
-//     Left(L), Op(Op), Right(R) {}
-//     Factor(Final *L) :
-//     Left(L) {}
-//     Factor() {}
-
-//     Final *getLeft() { return Left; }
-
-//     Operator getOperator() { return Op; }
-
-//     Final *getRight() { return Right; }
-
-//     virtual void accept(ASTVisitor &V) override
-//     {
-//         V.visit(*this);
-//     }
-// };
 
 class Conditions : public AST
 {
