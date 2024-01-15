@@ -165,13 +165,17 @@ public:
     enum Operator
     {
         Plus,
-        Minus
+        Minus,
+        Mul,
+        Div,
+        Mod,
+        Pow
     };
 
 private:
-    Term *Left = nullptr; // Left-hand side Expr
-    Operator Op;      // Operator of the binary operation
-    Expr *Right = nullptr; // Right-hand side Expr
+    Expr *Left = nullptr; 
+    Operator Op;      
+    Expr *Right = nullptr; 
 
 public:
     Expr(Term *L, Operator Op, Expr *R) : 
@@ -180,7 +184,7 @@ public:
     Left(L) {}
     Expr() {}
 
-    Term *getLeft() { return Left; }
+    Expr *getLeft() { return Left; }
 
     Operator getOperator() { return Op; }
 
@@ -193,70 +197,70 @@ public:
     }
 };
 
-class Term : public Expr
-{
-public:
-    enum Operator
-    {
-        Mul,
-        Div,
-        Mod
-    };
-private:
-    Factor *Left = nullptr; 
-    Operator Op;      
-    Expr *Right = nullptr; 
+// class Term : public Expr
+// {
+// public:
+//     enum Operator
+//     {
+//         Mul,
+//         Div,
+//         Mod
+//     };
+// private:
+//     Factor *Left = nullptr; 
+//     Operator Op;      
+//     Factor *Right = nullptr; 
 
-public:
-    Term(Factor *L, Operator Op, Expr *R) : 
-    Left(L), Op(Op), Right(R) {}
-    Term(Factor *L) :
-    Left(L) {}
-    Term() {}
+// public:
+//     Term(Factor *L, Operator Op, Factor *R) : 
+//     Left(L), Op(Op), Right(R) {}
+//     Term(Factor *L) :
+//     Left(L) {}
+//     Term() {}
 
-    Factor *getLeft() { return Left; }
+//     Factor *getLeft() { return Left; }
 
-    Operator getOperator() { return Op; }
+//     Operator getOperator() { return Op; }
 
-    Expr *getRight() { return Right; }
+//     Factor *getRight() { return Right; }
 
-    virtual void accept(ASTVisitor &V) override
-    {
-        V.visit(*this);
-    }
+//     virtual void accept(ASTVisitor &V) override
+//     {
+//         V.visit(*this);
+//     }
     
-};
+// };
 
-class Factor : public Term
-{
-public:
-    enum Operator
-    {
-        Pow
-    };
-private:
-    Final *Left = nullptr; 
-    Operator Op;      
-    Expr *Right = nullptr;
+// class Factor : public Term
+// {
+// public:
+//     enum Operator
+//     {
+//         Pow
+//     };
+// private:
+//     Final *Left = nullptr; 
+//     Operator Op;      
+//     Final *Right = nullptr;
 
-public:
-    Factor(Final *L, Operator Op, Expr *R) : 
-    Left(L), Op(Op), Right(R) {}
-    Factor(Final *L) :
-    Left(L) {}
-    Factor() {}
+// public:
+//     Factor(Final *L, Operator Op, Final *R) : 
+//     Left(L), Op(Op), Right(R) {}
+//     Factor(Final *L) :
+//     Left(L) {}
+//     Factor() {}
 
-    Final *getLeft() { return Left; }
+//     Final *getLeft() { return Left; }
 
-    Operator getOperator() { return Op; }
+//     Operator getOperator() { return Op; }
 
-    Expr *getRight() { return Right; }
+//     Final *getRight() { return Right; }
 
-    virtual void accept(ASTVisitor &V) override
-    {
-        V.visit(*this);
-    }
-};
+//     virtual void accept(ASTVisitor &V) override
+//     {
+//         V.visit(*this);
+//     }
+// };
 
 class Conditions : public AST
 {
