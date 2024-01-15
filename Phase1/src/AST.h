@@ -9,8 +9,6 @@ class AST; // Abstract Syntax Tree
 class ARK; // Top-level program
 class Statement; // Top-level statement
 class Expr; 
-class Term;
-class Factor;
 class Assign; // Assignment statement like a = 3;
 class Declare; // Declaration statement like int a;
 class If;
