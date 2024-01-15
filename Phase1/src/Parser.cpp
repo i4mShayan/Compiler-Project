@@ -197,23 +197,69 @@ _error:
 
 Expr *Parser::parseExpr()
 {
-    Final *Left;
-    Expr *Right;
+//     Final *Left;
+//     Expr *Right;
+//     Token::TokenKind tokKind;
+
+//     Left = (Final *) parseFinal();
+
+//     if(!Left) goto _error;
+
+//     if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
+//     {
+//         return (Expr*) Left;
+//     }
+
+//     tokKind = Tok.getKind();
+//     advance();
+    
+//     Right = parseExpr();
+
+//     if (!Right) goto _error;
+
+//     switch (tokKind)
+//     {
+//         case Token::plus:
+//             return new Expr(Left, Expr::Plus, Right);
+//         case Token::minus:
+//             return new Expr(Left, Expr::Minus, Right);
+//         case Token::star:
+//             return new Expr(Left, Expr::Mul, Right);
+//         case Token::slash:
+//             return new Expr(Left, Expr::Div, Right);
+//         case Token::mod:
+//             return new Expr(Left, Expr::Mod, Right);
+//         case Token::hat:
+//             return new Expr(Left, Expr::Pow, Right);
+//         default:
+//         {
+//             goto _error;
+//             break;
+//         }
+//     }
+// _error:
+//     llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
+//     while (Tok.getKind() != Token::eoi)
+//         advance();
+//     return nullptr;
+
+    Term *Left;
+    Term *Right;
     Token::TokenKind tokKind;
 
-    Left = (Final *) parseFinal();
+    Left = (Term *) parseTerm();
 
     if(!Left) goto _error;
 
-    if (!Tok.isOneOf(Token::plus, Token::minus, Token::star, Token::slash, Token::mod, Token::hat))
+    if (!Tok.isOneOf(Token::plus, Token::minus))
     {
         return (Expr*) Left;
     }
 
     tokKind = Tok.getKind();
     advance();
-    
-    Right = parseExpr();
+
+    Right = (Term *) parseTerm();
 
     if (!Right) goto _error;
 
@@ -223,14 +269,6 @@ Expr *Parser::parseExpr()
             return new Expr(Left, Expr::Plus, Right);
         case Token::minus:
             return new Expr(Left, Expr::Minus, Right);
-        case Token::star:
-            return new Expr(Left, Expr::Mul, Right);
-        case Token::slash:
-            return new Expr(Left, Expr::Div, Right);
-        case Token::mod:
-            return new Expr(Left, Expr::Mod, Right);
-        case Token::hat:
-            return new Expr(Left, Expr::Pow, Right);
         default:
         {
             goto _error;
@@ -239,6 +277,89 @@ Expr *Parser::parseExpr()
     }
 _error:
     llvm::errs() << "Expression Error at: " << Tok.getText() << "\n";
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
+
+}
+
+Term *Parser::parseTerm()
+{
+    Factor *Left;
+    Factor *Right;
+    Token::TokenKind tokKind;
+
+    Left = (Factor *) parseFactor();
+
+    if(!Left) goto _error;  
+
+    if (!Tok.isOneOf(Token::star, Token::slash, Token::mod))
+    {
+        return (Term*) Left;
+    }
+
+    tokKind = Tok.getKind();
+    advance();
+
+    Right = (Factor *) parseFactor();
+
+    if (!Right) goto _error;
+
+    switch (tokKind)
+    {
+        case Token::star:
+            return new Term(Left, Term::Mul, Right);
+        case Token::slash:
+            return new Term(Left, Term::Div, Right);
+        case Token::mod:
+            return new Term(Left, Term::Mod, Right);
+        default:
+        {
+            goto _error;
+            break;
+        }
+    }
+_error:
+    llvm::errs() << "Term Error at: " << Tok.getText() << "\n";
+    while (Tok.getKind() != Token::eoi)
+        advance();
+    return nullptr;
+}
+
+Factor *Parser::parseFactor()
+{
+    Final *Left;
+    Final *Right;
+    Token::TokenKind tokKind;
+
+    Left = (Final *) parseFinal();
+
+    if(!Left) goto _error;
+
+    if (!Tok.is(Token::hat))
+    {
+        return (Factor*) Left;
+    }
+
+    tokKind = Tok.getKind();
+    advance();
+
+    Right = (Final *) parseFinal();
+
+    if (!Right) goto _error;
+
+    switch (tokKind)
+    {
+        case Token::hat:
+            return new Factor(Left, Factor::Pow, Right);
+        default:
+        {
+            goto _error;
+            break;
+        }
+    }
+_error:
+    llvm::errs() << "Factor Error at: " << Tok.getText() << "\n";
     while (Tok.getKind() != Token::eoi)
         advance();
     return nullptr;
