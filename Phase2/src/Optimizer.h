@@ -6,7 +6,7 @@
 class Optimizer
 {
 public:
- void optimize(AST *Tree);
+ void optimize(AST *Tree, bool debuenableDebugModegMode);
 
 };
 #endif

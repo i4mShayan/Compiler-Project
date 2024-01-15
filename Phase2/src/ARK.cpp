@@ -5,6 +5,7 @@
 #include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/raw_ostream.h"
 #include <fstream>
+#include "Optimizer.h"
 
 // Define a command-line option for specifying the input expression.
 static llvm::cl::opt<std::string>
@@ -15,6 +16,8 @@ static llvm::cl::opt<std::string>
 // The main function of the program.
 int main(int argc, const char **argv)
 {
+    bool debugMode = true;
+
     // Initialize the LLVM framework.
     llvm::InitLLVM X(argc, argv);
 
@@ -44,15 +47,25 @@ int main(int argc, const char **argv)
 
     // Perform semantic analysis on the AST.
    Sema Semantic;
-   if (Semantic.semantic(Tree))
-   {
+   if (Semantic.semantic(Tree)) {
        llvm::errs() << "Semantic errors occurred\n";
        return 1;
    }
 
-   //Generate code for the AST using a code generator.
-   CodeGen CodeGenerator;
-   CodeGenerator.compile(Tree);
+    if(debugMode) {
+        llvm::errs() << "############ Code BEFORE Optimization: ############\n\n";
+        //Generate code for the AST using a code generator.
+        CodeGen CodeGenerator;
+        CodeGenerator.compile(Tree);
+        llvm::errs() << "\n############ Code AFTER Optimization: ############ \n";
+    }
+
+    Optimizer Optimizer;
+    Optimizer.optimize(Tree, debugMode);
+
+    //Generate code for the AST using a code generator.
+    CodeGen CodeGenerator;
+    CodeGenerator.compile(Tree);
 
     // The program executed successfully.
     return 0;

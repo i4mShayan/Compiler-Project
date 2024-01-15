@@ -224,9 +224,9 @@ _error:
 Expr *Parser::parseTerm()
 {
     Expr *Left = parseFactor();
-    while (Tok.isOneOf(Token::star, Token::slash))
+    while (Tok.isOneOf(Token::star, Token::slash, Token::mod))
     {
-        Expr::Operator Op = Tok.is(Token::star) ? Expr::Mul : Expr::Div;
+        Expr::Operator Op = Tok.is(Token::star) ? Expr::Mul : (Tok.is(Token::mod) ? Expr::Mod : Expr::Div);
         advance();
         Expr *Right = parseFactor();
         Left = new Expr(Left, Op,Right);

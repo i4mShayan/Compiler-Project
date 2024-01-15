@@ -57,6 +57,19 @@ public:
     llvm::SmallVector<Statement *>::const_iterator begin() { return statements.begin(); }
 
     llvm::SmallVector<Statement *>::const_iterator end() { return statements.end(); }
+
+    llvm::SmallVector<Statement *> erase(Statement* statement) {
+        llvm::SmallVector<Statement *>::iterator iter = std::find(statements.begin(), statements.end(), statement);
+
+        // Check if the element was found
+        if (iter != statements.end()) {
+            // Erase the element from the vector
+            statements.erase(iter);
+        }
+
+        return statements;
+    }
+
     virtual void accept(ASTVisitor &V) override
     {
         V.visit(*this);

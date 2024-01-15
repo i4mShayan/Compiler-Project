@@ -4,5 +4,6 @@ add_executable (ARK
   Lexer.cpp
   Parser.cpp
   Sema.cpp
+  Optimizer.cpp
   )
 target_link_libraries(ARK PRIVATE ${llvm_libs})
