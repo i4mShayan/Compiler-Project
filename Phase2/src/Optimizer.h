@@ -6,7 +6,7 @@
 class Optimizer
 {
 public:
- void remove_dead_variables(AST *Tree);
+ void optimize(AST *Tree);
 
 };
 #endif
