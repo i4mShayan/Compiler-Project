@@ -8,7 +8,7 @@
 class AST; // Abstract Syntax Tree
 class ARK; // Top-level program
 class Statement; // Top-level statement
-class Expr; // Binary operation of numbers and identifiers
+class Expr; 
 class Assign; // Assignment statement like a = 3;
 class Declare; // Declaration statement like int a;
 class If;
@@ -25,16 +25,16 @@ public:
     // Virtual visit functions for each AST node type
     virtual void visit(AST &) {};
     virtual void visit(ARK &) {};
-    virtual void visit(Statement &) {};
+    virtual void visit(Statement &) = 0;
     virtual void visit(Declare &) = 0;
     virtual void visit(Assign &) = 0;
     virtual void visit(Expr &) = 0;
-    virtual void visit(If &) {};
-    virtual void visit(Elif &) {};
-    virtual void visit(Else &) {};
-    virtual void visit(Conditions &) {};
-    virtual void visit(Condition &) {};
-    virtual void visit(Loop &) {};
+    virtual void visit(If &) = 0;
+    virtual void visit(Elif &) = 0;
+    virtual void visit(Else &) = 0;
+    virtual void visit(Conditions &) = 0;
+    virtual void visit(Condition &) = 0;
+    virtual void visit(Loop &) = 0;
     virtual void visit(Final &) = 0;
 };
 
@@ -169,18 +169,18 @@ public:
     };
 
 private:
-    Final *Left = nullptr; // Left-hand side Expr
-    Operator Op;      // Operator of the binary operation
-    Expr *Right = nullptr; // Right-hand side Expr
+    Expr *Left = nullptr; 
+    Operator Op;      
+    Expr *Right = nullptr; 
 
 public:
-    Expr(Final *L, Operator Op, Expr *R) : 
+    Expr(Expr *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
-    Expr(Final *L) : 
+    Expr(Expr *L) : 
     Left(L) {}
     Expr() {}
 
-    Final *getLeft() { return Left; }
+    Expr *getLeft() { return Left; }
 
     Operator getOperator() { return Op; }
 
@@ -192,6 +192,71 @@ public:
         V.visit(*this);
     }
 };
+
+// class Term : public Expr
+// {
+// public:
+//     enum Operator
+//     {
+//         Mul,
+//         Div,
+//         Mod
+//     };
+// private:
+//     Factor *Left = nullptr; 
+//     Operator Op;      
+//     Factor *Right = nullptr; 
+
+// public:
+//     Term(Factor *L, Operator Op, Factor *R) : 
+//     Left(L), Op(Op), Right(R) {}
+//     Term(Factor *L) :
+//     Left(L) {}
+//     Term() {}
+
+//     Factor *getLeft() { return Left; }
+
+//     Operator getOperator() { return Op; }
+
+//     Factor *getRight() { return Right; }
+
+//     virtual void accept(ASTVisitor &V) override
+//     {
+//         V.visit(*this);
+//     }
+    
+// };
+
+// class Factor : public Term
+// {
+// public:
+//     enum Operator
+//     {
+//         Pow
+//     };
+// private:
+//     Final *Left = nullptr; 
+//     Operator Op;      
+//     Final *Right = nullptr;
+
+// public:
+//     Factor(Final *L, Operator Op, Final *R) : 
+//     Left(L), Op(Op), Right(R) {}
+//     Factor(Final *L) :
+//     Left(L) {}
+//     Factor() {}
+
+//     Final *getLeft() { return Left; }
+
+//     Operator getOperator() { return Op; }
+
+//     Final *getRight() { return Right; }
+
+//     virtual void accept(ASTVisitor &V) override
+//     {
+//         V.visit(*this);
+//     }
+// };
 
 class Conditions : public AST
 {
