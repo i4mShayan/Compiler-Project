@@ -29,8 +29,6 @@ public:
     virtual void visit(Declare &) = 0;
     virtual void visit(Assign &) = 0;
     virtual void visit(Expr &) = 0;
-    virtual void visit(Term &) = 0;
-    virtual void visit(Factor &) = 0;
     virtual void visit(If &) = 0;
     virtual void visit(Elif &) = 0;
     virtual void visit(Else &) = 0;
