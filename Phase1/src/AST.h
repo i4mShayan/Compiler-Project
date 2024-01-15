@@ -256,7 +256,7 @@ public:
     {
         V.visit(*this);
     }
-}
+};
 
 class Conditions : public AST
 {
