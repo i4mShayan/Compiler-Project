@@ -243,6 +243,8 @@ Expr *Parser::parseExpr()
 //         advance();
 //     return nullptr;
 
+    llvm::errs() << "Expr\n";
+
     Term *Left;
     Expr *Right;
     Token::TokenKind tokKind;
@@ -285,6 +287,7 @@ _error:
 
 Term *Parser::parseTerm()
 {
+    llvm::errs() << "Term\n";
     Factor *Left;
     Expr *Right;
     Token::TokenKind tokKind;
@@ -328,6 +331,8 @@ _error:
 
 Factor *Parser::parseFactor()
 {
+    llvm::errs() << "Factor\n";
+
     Final *Left;
     Expr *Right;
     Token::TokenKind tokKind;
@@ -368,6 +373,8 @@ _error:
 
 Expr *Parser::parseFinal() // the return type MUST be Expr
 {
+    llvm::errs() << "Final\n";
+
     Expr *Res;
     switch (Tok.getKind())
     {
