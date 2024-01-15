@@ -1,6 +1,6 @@
-// #include "CodeGen.h"
+#include "CodeGen.h"
 #include "Parser.h"
-// #include "Sema.h"
+#include "Sema.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/raw_ostream.h"
@@ -43,16 +43,16 @@ int main(int argc, const char **argv)
     }
 
     // Perform semantic analysis on the AST.
-//    Sema Semantic;
-//    if (Semantic.semantic(Tree))
-//    {
-//        llvm::errs() << "Semantic errors occurred\n";
-//        return 1;
-//    }
+   Sema Semantic;
+   if (Semantic.semantic(Tree))
+   {
+       llvm::errs() << "Semantic errors occurred\n";
+       return 1;
+   }
 
-   // Generate code for the AST using a code generator.
-//    CodeGen CodeGenerator;
-//    CodeGenerator.compile(Tree);
+   //Generate code for the AST using a code generator.
+   CodeGen CodeGenerator;
+   CodeGenerator.compile(Tree);
 
     // The program executed successfully.
     return 0;
