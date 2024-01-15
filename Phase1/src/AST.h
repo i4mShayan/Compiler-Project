@@ -8,7 +8,7 @@
 class AST; // Abstract Syntax Tree
 class ARK; // Top-level program
 class Statement; // Top-level statement
-class Expr; // Binary operation of numbers and identifiers
+class Expr; 
 class Assign; // Assignment statement like a = 3;
 class Declare; // Declaration statement like int a;
 class If;
@@ -169,18 +169,18 @@ public:
     };
 
 private:
-    Final *Left = nullptr; // Left-hand side Expr
-    Operator Op;      // Operator of the binary operation
-    Expr *Right = nullptr; // Right-hand side Expr
+    Expr *Left = nullptr; 
+    Operator Op;      
+    Expr *Right = nullptr; 
 
 public:
-    Expr(Final *L, Operator Op, Expr *R) : 
+    Expr(Expr *L, Operator Op, Expr *R) : 
     Left(L), Op(Op), Right(R) {}
-    Expr(Final *L) : 
+    Expr(Expr *L) : 
     Left(L) {}
     Expr() {}
 
-    Final *getLeft() { return Left; }
+    Expr *getLeft() { return Left; }
 
     Operator getOperator() { return Op; }
 
@@ -192,6 +192,7 @@ public:
         V.visit(*this);
     }
 };
+
 
 class Conditions : public AST
 {

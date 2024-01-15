@@ -50,7 +50,7 @@ int main(int argc, const char **argv)
        return 1;
    }
 
-   // Generate code for the AST using a code generator.
+   //Generate code for the AST using a code generator.
    CodeGen CodeGenerator;
    CodeGenerator.compile(Tree);
 
