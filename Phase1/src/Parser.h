@@ -44,6 +44,8 @@ class Parser
     Declare *parseDec();
     Assign *parseAssign();
     Expr *parseExpr();
+    Term *parseTerm();
+    Factor *parseFactor();
     Expr *parseFinal();
     Conditions *parseConditions();
     Condition *parseCondition();
