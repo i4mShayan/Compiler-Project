@@ -47,8 +47,7 @@ namespace OptimizationMethods{
             llvm::errs() << "\n--------------------\n\n";
         }
 
-        void findLiveVars(StringRef Var) {
-            
+        void findLiveVars(StringRef Var) {      
             auto dependedOnVarsMap = variablesDependencyList.find(Var);
             if(dependedOnVarsMap == variablesDependencyList.end()) return;
 
@@ -59,17 +58,17 @@ namespace OptimizationMethods{
                 if (iter == liveVars.end()) {
                     liveVars.push_back(dVar);
                 }
-                if(dVar != goalVar) {
+                if(dVar != goalVar && !dVar.equals(Var)) {
                     findLiveVars(dVar);
                 }
             }
         }
 
         void run(AST *Tree, std::string goalVarName) {
+            Tree->accept(*this);
+
             llvm::StringRef goalVarStringRef(goalVarName);
             goalVar = goalVarStringRef;
-
-            Tree->accept(*this);
 
             liveVars.clear();
             liveVars.push_back(goalVar);
