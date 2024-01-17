@@ -22,6 +22,7 @@ namespace OptimizationMethods{
     // ------------------- DetectDeadVars Class-------------------
     class DetectDeadVars : public ASTVisitor {
         StringRef currentVar;
+        StringRef goalVar;
 
     public:
         void debug() {
@@ -58,14 +59,17 @@ namespace OptimizationMethods{
                 if (iter == liveVars.end()) {
                     liveVars.push_back(dVar);
                 }
-                findLiveVars(dVar);
+                if(dVar != goalVar) {
+                    findLiveVars(dVar);
+                }
             }
         }
 
         void run(AST *Tree, std::string goalVarName) {
-            Tree->accept(*this);
+            llvm::StringRef goalVarStringRef(goalVarName);
+            goalVar = goalVarStringRef;
 
-            llvm::StringRef goalVar(goalVarName);
+            Tree->accept(*this);
 
             liveVars.clear();
             liveVars.push_back(goalVar);
